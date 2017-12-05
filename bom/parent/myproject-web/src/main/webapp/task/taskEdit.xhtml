@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	  xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:body>
+
+	<ui:composition template="/WEB-INF/template/common/commonLayout.xhtml">
+
+		<ui:param name="heading1" value="#{taskBean.selectedTask.id == 0 ? 'Neue Aufgabe' : taskBean.selectedTask.title}" />
+
+		<ui:define name="content">
+
+			<div class="row">
+				<div class="col-lg-12">
+		            <div class="ibox float-e-margins">
+					<h:form id="taskForm" class="form-horizontal">
+		                <div class="ibox-title">
+		                    <h5>Aufgaben Details</h5>
+		                    <div class="ibox-tools">
+								    <h:commandLink  class="btn btn-xs btn-primary " action="#{taskBean.saveTask}">
+									   <i class="fa fa-save"></i>
+									</h:commandLink>
+									<h:commandLink action="taskList" class="btn btn-xs btn-primary " immediate="true" >
+										<i class="fa fa-times"></i>
+								    </h:commandLink>
+		                    </div>
+		                </div>
+		                <div class="ibox-content">
+		                
+									<div class="form-group">
+										<label class="col-sm-2 control-label">Titel</label>
+										<div class="col-sm-10">
+											<h:inputText id="title" value="#{taskBean.selectedTask.title}" class="form-control #{ component.valid ? '' : 'error'}"
+											validatorMessage="Titel erforderlich min. 3 Zeichen)" >
+												<f:validateLength minimum="3" maximum="255"/>
+											</h:inputText>
+										<h:messages for="title"  />
+										</div>
+									</div>
+									
+									
+									<div class="form-group">
+										<label class="col-sm-2 control-label">Zeitpunkt</label>
+										<div class="col-sm-4 date datepicker">
+											<span class="input-group-addon" style="display: none;">
+												<i class="fa fa-calendar"></i>
+											</span>
+											
+											<h:inputText value="#{taskBean.selectedTask.targetDate}" class="form-control" a:data-mask="99.99.9999" >
+												<f:convertDateTime pattern="dd.MM.yyyy" timeZone="CET" />
+											</h:inputText>
+										</div>
+									</div>
+									
+									<div class="form-group">
+										<label class="col-sm-2 control-label">Notiz</label>
+										<div class="col-sm-10">
+											<h:inputTextarea value="#{taskBean.selectedTask.note}"  class="form-control " rows="10"/>
+										<h:messages for="note"  />
+										</div>
+									</div>
+									
+									
+									<div class="hr-line-dashed"></div>
+									
+									<div class="form-group">
+										<label class="col-sm-2 control-label">Empfänger</label>
+										<div class="col-sm-10">
+											<h:selectBooleanCheckbox class="i-checks" value="#{taskBean.selectedTask.toEveryone}" />
+											<label class="control-label"> Jeder</label>
+										
+										</div>
+									</div>
+									
+									<div class="form-group">
+										<label class="col-sm-2 control-label"></label>
+										<div class="col-sm-10">
+										
+											<h:selectManyMenu 
+												value="#{taskBean.selectedTask.userReceipientList}"
+												class="chosen-select form-control"
+												a:data-placeholder="Mitarbeiter wählen ..."
+												converter="#{userConverter}">
+												<f:selectItems value="#{userBean.userList}" var="user"
+													itemValue="#{user}" itemLabel="#{user.name}" />
+											</h:selectManyMenu>
+										
+										</div>
+									</div>
+									
+									<div class="form-group">
+										<label class="col-sm-2 control-label"></label>
+										<div class="col-sm-10">
+										
+											<h:selectManyMenu 
+												value="#{taskBean.selectedTask.userGroupReceipientList}"
+												class="chosen-select form-control"
+												a:data-placeholder="Mitarbeiter-Gruppe wählen ..."
+												converter="#{userGroupConverter}">
+												<f:selectItems value="#{userGroupBean.userGroupList}" var="userGroup"
+													itemValue="#{userGroup}" itemLabel="#{userGroup.name}" />
+											</h:selectManyMenu>
+										
+										</div>
+									</div>
+									
+									<div class="form-group">
+										<label class="col-sm-2 control-label"></label>
+										<div class="col-sm-10">
+										
+											<h:selectManyMenu 
+												value="#{taskBean.selectedTask.shopReceipientList}"
+												class="chosen-select form-control"
+												a:data-placeholder="Filiale wählen ..."
+												converter="#{shopConverter}">
+												<f:selectItems value="#{shopBean.shopList}" var="shop"
+													itemValue="#{shop}" itemLabel="#{shop.name}" />
+											</h:selectManyMenu>
+										
+										</div>
+									</div>
+									
+									
+									
+									
+		                </div>
+	               </h:form>
+	               </div>
+               </div>
+               
+               
+            </div>
+
+
+		</ui:define>
+
+
+	</ui:composition>
+</h:body>
+</html>

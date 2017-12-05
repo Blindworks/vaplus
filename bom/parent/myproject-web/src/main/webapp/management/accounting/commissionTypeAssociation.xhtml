@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:body>
+
+
+	<ui:composition template="/WEB-INF/template/common/commonLayout.xhtml">
+		<ui:param name="heading1" value="Provisions Zuweisung" />
+		
+		<ui:define name="content">	
+		
+		<h:form class="form-horizontal ">
+		
+			<div class="row">
+					<div class="col-lg-12">
+	                    <div class="ibox">
+	                        <div class="ibox-title">
+	                            <h5>Zuweisungen für #{accountingBean.selectedCommissionTypeAssociation.vendor.name}</h5>
+								<div class="ibox-tools">
+										<h:commandLink class="btn btn-xs btn-danger confirm-btn" action="#{accountingBean.deleteSelectedCommissionTypeAssociation}" immediate="true" >
+											<i class="fa fa-trash"></i>
+									    </h:commandLink>
+										<h:commandLink id="saveButton" action="#{accountingBean.saveCommissionTypeAssociation(accountingBean.selectedCommissionTypeAssociation)}" class="btn btn-xs btn-primary " >
+											<i class="fa fa-save"></i>
+									    </h:commandLink>
+										<h:commandLink action="associationList" immediate="true" class="btn btn-xs btn-primary " >
+											<i class="fa fa-times"></i>
+									    </h:commandLink>
+				                </div>
+	                        </div>
+	                        <div class="ibox-content">
+	                       
+	                       			<div class="form-group">
+											<label class="col-sm-4 control-label">Anbieter</label>
+											<div class="col-sm-8">
+												<h:selectOneMenu pt:data-placeholder="Anbieter wählen ..."
+															id="vendor"
+															validatorMessage="Bitte Anbieter wählen"
+															value="#{accountingBean.selectedCommissionTypeAssociation.vendor}"
+															class="chosen-select-full-width form-control #{ component.valid ? '' : 'select-error'}" converter="#{vendorConverter}">
+															<f:selectItem itemValue="" itemLabel=""/>
+															<f:selectItems value="#{productBean.vendorList}" var="vendor"
+																itemValue="#{vendor}" itemLabel="#{vendor.name}" />
+															<f:validateRequired />
+												</h:selectOneMenu>
+												<h:messages for="vendor"  />
+											</div>
+										</div>
+										<div class="form-group">
+											<label class="col-sm-4 control-label">Tarif</label>
+											<div class="col-sm-8">
+												<h:selectOneMenu id="tariffSelect" pt:data-placeholder="Tarif wählen ..."
+													value="#{accountingBean.selectedCommissionTypeAssociation.product}"
+													class="chosen-select-full-width form-control"
+													converter="#{baseProductConverter}">
+													<f:selectItem itemValue="" itemLabel=""/>
+													<f:selectItems value="#{productBean.tariffList}" var="tariff"
+														itemValue="#{tariff}" itemLabel="#{tariff.name}" />
+												</h:selectOneMenu>
+												<h:messages for="tariffSelect"  />
+											</div>
+										</div>
+										<div class="form-group">
+											<label class="col-sm-4 control-label">Product Optionen</label>
+											<div class="col-sm-8">
+												<h:selectManyMenu id="productOptionList" pt:data-placeholder="Tarif Optionen wählen ..."
+													value="#{accountingBean.selectedCommissionTypeAssociation.productOptionList}"
+													class="chosen-select-full-width form-control"
+													converter="#{baseProductConverter}">
+													<f:selectItem itemValue="" itemLabel=""/>
+													<f:selectItems value="#{productBean.productOptionList}" var="option"
+														itemValue="#{option}" itemLabel="#{option.name}" />
+												</h:selectManyMenu>
+												<h:messages for="productOptionList"  />
+											</div>
+										</div>
+										<div class="form-group">
+											<label class="col-sm-4 control-label">Vertrags VL</label>
+											<div class="col-sm-8">
+												<h:selectBooleanCheckbox class="i-checks" value="#{accountingBean.selectedCommissionTypeAssociation.extensionOfTheTerm}" />
+											</div>
+										</div>
+	                        
+	                        </div>
+                        </div>
+                    </div>
+           </div>
+		</h:form>
+        </ui:define>
+    </ui:composition>
+</h:body>
+</html>

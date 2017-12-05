@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+		xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:f="http://java.sun.com/jsf/core"	
+	xmlns:p="http://primefaces.org/ui">
+
+<h:body>
+
+	<ui:composition template="/WEB-INF/template/common/commonLayout.xhtml">
+
+		<ui:param name="heading1" value="Urlaubsanträge" />
+		
+		<ui:define name="content">
+		
+	    <h:form class="form-horizontal" id="vacationRequestForm">
+		
+		
+		<div class="row">
+	            
+	            <div class="col-lg-12">
+	                <div class="wrapper wrapper-content animated fadeInUp">
+	
+	                    <div class="ibox">
+	                        <div class="ibox-title">
+									Neue Urlaubsanfrage
+	                            <div class="ibox-tools">
+	                            	<ui:fragment rendered="#{eventBean.selectedVacationRequest.id gt 0}">
+											<h:commandLink class="btn btn-xs btn-danger confirm-btn" action="#{eventBean.deleteVacationRequest}" immediate="true" >
+												<i class="fa fa-trash"></i>
+										    </h:commandLink>
+										    
+											<h:commandLink class="btn btn-xs btn-primary" action="#{eventBean.clearVacationRequest}" immediate="true" >
+												<i class="fa fa-times"></i>
+										    </h:commandLink>
+									</ui:fragment>
+									
+									<h:commandLink id="saveBtn" action="#{eventBean.saveVacationRequest}" class="btn btn-xs btn-primary " >
+											<i class="fa fa-save"></i>
+									</h:commandLink>
+									
+	                            </div>
+	                        </div>
+	                        <div class="ibox-content">
+	                        
+	                        		<div class="form-group">
+										<label class="col-lg-2 control-label">ab</label>
+										<div class="col-lg-5">
+										
+											<div class="input-group date ">
+                                   				<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+												<h:inputText converterMessage="Startzeit konnte nicht als Datum interpretiert werden." autocomplete="off" class="form-control datepicker" value="#{eventBean.selectedVacationRequest.vacationFrom}"  a:data-mask="99.99.9999">
+													<f:convertDateTime pattern="dd.MM.yyyy" timeZone="CET" />
+													<f:ajax event="change" render="vacationRequestDays" onevent="updatePluginsEvent"  />
+					                            </h:inputText>
+				                            </div>
+										</div>
+										<div class="col-lg-5">
+											<h:selectBooleanCheckbox class="i-checks" value="#{eventBean.selectedVacationRequest.startHalfDay}" >
+												<f:ajax event="change" render="vacationRequestDays" onevent="updatePluginsEvent"  />
+											</h:selectBooleanCheckbox>
+											<label class="control-label">halbtags</label>
+										</div>
+										
+									</div>
+	                        
+	                        		<div class="form-group">
+										<label class="col-lg-2 control-label">bis</label>
+										<div class="col-lg-5">
+										
+											<div class="input-group date ">
+                                   				<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+												<h:inputText converterMessage="Startzeit konnte nicht als Datum interpretiert werden." autocomplete="off" class="form-control datepicker" value="#{eventBean.selectedVacationRequest.vacationTo}"  a:data-mask="99.99.9999">
+													<f:convertDateTime pattern="dd.MM.yyyy" timeZone="CET" />
+													<f:ajax event="change" render="vacationRequestDays" onevent="updatePluginsEvent"  />
+					                            </h:inputText>
+				                            </div>
+										</div>
+										<div class="col-lg-5">
+											<h:selectBooleanCheckbox class="i-checks" value="#{eventBean.selectedVacationRequest.endHalfDay}" >
+												<f:ajax event="change" render="vacationRequestDays" onevent="updatePluginsEvent"  />
+											</h:selectBooleanCheckbox>
+											<label class="control-label">halbtags</label>
+										</div>
+										
+									</div>
+											
+									<div class="form-group">
+										<label class="col-lg-2 control-label">Kommentar</label>
+										<div class="col-lg-10">
+											<h:inputTextarea value="#{eventBean.selectedVacationRequest.creatorNote}" class="form-control" rows="8"/>
+										</div>
+									</div>
+											
+									<div class="form-group">
+										<label class="col-lg-2 control-label">Urlaubstage</label>
+										<div class="col-lg-10">
+											<h:panelGroup  id="vacationRequestDays">
+											<label class="control-label">
+											<h:outputText value="#{eventBean.getVacationDays(eventBean.selectedVacationRequest)}" />
+											</label>
+											</h:panelGroup>
+										</div>
+									</div>
+									
+									
+
+	                        </div>
+	                    </div>
+	                </div>
+	            </div>
+	        </div>
+		
+			<div class="row">
+	            
+	            <div class="col-lg-12">
+	            	
+	                <div class="wrapper wrapper-content animated fadeInUp">
+						<h:panelGroup id="userHolidayList" >
+							<h:panelGroup rendered="#{not empty eventBean.selectedVacationRequest.user}">
+			                    <div class="ibox">
+			                        <div class="ibox-title">
+											Urlaubsanträge
+			                            <div class="ibox-tools">
+			                            
+			                            
+			                            </div>
+			                        </div>
+			                        <div class="ibox-content">
+			                        	<h:panelGroup rendered="#{eventBean.getOwnVacationRequestList().size() eq 0}">
+			                        		bisher keine Urlaubsanträge gestellt
+			                        	</h:panelGroup>
+			                        	<h:panelGroup rendered="#{eventBean.getOwnVacationRequestList().size() gt 0}">
+			                        		
+				                        		<h:dataTable class="table table-striped" value="#{eventBean.getOwnVacationRequestList()}" var="vacationRequest">
+									
+													<h:column>
+									    				<f:facet name="header">beantragt</f:facet>
+									    				<h:outputText value="#{vacationRequest.creationDate}" >
+															<f:convertDateTime type="date" pattern="dd.MM.yy HH:mm" timeZone="CET"/>
+														</h:outputText>
+									    			</h:column>
+									
+													<h:column>
+									    				<f:facet name="header">ab</f:facet>
+									    				<h:outputText value="#{vacationRequest.vacationFrom}" >
+															<f:convertDateTime type="date" pattern="dd.MM.yy HH:mm" timeZone="CET"/>
+														</h:outputText>
+									    			</h:column>
+									    			
+													<h:column>
+									    				<f:facet name="header">bis</f:facet>
+									    				<h:outputText value="#{vacationRequest.vacationTo}" >
+															<f:convertDateTime type="date" pattern="dd.MM.yy HH:mm" timeZone="CET"/>
+														</h:outputText>
+									    			</h:column>
+									    			
+													<h:column>
+									    				<f:facet name="header">Urlaubstage</f:facet>
+									    				<h:outputText value="#{eventBean.getVacationDays(vacationRequest)}"/>
+									    			</h:column>
+									    			
+													<h:column>
+									    				<f:facet name="header">Status</f:facet>
+									    				<ui:fragment rendered="#{vacationRequest.status == 0}">
+									    					neu
+									    				</ui:fragment>
+									    				<ui:fragment rendered="#{vacationRequest.status == 1}">
+									    					akzeptiert
+									    				</ui:fragment>
+									    				<ui:fragment rendered="#{vacationRequest.status == 2}">
+									    					abgelehnt
+									    				</ui:fragment>
+									    				<ui:fragment rendered="#{vacationRequest.status == 3}">
+									    					zurückgezogen
+									    				</ui:fragment>
+									    			</h:column>
+									    			
+													<h:column>
+													
+														<h:commandLink action="#{eventBean.setSelectedVacationRequest(vacationRequest)}" class="btn btn-sm btn-primary pull-right ">
+																<i class="fa fa-pencil"></i>
+														</h:commandLink>
+									    			</h:column>
+	
+												</h:dataTable>
+											
+			                        	</h:panelGroup>
+			                        </div>
+			                    </div>
+	                    	</h:panelGroup>
+	                    </h:panelGroup>
+	                </div>
+	            </div>
+	        </div>
+		
+		</h:form>
+
+		</ui:define>
+
+
+	</ui:composition>
+</h:body>
+</html>

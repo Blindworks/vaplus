@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:body>
+
+	<ui:composition template="/WEB-INF/template/common/commonLayout.xhtml">
+
+		<ui:param name="heading1" value="Neuer Mitarbeiter" />
+		
+		<ui:define name="content">
+		
+		
+			<ui:decorate
+				template="/WEB-INF/template/common/commonContentWrapper.xhtml">
+				<ui:define name="title">
+					Mitarbeiter Details #{userBean.selectedUser.id}
+				</ui:define>
+				<ui:define name="tools">
+					<h:form>
+						<h:commandButton value="Passwort zurücksetzen" action="#{userBean.sendChangePwdLink}" class="btn btn-xs btn-default " />
+					</h:form>
+				</ui:define>
+				<ui:define name="content">
+				
+				
+				
+				<h:form class="form-horizontal">
+				<div class="form-group">
+					<label class="col-sm-2 control-label">Vorname</label>
+					<div class="col-sm-10">
+						<h:inputText value="#{userBean.selectedUser.firstname}"
+							class="form-control" />
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label">Nachname</label>
+					<div class="col-sm-10">
+						<h:inputText value="#{userBean.selectedUser.lastname}"
+							class="form-control" />
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label">Email</label>
+					<div class="col-sm-10">
+						<h:inputText value="#{userBean.selectedUser.email}"
+							class="form-control" />
+					</div>
+				</div>
+				
+				<div class="form-group">
+					<label class="col-sm-2 control-label">Strasse Nr.</label>
+					<div class="col-sm-10">
+						<div class="row">
+                            <div class="col-md-10"><input type="text" class="form-control" /></div>
+                            <div class="col-md-2"><input type="text" class="form-control" /></div>
+                        </div>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label">PLZ Ort</label>
+					<div class="col-sm-10">
+						<div class="row">
+                           <div class="col-md-4"><input type="text" class="form-control" /></div>
+                           <div class="col-md-8"><input type="text" class="form-control" /></div>
+                       </div>
+					</div>
+				</div>
+				
+						<div class="form-group">
+							<label class="col-sm-2 control-label">Punkte Ziel</label>
+							<div class="col-sm-10">
+								<div class="row">
+		                           <div class="col-md-2"><h:inputText value="#{userBean.selectedUser.pointGoal}" class="form-control" /></div>
+		                        </div>
+							</div>
+						</div>
+
+				<div class="hr-line-dashed"></div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label">Filial Rechte</label>
+					<div class="col-sm-10">
+					
+						<div class="row">
+						<ui:repeat value="#{shopBean.shopList}" var="shop" rowKeyVar="idx">
+							
+                            <div class="col-md-4">
+                            	<div class="checkbox">
+					      			<label><input type="checkbox" value="" class="i-checks" /> #{shop.name}</label>
+					    		</div>
+					    	</div>
+						</ui:repeat>
+                        </div>
+						
+					
+					</div>
+				</div>
+				
+				<div class="hr-line-dashed"></div>
+			
+				<div class="form-group">
+					<label class="col-sm-2 control-label">Gruppen</label>
+					<div class="col-sm-10">
+							<div class="checkbox">
+						      	<label><input type="checkbox" value="" class="i-checks"/> Gruppe 1</label>
+						    </div>
+						    <div class="checkbox">
+						      <label><input type="checkbox" value="" class="i-checks"/> Gruppe 2</label>
+						    </div>
+					</div>
+				</div>
+					
+				<div class="hr-line-dashed"></div>
+				
+				<div class="form-group">
+					<label class="col-sm-2 control-label">Rollen</label>
+					<div class="col-sm-10">
+						<div class="row">
+                            <div class="col-md-2">
+								<div class="radio">
+						      		<label><input type="radio" name="role_member" value="role_member" class="i-checks" /> Supervisor</label>
+						      	</div>
+						    </div>
+                            <div class="col-md-2">
+								<div class="radio">
+						      		<label><input type="radio" name="role_member"  value="role_member" class="i-checks" /> Filialleiter</label>
+						      	</div>
+						    </div>
+                            <div class="col-md-2">
+								<div class="radio">
+						      		<label><input type="radio" name="role_member"  value="role_member" class="i-checks" /> Mitarbeiter</label>
+						      	</div>
+						    </div>
+					    </div>
+					</div>
+				</div>
+				
+				<div class="hr-line-dashed"></div>
+				
+				<div class="form-group">
+					<label class="col-sm-2 control-label"> Rechte</label>
+					<div class="col-sm-10">
+						<div class="row">
+                            <div class="col-md-4">
+                            	<div class="checkbox">
+					      			<label><input type="checkbox" value="" class="i-checks" /> Recht 1</label>
+					    		</div>
+					    	</div>
+                            <div class="col-md-4">
+                            	<div class="checkbox">
+					      			<label><input type="checkbox" value="" class="i-checks" /> Recht 1</label>
+					    		</div>
+					    	</div>
+                            <div class="col-md-4">
+                            	<div class="checkbox">
+					      			<label><input type="checkbox" value="" class="i-checks" /> Recht 1</label>
+					    		</div>
+					    	</div>
+                        </div>
+						<div class="row">
+                            <div class="col-md-4">
+                            	<div class="checkbox">
+					      			<label><input type="checkbox" value="" class="i-checks" /> Recht 1</label>
+					    		</div>
+					    	</div>
+                            <div class="col-md-4">
+                            	<div class="checkbox">
+					      			<label><input type="checkbox" value="" class="i-checks" /> Recht 1</label>
+					    		</div>
+					    	</div>
+                            <div class="col-md-4">
+                            	<div class="checkbox">
+					      			<label><input type="checkbox" value="" class="i-checks" /> Recht 1</label>
+					    		</div>
+					    	</div>
+                        </div>
+						<div class="row">
+                            <div class="col-md-4">
+                            	<div class="checkbox">
+					      			<label><input type="checkbox" value="" class="i-checks" /> Recht 1</label>
+					    		</div>
+					    	</div>
+                            <div class="col-md-4">
+                            	<div class="checkbox">
+					      			<label><input type="checkbox" value="" class="i-checks" /> Recht 1</label>
+					    		</div>
+					    	</div>
+                            <div class="col-md-4">
+                            	<div class="checkbox">
+					      			<label><input type="checkbox" value="" class="i-checks" /> Recht 1</label>
+					    		</div>
+					    	</div>
+                        </div>
+						<div class="row">
+                            <div class="col-md-4">
+                            	<div class="checkbox">
+					      			<label><input type="checkbox" value="" class="i-checks"  /> Recht 1</label>
+					    		</div>
+					    	</div>
+                            <div class="col-md-4">
+                            	<div class="checkbox">
+					      			<label><input type="checkbox" value="" class="i-checks" /> Recht 1</label>
+					    		</div>
+					    	</div>
+                            <div class="col-md-4">
+                            	<div class="checkbox">
+					      			<label><input type="checkbox" value="" class="i-checks" /> Recht 1</label>
+					    		</div>
+					    	</div>
+                        </div>
+							
+					</div>
+				</div>
+				
+
+				<div class="hr-line-dashed"></div>
+
+				<div class="form-group">
+					<div class="col-sm-4 col-sm-offset-2">
+						<h:commandButton value="zurücksetzen"
+							action="#{userBean.reloadUser}" class="btn btn-default " />
+						<h:commandButton value="speichern" action="#{userBean.saveUser}"
+							class="btn btn-primary " />
+					</div>
+				</div>
+
+
+			</h:form>
+				</ui:define>
+			</ui:decorate>
+
+
+
+
+			
+
+		</ui:define>
+
+
+	</ui:composition>
+</h:body>
+</html>

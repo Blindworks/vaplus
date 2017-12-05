@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	  xmlns:f="http://java.sun.com/jsf/core"
+	  xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+
+<ui:composition>
+
+
+		<div class="sidebar-container"
+			style="overflow: hidden; width: auto; height: 100%;">
+			<h:form id="sidebarDefaultForm">
+				<h:inputHidden id="sidebarDefaultTab" value="#{propertyBean.defaultSideBarTab}" />
+				<h:commandLink id="send" action="#{propertyBean.doNothing}" value="updateDefaults" style="display:none;" >
+					<f:ajax execute="@form" />
+				</h:commandLink>
+			</h:form>
+			<ul class="nav nav-tabs navs-4">
+				
+				<li class="#{propertyBean.defaultSideBarTab == 1 ? 'active' : ''}">
+				<a data-toggle="tab" href="#sidebarTab-1" onclick="$('#sidebarDefaultForm\\:sidebarDefaultTab').val('1');$('#sidebarDefaultForm\\:send').click(); "> <i
+						class="fa fa-line-chart"></i>
+				</a></li>
+				<li class="#{propertyBean.defaultSideBarTab == 2 ? 'active' : ''}"><a data-toggle="tab" href="#sidebarTab-2" onclick="$('#sidebarDefaultForm\\:sidebarDefaultTab').val('2');$('#sidebarDefaultForm\\:send').click(); "> <i
+						class="fa fa-history"></i>
+				</a></li>
+				<li class="#{propertyBean.defaultSideBarTab == 3 ? 'active' : ''}">
+				<a data-toggle="tab" href="#sidebarTab-3" onclick="$('#sidebarDefaultForm\\:sidebarDefaultTab').val('3');$('#sidebarDefaultForm\\:send').click(); "> <i
+						class="fa fa-star"></i>
+				</a>
+				</li>
+				<li class=""><a data-toggle="tab" href="#sidebarTab-4"> <i
+						class="fa fa-gear"></i>
+				</a></li>
+			</ul>
+			<div class="tab-content">
+
+
+				<div id="sidebarTab-1" class="tab-pane #{propertyBean.defaultSideBarTab == 1 ? 'active' : ''}">
+
+					
+
+
+				</div>
+
+				<div id="sidebarTab-2" class="tab-pane #{propertyBean.defaultSideBarTab == 2 ? 'active' : ''}">
+
+					<div class="sidebar-title">
+						<h3>
+							<i class="fa fa-male"></i> Letzte Kunden
+						</h3>
+					</div>
+					
+					<h:form>
+
+					<ul class="sidebar-list">
+						<ui:repeat var="customerHistory" value="#{userBean.activeUser.customerHistoryList}">
+							<li class="list-item link-item">
+			                    <h:commandLink action="/customer/profile">
+									<f:setPropertyActionListener value="#{customerHistory.customer}" target="#{customerBean.selectedCustomer}" />
+									
+									<h:outputText value="#{customerHistory.customer.name}" />
+									
+								</h:commandLink>
+							</li>
+						</ui:repeat>
+
+					</ul>
+					</h:form>
+
+				</div>
+
+				<div id="sidebarTab-3" class="tab-pane #{propertyBean.defaultSideBarTab == 3 ? 'active' : ''}">
+
+					<div class="sidebar-title">
+						<h3>
+							<i class="fa fa-codepen"></i> Top Produkte
+						</h3>
+					</div>
+					
+					<h:panelGroup id="sideBarProductList">
+					<ul class="sidebar-list product-list">
+					
+						<ui:repeat var="rp" value="#{productBean.sideBarProductList}">
+							<li class="list-item"> 
+								<div class="row">
+						        <div class="col-md-7">
+						        	<a href="#">
+						        		<h:outputText value="#{rp.product.name}" />
+						        		<h:panelGroup rendered="#{not empty rp.productOptionList}">
+						        			(<ui:repeat var="option" value="#{rp.productOptionList}" varStatus="status"><h:outputText value="#{option.name}" /><h:panelGroup rendered="#{not status.last}">, </h:panelGroup></ui:repeat>)
+						        		</h:panelGroup>
+						        	</a>
+						        	<h:panelGroup rendered="#{rp.singlePoint}" > 
+						        		<span class="spacer"></span>
+						        		<h:outputText value="(#{rp.firstPointName})" rendered="#{fn:length(key) gt 0}"/>
+						        		<h:outputText value="#{rp.firstPointName}" rendered="#{fn:length(key) == 0}"/>
+						        	</h:panelGroup>
+						        </div>
+						        <div class="col-md-5">
+									<ui:repeat var="key" value="#{rp.points.keySet().toArray()}">
+						        		<p class="pull-right text-navy">
+						        		
+								        	<h:panelGroup rendered="#{not rp.singlePoint}" > 
+								        		<h:outputText value="(#{key})" rendered="#{fn:length(key) gt 0}"/>
+								        		<h:outputText value="#{key}" rendered="#{fn:length(key) == 0}"/>
+								        		<span class="spacer"></span>
+								        	</h:panelGroup>
+						        			<h:outputText value="#{rp.points.get(key)}" >
+												<f:convertNumber maxFractionDigits="2" minFractionDigits="0" />
+											</h:outputText> <i class="fa fa-star"></i>
+						        		</p>
+						        	</ui:repeat>
+						        </div>
+					        </div>
+							</li>
+							
+					    </ui:repeat>
+					</ul>
+					
+					</h:panelGroup>
+
+				</div>
+
+				<div id="sidebarTab-4" class="tab-pane">
+
+					<div class="sidebar-title">
+						<h3>
+							<i class="fa fa-gears"></i> Einstellungen
+						</h3>
+						<small><i class="fa fa-tim"></i> Beispieltext</small>
+					</div>
+					<h:form>
+					<div class="setings-item">
+						<span> Produkte gruppieren </span>
+						<div class="switch">
+                            <div class="onoffswitch">
+                            	<h:selectBooleanCheckbox value="#{propertyBean.showGroupedProductsOnSideBar}"  class="onoffswitch-checkbox" id="userPropSwitchProductGrouped" >
+									<f:ajax execute="@this" event="change" render="sideBarProductList" />
+								</h:selectBooleanCheckbox>
+								<h:outputLabel class="onoffswitch-label" for="userPropSwitchProductGrouped">
+                                    <span class="onoffswitch-inner"></span>
+                                    <span class="onoffswitch-switch"></span>
+                                </h:outputLabel>
+                            </div>
+                        </div>
+					</div>
+					<div class="setings-item">
+						<span> nutze Firmen Dashboard</span>
+						<div class="switch">
+                            <div class="onoffswitch">
+                            	<h:selectBooleanCheckbox value="#{propertyBean.showShopGroupDashboard}"  class="onoffswitch-checkbox" id="userPropSwitchShopGroupDashboard" >
+									<f:ajax execute="@this" event="change" render="sideBarProductList navBarForm" onevent="initSideMenu"/>
+								</h:selectBooleanCheckbox>
+								<h:outputLabel class="onoffswitch-label" for="userPropSwitchShopGroupDashboard">
+                                    <span class="onoffswitch-inner"></span>
+                                    <span class="onoffswitch-switch"></span>
+                                </h:outputLabel>
+                            </div>
+                        </div>
+					</div>
+					<div class="setings-item">
+						<span> Retail Produkte anzeigen </span>
+					</div>
+					</h:form>
+					
+
+					<div class="sidebar-content">
+						<h4>Einstellungen</h4>
+						<div class="small">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut</div>
+					</div>
+
+				</div>
+			</div>
+
+		</div>
+
+
+
+
+
+
+</ui:composition>
+</html>

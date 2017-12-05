@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	  xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:body>
+
+	<f:metadata>
+		<f:event listener="#{FEPluginBean.includePeity}" type="preRenderComponent"></f:event>
+		<f:event listener="#{FEPluginBean.includeChosen}" type="preRenderComponent"></f:event>
+	</f:metadata>
+
+	<ui:composition template="/WEB-INF/template/common/commonLayout.xhtml">
+
+		<ui:param name="heading1" value="Filiale" />
+
+
+		<ui:define name="content">
+
+			<h:panelGroup id="shopPage">
+			<div class="row">
+				<div class="col-lg-9">
+		            <div class="ibox float-e-margins">
+					<h:form id="shopForm" class="form-horizontal">
+		                <div class="ibox-title">
+		                    <h5>Filial Details</h5>
+		                    <div class="ibox-tools">
+										<h:commandLink class="btn btn-xs btn-danger confirm-btn" action="#{shopBean.deleteShop}" immediate="true" rendered="#{shopBean.selectedShop.id gt 0}">
+											<i class="fa fa-trash"></i>
+									    </h:commandLink>
+								    <h:commandLink  class="btn btn-xs btn-primary " action="#{shopBean.saveShop}">
+									   <f:ajax execute="@form" render="shopForm" onevent="updatePluginsEvent"/>
+									   <i class="fa fa-save"></i>
+									</h:commandLink>
+										<h:commandLink action="shopList" class="btn btn-xs btn-primary " immediate="true" >
+											<i class="fa fa-times"></i>
+									    </h:commandLink>
+		                    </div>
+		                </div>
+		                <div class="ibox-content">
+									<div class="form-group">
+										<label class="col-sm-2 control-label">Name</label>
+										<div class="col-sm-10">
+											<h:inputText id="name" value="#{shopBean.selectedShop.name}" class="form-control #{ component.valid ? '' : 'error'}"
+											validatorMessage="Name erforderlich (mind. 3 Zeichen)">
+												<f:validateLength minimum="3" maximum="255"/>
+											</h:inputText>
+										<h:messages for="name"  />
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-2 control-label">Strasse Nr.</label>
+										<div class="col-sm-10">
+											<div class="row">
+					                            <div class="col-md-10"><h:inputText value="#{shopBean.selectedShop.address.street}" class="form-control" /></div>
+					                            <div class="col-md-2"><h:inputText value="#{shopBean.selectedShop.address.streetNumber}" class="form-control" /></div>
+					                        </div>
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-2 control-label">PLZ Ort</label>
+										<div class="col-sm-10">
+											<div class="row">
+					                           <div class="col-md-4"><h:inputText value="#{shopBean.selectedShop.address.zip}" class="form-control" /></div>
+					                           <div class="col-md-8"><h:inputText value="#{shopBean.selectedShop.address.city}" class="form-control" /></div>
+					                        </div>
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-2 control-label">Land</label>
+										<div class="col-sm-4">
+											<div class="row">
+					                           <div class="col-md-2"><h:inputText value="#{shopBean.selectedShop.address.country}" class="form-control" /></div>
+					                        </div>
+										</div>
+										<label class="col-sm-2 control-label">Bundesland</label>
+										<div class="col-sm-4">
+											<h:selectOneMenu a:data-placeholder="Bundesland wählen ..." class="chosen-select-no-single form-control" converter="#{stateConverter}" value="#{shopBean.selectedShop.state}" >
+												<f:selectItems value="#{stateBean.stateList}" var="state" itemValue="#{state}" itemLabel="#{state.name}" />
+											</h:selectOneMenu>
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-2 control-label">Kontakt Person</label>
+										<div class="col-sm-10">
+											<div class="row">
+					                           <div class="col-md-8"><h:inputText value="#{shopBean.selectedShop.contactPerson}" class="form-control" /></div>
+					                        </div>
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-2 control-label">Tel.</label>
+										<div class="col-sm-4">
+											<div class="row">
+					                           <div class="col-md-8"><h:inputText value="#{shopBean.selectedShop.tel}" class="form-control" /></div>
+					                        </div>
+										</div>
+										<label class="col-sm-2 control-label">Fax.</label>
+										<div class="col-sm-4">
+											<div class="row">
+					                           <div class="col-md-8"><h:inputText value="#{shopBean.selectedShop.fax}" class="form-control" /></div>
+					                        </div>
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-2 control-label">E-Mail</label>
+										<div class="col-sm-10">
+											<div class="row">
+					                           <div class="col-md-8"><h:inputText value="#{shopBean.selectedShop.email}" class="form-control" /></div>
+					                        </div>
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-2 control-label">Kalender Notiz</label>
+										<div class="col-sm-10">
+											<div class="row">
+					                           <div class="col-md-8"><h:inputText value="#{shopBean.selectedShop.calendarNote}" class="form-control" /></div>
+					                        </div>
+										</div>
+									</div>
+									
+									
+									<div class="form-group">
+										<label class="col-sm-2 control-label">Punkte Ziel</label>
+										<div class="col-sm-10">
+											<div class="row">
+						                        <div class="col-md-2">
+						                        	<h:inputText id="pointGoal" value="#{shopBean.selectedShop.pointGoal}" class="form-control  #{ component.valid ? '' : 'error'}" 
+						                        	validatorMessage="Bitte Punkte Ziel angeben.">
+						                        		<f:validateRequired/>
+						                        		<f:convertNumber maxFractionDigits="2" minFractionDigits="0" />
+						                        	</h:inputText>
+													<h:messages for="pointGoal"  />
+						                        </div>
+												<label class="col-md-2 control-label">Farbe:</label>
+												<div class="col-md-2">
+													<h:selectOneMenu  value="#{shopBean.selectedShop.color}"
+																class="colorpicker-picker-longlist"
+																id="colorSelect">
+																<f:selectItems value="#{helperBean.cssColor}" var="color"
+																	itemValue="#{color}" itemLabel="#{color}" />
+																<f:validateRequired />
+													</h:selectOneMenu>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-2 control-label">Aktiv</label>
+										<div class="col-sm-10">
+											<h:selectBooleanCheckbox class="i-checks" value="#{shopBean.selectedShop.enabled}" />
+										</div>
+									</div>
+									
+									<div class="form-group">
+										<label class="col-sm-2 control-label">Lager</label>
+										<div class="col-sm-10">
+											
+											<h:selectOneMenu a:data-placeholder="Lager wählen ..." value="#{shopBean.selectedShop.stock}"
+														class="chosen-select-no-single-class form-control #{ component.valid ? '' : 'error'}"
+														id="category"
+														validatorMessage="Bitte Lager wählen."
+														converter="#{stockConverter}">
+														<f:selectItem itemValue="" itemLabel="" />
+														<f:selectItems value="#{stockBean.stockList}"
+															var="stock" itemLabel="#{stock.name}"
+															itemValue="#{stock}" />
+											</h:selectOneMenu>
+										
+										</div>
+									</div>
+									
+									<div class="hr-line-dashed"></div>
+									
+									<div class="form-group">
+										<label class="col-sm-2 control-label">Öffnungszeiten</label>
+										<div class="col-sm-10">
+											<div class="row">
+												<label class="col-sm-2 control-label">Montag</label>
+												<div class="col-sm-10" >
+							                         <div class="input-timerange input-group">
+								                             <h:inputText type="text" class="form-control" value="#{shopBean.selectedShop.businessHours_start_0}" a:data-mask="99:99">
+								                             	
+								                             </h:inputText>
+								                             <span class="input-group-addon">bis</span>
+								                             <h:inputText type="text" class="form-control" value="#{shopBean.selectedShop.businessHours_end_0}" a:data-mask="99:99">
+								                            	 
+								                             </h:inputText>
+							                         </div>
+							                     </div>
+											</div>
+										</div>
+									</div>
+									
+									<div class="form-group">
+										<div class="col-sm-10 col-sm-offset-2">
+											<div class="row">
+												<label class="col-sm-2 control-label">Dienstag</label>
+												<div class="col-sm-10" >
+							                         <div class="input-timerange input-group">
+								                             <h:inputText type="text" class="form-control" value="#{shopBean.selectedShop.businessHours_start_1}" a:data-mask="99:99">
+								                             	
+								                             </h:inputText>
+								                             <span class="input-group-addon">bis</span>
+								                             <h:inputText type="text" class="form-control" value="#{shopBean.selectedShop.businessHours_end_1}"  a:data-mask="99:99">
+								                            	 
+								                             </h:inputText>
+							                         </div>
+							                     </div>
+											</div>
+										</div>
+									</div>
+									
+									<div class="form-group">
+										<div class="col-sm-10 col-sm-offset-2">
+											<div class="row">
+												<label class="col-sm-2 control-label">Mittwoch</label>
+												<div class="col-sm-10" >
+							                         <div class="input-timerange input-group">
+								                             <h:inputText type="text" class="form-control" value="#{shopBean.selectedShop.businessHours_start_2}" a:data-mask="99:99">
+								                             	
+								                             </h:inputText>
+								                             <span class="input-group-addon">bis</span>
+								                             <h:inputText type="text" class="form-control" value="#{shopBean.selectedShop.businessHours_end_2}"  a:data-mask="99:99">
+								                            	 
+								                             </h:inputText>
+							                         </div>
+							                     </div>
+											</div>
+										</div>
+									</div>
+									
+									<div class="form-group">
+										<div class="col-sm-10 col-sm-offset-2">
+											<div class="row">
+												<label class="col-sm-2 control-label">Donnerstag</label>
+												<div class="col-sm-10" >
+							                         <div class="input-timerange input-group">
+								                             <h:inputText type="text" class="form-control" value="#{shopBean.selectedShop.businessHours_start_3}" a:data-mask="99:99">
+								                             	
+								                             </h:inputText>
+								                             <span class="input-group-addon">bis</span>
+								                             <h:inputText type="text" class="form-control" value="#{shopBean.selectedShop.businessHours_end_3}"  a:data-mask="99:99">
+								                            	 
+								                             </h:inputText>
+							                         </div>
+							                     </div>
+											</div>
+										</div>
+									</div>
+									
+									<div class="form-group">
+										<div class="col-sm-10 col-sm-offset-2">
+											<div class="row">
+												<label class="col-sm-2 control-label">Freitag</label>
+												<div class="col-sm-10" >
+							                         <div class="input-timerange input-group">
+								                             <h:inputText type="text" class="form-control" value="#{shopBean.selectedShop.businessHours_start_4}" a:data-mask="99:99">
+								                             	
+								                             </h:inputText>
+								                             <span class="input-group-addon">bis</span>
+								                             <h:inputText type="text" class="form-control" value="#{shopBean.selectedShop.businessHours_end_4}"  a:data-mask="99:99">
+								                            	 
+								                             </h:inputText>
+							                         </div>
+							                     </div>
+											</div>
+										</div>
+									</div>
+									
+									<div class="form-group">
+										<div class="col-sm-10 col-sm-offset-2">
+											<div class="row">
+												<label class="col-sm-2 control-label">Samstag</label>
+												<div class="col-sm-10" >
+							                         <div class="input-timerange input-group">
+								                             <h:inputText type="text" class="form-control" value="#{shopBean.selectedShop.businessHours_start_5}" a:data-mask="99:99">
+								                             	
+								                             </h:inputText>
+								                             <span class="input-group-addon">bis</span>
+								                             <h:inputText type="text" class="form-control"  value="#{shopBean.selectedShop.businessHours_end_5}" a:data-mask="99:99">
+								                            	 
+								                             </h:inputText>
+							                         </div>
+							                     </div>
+											</div>
+										</div>
+									</div>
+									
+									<div class="form-group">
+										<div class="col-sm-10 col-sm-offset-2">
+											<div class="row">
+												<label class="col-sm-2 control-label">Sonntag</label>
+												<div class="col-sm-10" >
+							                         <div class="input-timerange input-group">
+								                             <h:inputText type="text" class="form-control" value="#{shopBean.selectedShop.businessHours_start_6}" a:data-mask="99:99">
+								                             	
+								                             </h:inputText>
+								                             <span class="input-group-addon">bis</span>
+								                             <h:inputText type="text" class="form-control" value="#{shopBean.selectedShop.businessHours_end_6}"  a:data-mask="99:99">
+								                             
+								                             </h:inputText>
+							                         </div>
+							                     </div>
+											</div>
+										</div>
+									</div>
+									
+									<div class="hr-line-dashed"></div>
+									
+									<ui:fragment rendered="#{shopBean.selectedShop.id gt 0}">
+									<div class="form-group">
+										<label class="col-sm-2 control-label">WaWi</label>
+										<div class="col-sm-10">
+											<div class="row">
+												<label class="col-sm-4 control-label">aktuelle Rechnungs Nr.</label>
+												<div class="col-sm-4" >
+													<h:inputText type="text" class="form-control" value="#{shopBean.selectedShopDocNumberRanges.invoiceNumber}" >
+														<f:validateRequired />
+								                     </h:inputText>
+							                     </div>
+											</div>
+										</div>
+									</div>
+									
+									<div class="form-group">
+										<label class="col-sm-2 control-label"></label>
+										<div class="col-sm-10">
+											<div class="row">
+												<label class="col-sm-4 control-label">aktuelle Bestellungs Nr.</label>
+												<div class="col-sm-4" >
+													<h:inputText type="text" class="form-control" value="#{shopBean.selectedShopDocNumberRanges.orderNumber}" >
+														<f:validateRequired />
+								                     </h:inputText>
+							                     </div>
+											</div>
+										</div>
+									</div>
+									
+									<div class="form-group">
+										<label class="col-sm-2 control-label"></label>
+										<div class="col-sm-10">
+											<div class="row">
+												<label class="col-sm-4 control-label">aktuelle Lieferschein Nr.</label>
+												<div class="col-sm-4" >
+													<h:inputText type="text" class="form-control" value="#{shopBean.selectedShopDocNumberRanges.pickslipNumber}" >
+														<f:validateRequired />
+								                     </h:inputText>
+							                     </div>
+											</div>
+										</div>
+									</div>
+									
+									</ui:fragment>
+									
+									<div class="form-group">
+										<label class="col-sm-2 control-label"></label>
+										<div class="col-sm-10">
+											<div class="row">
+												<label class="col-sm-2 control-label">Absender Zeile</label>
+												<div class="col-sm-10" >
+													<h:inputText type="text" class="form-control" value="#{shopBean.selectedShop.drafterLine}" >
+								                     </h:inputText>
+							                     </div>
+											</div>
+										</div>
+									</div>
+									
+									<div class="form-group">
+										<label class="col-sm-2 control-label"></label>
+										<div class="col-sm-10">
+											<div class="row">
+												<label class="col-sm-2 control-label">Dokument Footer Zeile 1</label>
+												<div class="col-sm-10" >
+													<h:inputText type="text" class="form-control" value="#{shopBean.selectedShop.docFooterLine1}" >
+								                     </h:inputText>
+							                     </div>
+											</div>
+										</div>
+									</div>
+									
+									<div class="form-group">
+										<label class="col-sm-2 control-label"></label>
+										<div class="col-sm-10">
+											<div class="row">
+												<label class="col-sm-2 control-label">Dokument Footer Zeile 2</label>
+												<div class="col-sm-10" >
+													<h:inputText type="text" class="form-control" value="#{shopBean.selectedShop.docFooterLine2}" >
+								                     </h:inputText>
+							                     </div>
+											</div>
+										</div>
+									</div>
+									
+									<div class="form-group">
+										<label class="col-sm-2 control-label"></label>
+										<div class="col-sm-10">
+											<div class="row">
+												<label class="col-sm-2 control-label">Dokument Footer Zeile 3</label>
+												<div class="col-sm-10" >
+													<h:inputText type="text" class="form-control" value="#{shopBean.selectedShop.docFooterLine3}" >
+								                     </h:inputText>
+							                     </div>
+											</div>
+										</div>
+									</div>
+									
+									<div class="hr-line-dashed"></div>
+									
+									<div class="form-group">
+										<label class="col-sm-2 control-label">Crosscan</label>
+										<div class="col-sm-10">
+											<div class="row">
+												<label class="col-sm-2 control-label">Auth ID</label>
+												<div class="col-sm-10" >
+													<h:inputText type="text" class="form-control" value="#{shopBean.selectedShop.crosscanData_authID}" >
+								                     </h:inputText>
+							                     </div>
+											</div>
+										</div>
+									</div>
+									
+									<div class="form-group">
+										<label class="col-sm-2 control-label"></label>
+										<div class="col-sm-10">
+											<div class="row">
+												<label class="col-sm-2 control-label">Shop ID</label>
+												<div class="col-sm-10" >
+													<h:inputText type="text" class="form-control" value="#{shopBean.selectedShop.crosscanData_storeID}" >
+								                     </h:inputText>
+							                     </div>
+											</div>
+										</div>
+									</div>
+									
+		                </div>
+	               </h:form>
+	               </div>
+               </div>
+               
+               <div class="col-lg-3">
+		            <div class="ibox float-e-margins">
+						<h:form class="form-horizontal" id="imageForm" enctype="multipart/form-data">
+		                <div class="ibox-title">
+		                    <h5>Filial Bild</h5>
+		                </div>
+			                <div class="ibox-content text-center">
+			                
+								<img alt="" src="#{shopBean.selectedShop.shopImage.URI}" style="width: 150px;height: 150px;" />
+														
+								  <h:inputFile id="imageUpload" value="#{shopBean.newShopImage}">
+								  		<f:ajax event="change" render="shopPage messages" />
+								  </h:inputFile>
+							</div>
+						</h:form>
+					</div>
+					
+		            <div class="ibox float-e-margins">
+		                <div class="ibox-title">
+		                    <h5>Filial VOs</h5>
+		                </div>
+		                <div class="ibox-content no-padding">
+	                        <ul class="list-group">
+	                        	<ui:repeat var="vo" value="#{shopBean.selectedShop.shopVOList}">
+	                        		<ui:fragment rendered="#{not vo.deleted}">
+			                            <li class="list-group-item">
+			                                <span class="pull-right"><h:outputText value="#{vo.number}" /></span>
+			                                <h:outputText value="#{vo.name}" />
+			                            </li>
+		                            </ui:fragment>
+	                        	</ui:repeat>
+	                        </ul>
+	                    </div>
+					</div>
+					
+		            <div class="ibox float-e-margins">
+		            	<h:form id="voPermissionList">
+		                <div class="ibox-title">
+		                    <h5>VO Erlaubnis</h5>
+		                    <div class="ibox-tools">
+		                    
+		                    <h:selectOneMenu 
+										value="#{shopBean.selectedVO}"
+										a:data-placeholder="VO wählen ..."
+										class="chosen-select-xs"
+										converter="#{vOConverter}"
+										rendered="#{shopBean.shopVOPermissionListEditable}">
+										<f:selectItem itemValue="" itemLabel=""/>
+										<f:selectItems value="#{shopBean.getAvailableShopPermissionVOList()}" var="vo"
+											itemValue="#{vo}" itemLabel="#{vo.name}" />
+									</h:selectOneMenu>
+									
+									<h:commandLink action="#{shopBean.addVOToShopPermission()}" class="btn btn-xs btn-primary " rendered="#{shopBean.shopVOPermissionListEditable}">
+										<f:ajax execute="@form" render="voPermissionList messages" onevent="function(data) { if (data.status === 'success') { loadChosenElements(); } }"/>
+										<i class="fa fa-plus"></i>
+								    </h:commandLink>
+								    
+								    <h:commandLink  class="btn btn-xs btn-primary "  action="#{shopBean.toggleShopVOPermissionListEditable()}" rendered="#{shopBean.shopVOPermissionListEditable}">
+									   <f:ajax render="voPermissionList"/>
+									   <i class="fa fa-times"></i>
+									</h:commandLink>
+								    <h:commandLink  class="btn btn-xs btn-primary " action="#{shopBean.toggleShopVOPermissionListEditable()}"  rendered="#{not shopBean.shopVOPermissionListEditable}">
+									   <f:ajax render="voPermissionList"  onevent="function(data) { if (data.status === 'success') { loadChosenElements(); } }"/>
+									   <i class="fa fa-pencil"></i>
+									</h:commandLink>
+		                    </div>
+		                </div>
+		                <div class="ibox-content no-padding">
+	                        <ul class="list-group">
+	                        	<ui:repeat var="vo" value="#{shopBean.selectedShop.shopVOPermissionList}">
+		                            <li class="list-group-item">
+		                                <span class="pull-right">
+		                                	<h:outputText value="#{vo.number}" />
+			                                <h:commandLink action="#{shopBean.removeVOFromShopPermission(vo)}" class="btn btn-xs btn-danger " rendered="#{shopBean.shopVOPermissionListEditable}">
+											   	<i class="fa fa-trash"></i>
+						                	</h:commandLink>
+		                                </span>
+		                                <h:outputText value="#{vo.name}" />
+				 
+					                	
+		                            </li>
+	                        	</ui:repeat>
+	                        </ul>
+	                    </div>
+	                    </h:form>
+					</div>
+				</div>
+               
+            </div>
+
+
+
+		<h:outputScript>
+		
+			function updateImageUploadButton(data){
+				if(data.status == "success"){
+					initImageUploadButton();
+				}
+			}
+		
+			function initImageUploadButton(){
+				$('#imageForm\\:imageUpload').before('<a type="button" class="btn btn-xs btn-primary" id="imageUploadButton" ><i class="fa fa-plus"></i> Bild</a>');
+				$('#imageForm\\:imageUpload').hide();
+				$('body').on('click', '#imageUploadButton', function() { 
+				    $('#imageForm\\:imageUpload').trigger('click');    
+				});
+			}
+			
+			$(document).ready(function () {
+				initImageUploadButton();
+			});
+		</h:outputScript>
+
+		</h:panelGroup>
+		</ui:define>
+
+
+	</ui:composition>
+</h:body>
+</html>

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	  xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:body>
+
+	<ui:composition template="/WEB-INF/template/common/commonLayout.xhtml">
+
+		<ui:param name="heading1" value="Zahlungsart" />
+
+
+		<ui:define name="content">
+
+			<h:panelGroup id="paymentPage">
+		            <div class="ibox float-e-margins">
+					<h:form id="paymentForm" class="form-horizontal">
+		                <div class="ibox-title">
+		                    <h5>Details</h5>
+		                    <div class="ibox-tools">
+										<h:commandLink class="btn btn-xs btn-danger confirm-btn" action="#{paymentBean.deletePayment}" immediate="true" rendered="#{paymentBean.selectedPayment.id gt 0}">
+											<i class="fa fa-trash"></i>
+									    </h:commandLink>
+								    <h:commandLink  class="btn btn-xs btn-primary " action="#{paymentBean.savePayment}">
+									   <f:ajax execute="@form" render="paymentForm" onevent="updatePluginsEvent"/>
+									   <i class="fa fa-save"></i>
+									</h:commandLink>
+										<h:commandLink action="paymentList" class="btn btn-xs btn-primary " immediate="true" >
+											<i class="fa fa-times"></i>
+									    </h:commandLink>
+		                    </div>
+		                </div>
+		                <div class="ibox-content">
+									<div class="form-group">
+										<label class="col-sm-2 control-label">Name</label>
+										<div class="col-sm-10">
+											<h:inputText id="name" value="#{paymentBean.selectedPayment.name}" class="form-control #{ component.valid ? '' : 'error'}"
+											validatorMessage="Name erforderlich (mind. 2 Zeichen)"  disabled="#{paymentBean.selectedPayment.systemPayment}">
+												<f:validateLength minimum="2" maximum="255"/>
+											</h:inputText>
+										<h:messages for="name"  />
+										</div>
+									</div>
+									
+									<div class="form-group">
+										<label class="col-sm-2 control-label">Aktiv</label>
+										<div class="col-sm-10">
+											<h:selectBooleanCheckbox class="i-checks" value="#{paymentBean.selectedPayment.enabled}" />
+										</div>
+									</div>
+									
+									<div class="form-group">
+										<label class="col-sm-2 control-label">Bezeichnung</label>
+										<div class="col-sm-10">
+											<h:inputText id="description" value="#{paymentBean.selectedPayment.description}" class="form-control #{ component.valid ? '' : 'error'}"
+											validatorMessage="Bezeichnung erforderlich (mind. 2 Zeichen)" >
+												<f:validateLength minimum="2" maximum="255"/>
+											</h:inputText>
+										<h:messages for="description"  />
+										</div>
+									</div>
+									
+									<div class="form-group">
+										<label class="col-sm-2 control-label">Zahlungsziel (Tage)</label>
+										<div class="col-sm-10">
+											<h:inputText id="termOfPayment" value="#{paymentBean.selectedPayment.termOfPayment}" class="form-control #{ component.valid ? '' : 'error'}"
+											validatorMessage="Bezeichnung erforderlich (mind. 2 Zeichen)" >
+												<f:convertNumber maxFractionDigits="0" minFractionDigits="0" />
+											</h:inputText>
+										<h:messages for="termOfPayment"  />
+										</div>
+									</div>
+									
+									<div class="form-group">
+										<label class="col-sm-2 control-label">Rechnungstext</label>
+										<div class="col-sm-10">
+											<h:inputTextarea rows="10" id="invoiceText" value="#{paymentBean.selectedPayment.invoiceText}" class="form-control #{ component.valid ? '' : 'error'}" >
+											</h:inputTextarea>
+										</div>
+									</div>
+									
+									
+									
+		                </div>
+	               </h:form>
+	               </div>
+               
+               
+
+
+
+		</h:panelGroup>
+		</ui:define>
+
+
+	</ui:composition>
+</h:body>
+</html>

@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+		xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:f="http://java.sun.com/jsf/core"	
+	xmlns:c="http://java.sun.com/jstl/core"	
+	xmlns:p="http://primefaces.org/ui">
+
+<h:body>
+
+	<f:metadata>
+		<f:event listener="#{FEPluginBean.includeChosen}" type="preRenderComponent"></f:event>
+		<f:event listener="#{FEPluginBean.includeFullCalendar}" type="preRenderComponent"></f:event>
+		<f:event listener="#{FEPluginBean.includeDatepicker}" type="preRenderComponent"></f:event>
+	</f:metadata>
+
+	<ui:composition template="/WEB-INF/template/common/commonLayout.xhtml">
+	
+		<ui:define name="script">
+			<h:outputScript library="plugins" name="fullcalendar/moment.min.js"  />
+			<h:outputScript library="plugins" name="fullcalendar_year/fullcalendar.js"  />
+			<h:outputScript library="plugins" name="fullcalendar_year/de.js"  />
+			<h:outputScript library="plugins" name="fullcalendar/calendar.js"  />
+		</ui:define>
+
+
+		<ui:param name="bodyClass" value="right-sidebar-closed force-right-sidebar-closed" />
+		<ui:param name="heading1" value="Jahres Übersicht" />
+		
+		
+		<ui:define name="content">
+		
+		<h:panelGroup id="pageContent">
+		
+		<div class="row calendarContent">
+			
+			<div class="col-lg-12">
+			
+		            <div class="ibox float-e-margins">
+		                <div class="ibox-content">
+		                	<div class="fc-toolbar">
+		                						
+		                				<div class="fc-right">
+		                					<div class="fc-button-group">
+		                						<button type="button" onclick="prevCalendarTimeSpan();" class="fc-prev-button fc-button fc-state-default fc-corner-left"><span class="fc-icon fc-icon-left-single-arrow"></span></button>
+		                						<button type="button" onclick="nextCalendarTimeSpan();" class="fc-next-button fc-button fc-state-default fc-corner-right"><span class="fc-icon fc-icon-right-single-arrow"></span></button>
+		                						<button type="button" onclick="todayCalendarTimeSpan();" class="fc-today-button fc-button fc-state-default fc-corner-left fc-corner-right">heute</button>
+		                					</div>
+		                				</div>
+		                				<div class="fc-center">
+		                					<h2 class="calendarDuration"></h2>
+		                				</div>
+		                				<div class="fc-clear"></div></div>
+		                				
+		                				
+		                    		<div id="calendar_#{propertyBean.yearViewCalendarId}" class="calendar"  data-shopid="#{propertyBean.yearViewCalendarId}" data-editable="false" data-defaultview="year">
+		                    			<ui:repeat var="user" value="#{userBean.userList}">
+		                    				<div class="user" data-userid="#{user.uuid}" data-color="#{user.color}"></div>
+										</ui:repeat>
+										<div class="user" data-userid="0" data-holiday="true"></div>
+		                    		</div>
+		                </div>
+		            </div>
+	            
+	        </div>
+	            
+	            
+	            
+			
+	            
+	    </div>
+        
+
+        </h:panelGroup>
+		
+	
+	
+        	<ui:include src="/WEB-INF/include/calendar/eventModal.xhtml" />
+        	<ui:include src="/WEB-INF/include/calendar/calendarDraggableListForm.xhtml" />
+
+
+
+<script>
+
+$(document).ready(function() {
+
+	$('#calendar').fullCalendar({
+		header: {
+			left: 'prev,next today',
+			center: 'title',
+			right: 'year,month,agendaWeek,agendaDay'
+		},
+		defaultDate: '2015-01-12',
+		defaultView: 'year',
+		yearColumns: 3,
+		selectable: true,
+		selectHelper: true,
+		select: function(start, end) {
+			var title = prompt('Event Title:');
+			var eventData;
+			if (title) {
+				eventData = {
+					title: title,
+					start: start,
+					end: end
+				};
+				$('#calendar').fullCalendar('renderEvent', eventData, true); // stick? = true
+			}
+			$('#calendar').fullCalendar('unselect');
+		},
+		firstDay: 0,
+		editable: true,
+		eventLimit: true, // allow "more" link when too many events
+		events: [
+			{
+				title: 'Long event',
+				start: '2015-01-07',
+				end: '2015-01-10'
+			},
+			{
+				title: 'Background Yearview Dev',
+				start: '2015-01-04',
+				end: '2015-01-19',
+				rendering: 'background'
+			},
+			{
+				id: 999,
+				title: 'Repeating Event',
+				start: '2015-01-09T16:00:00'
+			},
+			{
+				id: 999,
+				title: 'Repeating Event',
+				start: '2015-01-16T16:00:00'
+			},
+			{
+				title: 'Long over months',
+				start: '2015-01-29',
+				end: '2015-02-02'
+			},
+			{
+				title: 'All Day Event',
+				start: '2015-03-01'
+			},
+			{
+				title: 'Conference',
+				start: '2015-11-11',
+				end: '2015-11-13'
+			},
+			{
+				title: 'Meeting',
+				start: '2015-11-12T10:30:00',
+				end: '2015-11-12T12:30:00'
+			},
+			{
+				title: 'Lunch',
+				start: '2015-11-12T12:00:00'
+			},
+			{
+				title: 'Meeting',
+				start: '2015-11-12T14:30:00'
+			},
+			{
+				title: 'Happy Hour',
+				start: '2014-11-12T17:30:00'
+			},
+			{
+				title: 'Dinner',
+				start: '2014-11-12T20:00:00'
+			},
+			{
+				title: 'Birthday Party',
+				start: '2014-11-13T07:00:00'
+			},
+			{
+				title: 'Click for Google',
+				url: 'http://google.com/',
+				start: '2015-03-28'
+			}
+		]
+	});
+
+});
+
+</script>
+
+
+
+		</ui:define>
+
+
+
+	</ui:composition>
+</h:body>
+</html>

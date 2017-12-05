@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+	<ui:composition>
+	        <div class="pull-right">
+	        	<span>AppVersion: <strong>#{propertyBean.appVerson}</strong></span>
+	        	<span class="spacer"></span>
+	        	<span>DBVersion: <strong>#{propertyBean.DBVerson}</strong></span>
+	        	<ui:fragment rendered="#{permissionBean.hasPermission('file','read')}">
+		        	<span class="spacer"></span>
+		        	<span class="#{fileBean.isStorageLimitExceeded() ? 'text-red' : ''}">Speicher: <strong>#{helperBean.getFileSize(fileBean.fileConsumption)} / #{helperBean.getFileSize(fileBean.storageLimit)}</strong></span>
+	        	</ui:fragment>
+            </div>
+            <div>
+                <strong>Copyright</strong> Dennis Knopp © 2015
+            </div>
+	</ui:composition>
+</html>

@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+		xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:f="http://java.sun.com/jsf/core"	
+	xmlns:p="http://primefaces.org/ui">
+
+<h:body>
+	<ui:composition >
+
+<div class="modal inmodal" id="eventModal" tabindex="-1" role="dialog" aria-hidden="true" style="display: none;">
+	
+	    <div class="modal-dialog">
+	        <div class="modal-content animated fadeIn">
+	        	<h:form id="eventModalForm"  class="form-horizontal">
+	        	
+	        	
+	        	
+	        		<h:inputText id="reloadAllEvents" value="#{eventBean.reloadAllEvents}" class="hide" />
+		        	<h:inputText id="calendarId" value="#{eventBean.selectedCalendarId}" class="hide" />
+		        	<h:inputText id="eventId" value="#{eventBean.selectedEventUuid}" class="hide" />
+		        	<h:inputText id="eventTmpId" value="#{eventBean.tempEventUuid}" class="hide" />
+					<h:commandButton id="loadEventBtn" value="load" action="#{eventBean.loadSelectedEvent}" class="hide">
+						<f:ajax execute="calendarId eventId eventTmpId" render="eventModalForm" onevent="updatePluginsEvent" />
+					</h:commandButton>
+        			<h:outputText id="global_flag_validation_failed" value="true" rendered="#{facesContext.validationFailed}" class="hide"/>
+					
+	        	
+			        <h:panelGroup rendered="#{calendarBean.calendarEditable and permissionBean.hasPermission('calendar','edit')}">
+			        	<span class="hide alertField">#{eventBean.alert}</span>
+			        	<span class="hide warningField">#{eventBean.warning}</span>
+			        	<span class="hide causeField">#{eventBean.cause}</span>
+			        	<span class="hide userNameField">#{eventBean.selectedEvent.user.name}</span>
+			        	<span class="hide shopNameField">#{eventBean.selectedEvent.shop.name}</span>
+			        	<span class="hide eventTypeField">#{eventBean.selectedEvent.eventType.title}</span>
+			        	<span class="hide effectiveDateField">
+			        		<h:outputText value="#{eventBean.selectedEvent.effectiveDate}" >
+								<f:convertDateTime pattern="yyyy-MM-dd'T'HH:mm:ss.SSSXXX" timeZone="CET" />
+			        		</h:outputText>
+			        	</span>
+			        	<span class="hide expiryDateField">
+			        		<h:outputText value="#{eventBean.selectedEvent.expiryDate}" >
+								<f:convertDateTime pattern="yyyy-MM-dd'T'HH:mm:ss.SSSXXX" timeZone="CET" />
+			        		</h:outputText>
+			        	</span>
+			        	
+			        	<h:inputText id="eventTypeShortName" binding="#{eventBean.selectedEventTypeShortNameInput}" value="#{eventBean.selectedEventTypeShortName}" class="hide" />
+			        	<h:inputText id="shopId" value="#{eventBean.selectedEventShopUuid}" class="hide" />
+						<h:inputText id="userId" value="#{eventBean.selectedEventUserUuid}" class="hide" >
+							<f:ajax event="change" render="newEventModalHead" onevent="updatePluginsEvent"  />
+						</h:inputText>
+						<h:inputText value="#{eventBean.selectedEvent.title}" class="hide" />
+						<h:inputText id="effectiveDate" value="#{eventBean.selectedEvent.effectiveDate}" class="hide" >
+							<f:convertDateTime pattern="dd.MM.yyyy HH:mm:ss" timeZone="CET" />
+							<f:ajax event="change" render="effectiveTime expiryTime" onevent="updatePluginsEvent"  />
+						</h:inputText>
+						<h:inputText id="expiryDate" value="#{eventBean.selectedEvent.expiryDate}" class="hide" >
+							<f:convertDateTime pattern="dd.MM.yyyy HH:mm:ss" timeZone="CET" />
+							<f:ajax event="change" render="effectiveTime expiryTime" onevent="updatePluginsEvent"  />
+						</h:inputText>
+					</h:panelGroup>
+	            <div class="modal-header">
+	            	<h:panelGroup id="newEventModalHead">
+		                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+		                <i class="fa fa-clock-o modal-icon"></i>
+		                <h4 class="modal-title">Termin für #{eventBean.selectedEvent.user.name}</h4>
+	                </h:panelGroup>
+	            </div>
+	            <div class="modal-body">
+	            
+	            
+	            	<h:panelGroup rendered="#{ not calendarBean.selectedEventEditable}">
+		            	<div class="row">
+		            		<div class="col-lg-4">Mitarbeiter: </div>
+		            		<div class="col-lg-8"><h:outputText value="#{eventBean.selectedEvent.user.name}" /></div>
+		            	</div>
+		            	<div class="row">
+		            		<div class="col-lg-4">Filiale: </div>
+		            		<div class="col-lg-8">
+		            			<h:outputText value="#{eventBean.selectedEvent.shop.name}" rendered="#{ not empty eventBean.selectedEvent.shop}" />
+		            			<h:outputText value="Außer Haus" rendered="#{ empty eventBean.selectedEvent.shop}" />
+		            		</div>
+		            	</div>
+		            	<div class="row">
+		            		<div class="col-lg-4">Zeitraum: </div>
+		            		<div class="col-lg-8">
+		            		
+		            			<h:outputText value="#{eventBean.selectedEvent.effectiveDate}" rendered="#{eventBean.selectedEvent.allDay and eventBean.selectedEvent.singleDay}" >
+									<f:convertDateTime pattern="dd.MM.yyyy" timeZone="CET" />
+		            			</h:outputText>
+		            			
+		            			<h:panelGroup rendered="#{eventBean.selectedEvent.allDay and not eventBean.selectedEvent.singleDay}">
+			            			<h:outputText value="#{eventBean.selectedEvent.effectiveDate}" >
+										<f:convertDateTime pattern="dd.MM.yyyy" timeZone="CET" />
+			            			</h:outputText> 
+			            			-
+			            			<h:outputText value="#{eventBean.selectedEvent.expiryDate}" >
+										<f:convertDateTime pattern="dd.MM.yyyy" timeZone="CET" />
+			            			</h:outputText>
+		            			</h:panelGroup>
+		            		
+		            			<h:panelGroup rendered="#{not eventBean.selectedEvent.allDay}">
+			            			<h:outputText value="#{eventBean.selectedEvent.effectiveDate}" >
+										<f:convertDateTime pattern="dd.MM.yyyy HH:mm" timeZone="CET" />
+			            			</h:outputText> 
+			            			-
+			            			<h:outputText value="#{eventBean.selectedEvent.expiryDate}" >
+										<f:convertDateTime pattern="dd.MM.yyyy HH:mm" timeZone="CET" />
+			            			</h:outputText>
+		            			</h:panelGroup>
+		            		</div>
+		            	</div>
+		            	<h:panelGroup rendered="#{eventBean.selectedEvent.workingTime and eventBean.selectedEvent.singleDay}">
+			            	<div class="row">
+			            		<div class="col-lg-4">Arbeitszeit</div>
+			            		<div class="col-lg-8">
+			            			<h:outputText value="#{helperBean.minToString( eventBean.calculateWorkingTime( eventBean.selectedEvent) ) }"  />
+			            		</div>
+			            	</div>
+			            	<div class="row">
+			            		<div class="col-lg-4">Pause</div>
+			            		<div class="col-lg-8">
+			            			<h:panelGroup rendered="#{eventBean.selectedEvent.pauseLength gt 0}">
+			            				<h:outputText value="#{eventBean.selectedEvent.pauseLength}" /> min
+			            			</h:panelGroup>
+			            			<h:panelGroup rendered="#{eventBean.selectedEvent.pauseLength lt 1}">
+			            				<h:outputText value="keine" /> 
+			            			</h:panelGroup>
+			            		</div>
+			            	</div>
+			            </h:panelGroup>
+		            	<div class="row">
+		            		<div class="col-lg-4">Notizen</div>
+		            		<div class="col-lg-8">
+		            			<h:outputText value="#{eventBean.selectedEvent.note}" />
+		            		</div>
+		            	</div>
+	            	</h:panelGroup>
+	            	
+	            	<h:panelGroup rendered="#{ calendarBean.selectedEventEditable}">
+	            	
+	            	<h:messages />
+		            
+		            	<h:panelGroup rendered="#{eventBean.selectedEventTypeChangeable}">
+				            <div class="form-group">
+								<label class="col-lg-2 control-label">Event Typ</label>
+								<div class="col-lg-10" >
+									<h:selectOneMenu id="eventType"
+										value="#{eventBean.selectedEvent.eventType}" 
+										validatorMessage="Bitte Event Typ wählen!"
+										a:data-placeholder="Event Typ wählen ..."
+											class="chosen-select-full-width form-control" 
+											validator="#{eventBean.validateEventType}"
+											converter="#{eventTypeShortNameConverter}" >
+									<f:selectItem itemValue="" itemLabel=""/>
+									<f:selectItems value="#{eventBean.selectableEventTypeList}" var="eventType" itemValue="#{eventType}" itemLabel="#{eventType.shortName} - #{eventType.title}" />
+									<f:ajax event="change" listener="#{eventBean.presetSelectedEventTime}" render="eventModalForm" onevent="updatePluginsEvent" />
+									</h:selectOneMenu>
+									<h:messages for="eventType"  />
+								</div>
+								
+							</div>
+						</h:panelGroup>
+		            
+			            <div class="form-group">
+							<label class="col-lg-2 control-label">ganztägig</label>
+							<div class="col-lg-10">
+								<h:panelGroup  id="allDayWrapper">
+								<h:selectBooleanCheckbox id="allDay" class="i-checks" value="#{eventBean.selectedEvent.allDay}" >
+									<f:ajax event="change" listener="#{eventBean.updatePauseLength}" render="timeGroup workingTimeGroup" onevent="updatePluginsEvent"  />
+								</h:selectBooleanCheckbox>
+								</h:panelGroup>
+							</div>
+						</div>
+		            
+		            	<h:panelGroup id="timeGroup">
+			            <div class="form-group #{eventBean.selectedEvent.allDay ? 'hide' : '' }">
+							<label class="col-lg-2 control-label">Zeitraum</label>
+							<div class="col-lg-10">
+								<div class="input-timerange input-group">
+									<h:inputText id="effectiveTime" autocomplete="off" class="form-control" value="#{eventBean.selectedEvent.effectiveDate}" a:data-mask="99:99" disabled="#{eventBean.selectedEvent.allDay}">
+										<f:convertDateTime pattern="HH:mm" timeZone="CET" />
+										<f:ajax event="keyup" listener="#{eventBean.updatePauseLength}" render="effectiveDate expiryDate workingTimeGroup" onevent="updatePluginsEvent"  />
+		                             </h:inputText>
+		                             <span class="input-group-addon">bis</span>
+		                             <h:inputText id="expiryTime" autocomplete="off" class="form-control" value="#{eventBean.selectedEvent.expiryDate}" a:data-mask="99:99" disabled="#{eventBean.selectedEvent.allDay}">
+		                            	<f:convertDateTime pattern="HH:mm" timeZone="CET" />
+										<f:ajax event="keyup" listener="#{eventBean.updatePauseLength}" render="effectiveDate expiryDate workingTimeGroup" onevent="updatePluginsEvent"  /> 
+		                             </h:inputText>
+	                             </div>
+							</div>
+						</div>
+			            <div class="form-group #{eventBean.selectedEvent.allDay and eventBean.selectedEvent.eventType.shortName eq 'K' ? '' : 'hide' }">
+							<label class="col-lg-2 control-label">Zeitraum</label>
+							<div class="col-lg-10">
+								<div class="input-timerange input-group">
+									<h:inputText id="effectiveDate2" autocomplete="off" class="form-control" value="#{eventBean.selectedEvent.effectiveDate}" a:data-mask="99.99.9999" disabled="#{eventBean.selectedEvent.allDay and not eventBean.selectedEvent.eventType.shortName eq 'K'}">
+										<f:convertDateTime pattern="dd.MM.yyyy" timeZone="CET" />
+										<f:ajax event="keyup" listener="#{eventBean.updatePauseLength}" render="effectiveDate expiryDate workingTimeGroup" onevent="updatePluginsEvent"  />
+		                             </h:inputText>
+		                             <span class="input-group-addon">bis</span>
+		                             <h:inputText id="expiryDate2" autocomplete="off" class="form-control" value="#{eventBean.selectedEvent.expiryDate}" a:data-mask="99.99.9999" disabled="#{eventBean.selectedEvent.allDay and not eventBean.selectedEvent.eventType.shortName eq 'K'}">
+		                            	<f:convertDateTime pattern="dd.MM.yyyy" timeZone="CET" />
+										<f:ajax event="keyup" listener="#{eventBean.updatePauseLength}" render="effectiveDate expiryDate workingTimeGroup" onevent="updatePluginsEvent"  /> 
+		                             </h:inputText>
+	                             </div>
+							</div>
+						</div>
+						</h:panelGroup>
+		            
+			            <div class="form-group">
+							<label class="col-lg-2 control-label">Arbeitszeit</label>
+							<div class="col-lg-2">
+								<h:selectBooleanCheckbox id="workingTime" class="i-checks" value="#{eventBean.selectedEvent.workingTime}" >
+									<f:ajax event="change" render="workingTimeGroup" onevent="updatePluginsEvent"  />
+								</h:selectBooleanCheckbox>
+							</div>
+							
+							<h:panelGroup id="workingTimeGroup">
+								<h:panelGroup rendered="#{eventBean.selectedEvent.workingTime}">
+					            		<div class="col-lg-3">
+					            			<p class="form-control-static">
+						            			<h:outputText value="#{helperBean.minToString( eventBean.calculateWorkingTime( eventBean.selectedEvent) )}" />
+					            			</p>
+					            		</div>
+					            		<label class="col-lg-2 control-label">Pause:</label>
+					            		<div class="col-lg-3">
+					            			<p class="form-control-static">
+						            			<h:panelGroup rendered="#{eventBean.selectedEvent.pauseLength gt 0}">
+						            				<h:outputText value="#{eventBean.selectedEvent.pauseLength}" /> min
+						            			</h:panelGroup>
+						            			<h:panelGroup rendered="#{eventBean.selectedEvent.pauseLength lt 1}">
+						            				<h:outputText value="keine" /> 
+						            			</h:panelGroup>
+					            			</p>
+					            		</div>
+						        </h:panelGroup>
+					        </h:panelGroup>
+							
+						</div>
+						
+		            
+			            <div class="form-group">
+							<label class="col-lg-2 control-label">Notizen</label>
+							<div class="col-lg-10">
+								<h:inputTextarea id="note" value="#{eventBean.selectedEvent.note}" class="form-control" />
+							</div>
+						</div>
+						
+						
+		            	<ui:fragment rendered="#{not empty eventBean.selectedEvent.eventType and eventBean.selectedEvent.eventType.shortName eq 'K' and empty eventBean.selectedEventUuid}">
+				            <div class="form-group">
+								<label class="col-lg-2 control-label">Andere Termine entfernen?</label>
+								<div class="col-lg-10">
+									<h:selectBooleanCheckbox id="deleteOtherEvents" class="i-checks" value="#{eventBean.deleteOtherEvents}" />
+								</div>
+							</div>
+						</ui:fragment>
+						
+						
+		            	<div class="row">
+		                   <div class="col-lg-12">
+		                        <div id="copyEventFormGroup" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">
+		                        
+		                        	<div class="hr-line-dashed"></div>
+		                        	
+	                            	<div class="form-group">
+										<label class="col-lg-2 control-label">Termin kopieren</label>
+										<div class="col-lg-1">
+											<h:selectBooleanCheckbox id="cb_copyEventToMonday" class="i-checks copyEventCheckbox" value="#{eventBean.copyEventToMonday}" />
+											Mo
+										</div>
+										<div class="col-lg-1">
+											<h:selectBooleanCheckbox id="cb_copyEventToTuesday" class="i-checks copyEventCheckbox" value="#{eventBean.copyEventToTuesday}" />
+											Di
+										</div>
+										<div class="col-lg-1">
+											<h:selectBooleanCheckbox id="cb_copyEventToWednesday" class="i-checks copyEventCheckbox" value="#{eventBean.copyEventToWednesday}" />
+											Mi
+										</div>
+										<div class="col-lg-1">
+											<h:selectBooleanCheckbox id="cb_copyEventToThursday" class="i-checks copyEventCheckbox" value="#{eventBean.copyEventToThursday}" />
+											Do
+										</div>
+										<div class="col-lg-1">
+											<h:selectBooleanCheckbox id="cb_copyEventToFriday" class="i-checks copyEventCheckbox" value="#{eventBean.copyEventToFriday}" />
+											Fr
+										</div>
+										<div class="col-lg-1">
+											<h:selectBooleanCheckbox id="cb_copyEventToSaturday" class="i-checks copyEventCheckbox" value="#{eventBean.copyEventToSaturday}" />
+											Sa
+										</div>
+										<div class="col-lg-1">
+											<h:selectBooleanCheckbox id="cb_copyEventToSunday" class="i-checks copyEventCheckbox" value="#{eventBean.copyEventToSunday}" />
+											So
+										</div>
+							
+									</div>
+									
+									
+									
+									<div class="form-group">
+										<label class="col-lg-2 control-label">bis</label>
+										<div class="col-lg-10">
+											<div class="input-group date ">
+                                   				<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+												<h:inputText  id="date_copyEventTill" converterMessage="Endzeit konnte nicht als Datum interpretiert werden." autocomplete="off" class="form-control datepicker" value="#{eventBean.copyEventTill}" >
+													<f:convertDateTime pattern="dd.MM.yyyy" timeZone="CET" />
+					                            </h:inputText>
+				                            </div>
+										</div>
+									</div>
+	                        	</div>
+	                     	</div>
+	                     </div>
+					
+	            	</h:panelGroup>
+	            	
+	            </div>
+	            <div class="modal-footer">
+	            
+	            	<ui:fragment rendered="#{calendarBean.calendarEditable and permissionBean.hasPermission('calendar','edit') and calendarBean.selectedEventEditable}">
+		            	<a data-toggle="collapse" href="#copyEventFormGroup" class="collapsed btn btn-default" aria-expanded="false" onclick="$('#copyEventFormGroup .copyEventCheckbox').icheck('unchecked');">
+		            		kopieren
+		            	</a>
+	            	</ui:fragment>
+	            	
+					<h:commandButton id="saveEventBtn" class="btn btn-default" value="speichern" action="#{eventBean.saveSelectedEvent}" rendered="#{calendarBean.calendarEditable and permissionBean.hasPermission('calendar','edit') and calendarBean.selectedEventEditable}">
+						<f:ajax execute="calendarId eventTypeShortName eventId eventTmpId shopId userId effectiveDate expiryDate eventType allDay workingTime note deleteOtherEvents date_copyEventTill cb_copyEventToMonday cb_copyEventToTuesday cb_copyEventToWednesday cb_copyEventToThursday cb_copyEventToFriday cb_copyEventToSaturday cb_copyEventToSunday" render="eventModalForm messages" onevent="submitCalendarSaveEvent" onerror="refetchCalendarEvents" />
+					</h:commandButton>
+					
+					<h:commandButton id="deleteEventBtn" class="btn btn-danger" value="löschen" action="#{eventBean.deleteSelectedEvent}" rendered="#{not empty eventBean.selectedEventUuid and calendarBean.calendarEditable and permissionBean.hasPermission('calendar','edit')}">
+						<f:ajax execute="@this" render="eventModalForm messages" onevent="removeEvent" onerror="hideEventModalFetchEvents" />
+					</h:commandButton>
+					
+					
+					
+					<h:commandButton id="clearEventBtn" value="clear" action="#{eventBean.clearSelectedEvent}" class="hide">
+						<f:ajax execute="@this" />
+					</h:commandButton>
+					
+					<h:commandButton id="prepareNewEventBtn" value="prepare" class="hide" rendered="#{permissionBean.hasPermission('calendar','edit')}">
+						<f:ajax execute="calendarId eventTypeShortName eventId eventTmpId shopId userId effectiveDate expiryDate" render="eventModalForm" onevent="updatePluginsEvent" />
+					</h:commandButton>
+	            </div>
+	            </h:form>
+	        </div>
+	    </div>
+	</div>
+	
+
+	</ui:composition>
+</h:body>
+</html>

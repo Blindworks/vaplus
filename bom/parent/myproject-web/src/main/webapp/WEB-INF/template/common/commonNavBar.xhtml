@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:o="http://omnifaces.org/ui">
+	
+	<ui:composition>
+	
+	<h:outputScript>
+		var viewId = "menu_item#{fn:replace(fn:replace(view.viewId, '.xhtml', ''),'/','_')}";
+		
+	</h:outputScript>
+
+	<h:form id="navBarForm">
+		<ul class="nav" id="side-menu">
+		
+				
+		
+		
+		
+                <li class="nav-header">
+                    <div class="dropdown profile-element"> 
+                    		<span>
+                    		<ui:fragment rendered="#{empty userBean.activeUser.userImage}">
+                            	<img alt="image" class="img-circle" src="#{resource['common:img/profile.png']}" style="width:50px;height:50px;" />
+                            </ui:fragment>
+                    		<ui:fragment rendered="#{not empty userBean.activeUser.userImage}">
+                            	<img alt="image" class="img-circle" src="#{userBean.activeUser.userImage.URI}" style="width:50px;height:50px;" />
+                            </ui:fragment>
+                            </span>
+                        <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                            <span class="clear"> <span class="block m-t-xs"> <strong class="font-bold">#{userBean.activeUser.firstname} #{userBean.activeUser.lastname}</strong>
+                             </span> <span class="text-muted text-xs block">#{userBean.activeUser.jobTitle} <b class="caret"></b></span> </span> </a>
+                        
+                        <ul class="dropdown-menu animated fadeInRight m-t-xs">
+                            <li>
+                            	<h:link outcome="/user/changePassword" >Kennwort ändern</h:link>
+                            </li>
+                            <li class="divider"></li>
+                            <li>
+		                		<h:commandLink action="#{loginController.logout}" >abmelden</h:commandLink>
+		                	</li>
+                        </ul>
+                    </div>
+                    <div class="logo-element">
+                        VA+
+                    </div>
+                </li>
+                
+				
+				<ui:fragment rendered="#{permissionBean.hasPermission('cashRegister','read')}">
+
+					<li>
+		                	<a href="#">
+		                		<ui:fragment rendered="#{paymentBean.cashRegisterStatus}">
+			             			<i class="fa fa-fw fa-shopping-cart"></i>
+			             		</ui:fragment>
+			             		<ui:fragment rendered="#{not paymentBean.cashRegisterStatus}">
+			             			<i class="fa fa-fw fa-lock"></i>
+			             		</ui:fragment>
+		                	
+			             		<span class="nav-label">Kasse</span> <span class="fa arrow"></span>
+			             		
+		                	</a>
+		                    <ul class="nav nav-second-level collapse">
+		                    	<ui:fragment rendered="#{permissionBean.hasPermission('cashRegister','open') and not paymentBean.cashRegisterStatus}">
+					             <li id="menu_item_cashRegister_open">
+					                 <h:link outcome="/cashRegister/open" >
+				               	 		<i class="fa fa-unlock"></i>
+					             		<span class="nav-label">Kasse öffnen</span>
+				               	 	</h:link>
+					             </li>
+					             </ui:fragment>
+					             
+		                    	<ui:fragment rendered="#{permissionBean.hasPermission('cashRegister','close') and paymentBean.cashRegisterStatus}">
+					             <li id="menu_item_cashRegister_close">
+					                 <h:link outcome="/cashRegister/close" >
+				               	 		<i class="fa fa-lock"></i>
+					             		<span class="nav-label">Kasse schliessen</span>
+				               	 	</h:link>
+					             </li>
+					             </ui:fragment>
+					             
+					             <ui:fragment rendered="#{permissionBean.hasPermission('sale','create')}">
+					             <li id="menu_item_cashRegister_sale" >
+					                 <h:commandLink action="/cashRegister/sale"  actionListener="#{saleBean.newCashInvoice()}">
+				               	 		
+				               	 		<ui:fragment rendered="#{not paymentBean.cashRegisterStatus}">
+							               	<i class="fa fa-lock"></i>
+							            </ui:fragment>
+				               	 		
+				               	 		<ui:fragment rendered="#{paymentBean.cashRegisterStatus}">
+							               	<i class="fa fa-bank"></i>
+							            </ui:fragment>
+				               	 		
+				               	 		
+					             		<span class="nav-label">Verkauf</span>
+				               	 	</h:commandLink>
+					             </li>
+					             </ui:fragment>
+					        </ul>
+					 </li>
+
+
+		        </ui:fragment>
+				
+				
+                <ui:fragment rendered="#{customerBean.customer.id gt 0}">
+
+					<li>
+		                	<a href="#">
+			             			<i class="fa fa-fw fa-male"></i> 
+			             		<span class="nav-label">#{customerBean.customer.name}</span> <span class="fa arrow"></span>
+		                	</a>
+		                    <ul class="nav nav-second-level">
+					             <ui:fragment rendered="#{permissionBean.hasPermission('customer','read')}">
+					             <li id="menu_item_customer_profile" >
+					                 <h:link outcome="/customer/profile" >
+				               	 		<i class="fa fa-info"></i>
+					             		<span class="nav-label">Profil</span>
+				               	 	</h:link>
+					             </li>
+					             </ui:fragment>
+					             <ui:fragment rendered="#{permissionBean.hasPermission('customer','read')}">
+					             <li id="menu_item_customer_activities" >
+					                 <h:link outcome="/customer/activities" >
+				               	 		<i class="fa fa-exchange"></i>
+					             		<span class="nav-label">Aktivitäten</span>
+				               	 	</h:link>
+					             </li>
+					             </ui:fragment>
+					             <ui:fragment rendered="#{permissionBean.hasPermission('contract','create')}">
+					             <li id="menu_item_customer_contract" >
+					                 <h:commandLink action="/customer/contract" actionListener="#{contractBean.newContract()}">
+				               	 		<i class="fa fa-plus"></i>
+					             		<span class="nav-label">Vertrag</span>
+				               	 	</h:commandLink>
+					             </li>
+					             </ui:fragment>
+					             <ui:fragment rendered="#{permissionBean.hasPermission('sale','create')}">
+					             <li id="menu_item_customer_sale" >
+					                 <h:commandLink action="/customer/sale"  actionListener="#{saleBean.newInvoice()}">
+				               	 		
+				               	 		<ui:fragment rendered="#{not paymentBean.cashRegisterStatus}">
+							               	<i class="fa fa-lock"></i>
+							            </ui:fragment>
+				               	 		
+				               	 		<ui:fragment rendered="#{paymentBean.cashRegisterStatus}">
+							               	<i class="fa fa-bank"></i>
+							            </ui:fragment>
+				               	 		
+				               	 		
+					             		<span class="nav-label">Verkauf</span>
+				               	 	</h:commandLink>
+					             </li>
+					             </ui:fragment>
+					             <ui:fragment rendered="#{permissionBean.hasPermission('customer','edit')}">
+					             <li id="menu_item_customer_customer" >
+					                 <h:link outcome="/customer/customer" >
+				               	 		<i class="fa fa-list"></i>
+					             		<span class="nav-label">Kundendaten</span>
+				               	 	</h:link>
+					             </li>
+					             </ui:fragment>
+					             <ui:fragment rendered="#{permissionBean.hasPermission('file','read')}">
+					             <li id="menu_item_customer_fileList" >
+					                 <h:commandLink action="/customer/fileList" >
+				               	 		<i class="fa fa-files-o"></i>
+					             		<span class="nav-label">Dateien</span>
+				               	 	</h:commandLink>
+					             </li>
+					             </ui:fragment>
+					        </ul>
+					 </li>
+
+
+		        </ui:fragment>
+		        
+		        
+				
+                <ui:fragment rendered="#{not propertyBean.showShopGroupDashboard}">
+	                <li id="menu_item_dashboard" >
+	               	 	<h:link outcome="/dashboard" >
+	               	 		<i class="fa fa-th-large"></i>
+		             		<span class="nav-label">Dashboard</span>
+	               	 	</h:link>
+			        </li>   
+		        </ui:fragment>   
+                <ui:fragment rendered="#{propertyBean.showShopGroupDashboard}">
+	                <li id="menu_item_dashboardShopGroup" >
+	               	 	<h:link outcome="/dashboardShopGroup" >
+	               	 		<i class="fa fa-th-large"></i>
+		             		<span class="nav-label">Dashboard</span>
+	               	 	</h:link>
+			        </li>   
+		        </ui:fragment>         
+                
+                <ui:fragment rendered="#{permissionBean.hasPermission('customer','create')}">
+                	 <li id="menu_item_newCustomer" >
+                	 	<h:commandLink action="/newCustomer"  actionListener="#{customerBean.newCustomer()}">
+                	 		<i class="fa fa-user-plus"></i>
+		             		<span class="nav-label">Neukunde</span>
+                	 	</h:commandLink>
+		             </li>
+		        </ui:fragment>
+                
+                
+                
+                <ui:fragment rendered="#{permissionBean.hasPermission('controlling','read')}">
+
+					<li>
+		                	<a href="#">
+			             			<i class="fa fa-fw fa-bar-chart-o"></i> 
+			             		<span class="nav-label">Controlling</span> <span class="fa arrow"></span>
+		                	</a>
+		                    <ul class="nav nav-second-level collapse">
+					             <ui:fragment rendered="#{permissionBean.hasPermission('controlling','read')}">
+					             <li id="menu_item_controlling_shopList">
+					                 <h:link outcome="/controlling/shopList" >
+				               	 		<i class="fa fa-bar-chart-o"></i>
+					             		<span class="nav-label">Filial Vergleich</span>
+				               	 	</h:link>
+					             </li>
+					             </ui:fragment>
+					             <ui:fragment rendered="#{permissionBean.hasPermission('controlling','read')}">
+					             <li id="menu_item_controlling_userList" >
+					                 <h:link outcome="/controlling/userList" >
+				               	 		<i class="fa fa-bar-chart-o"></i>
+					             		<span class="nav-label">MA Vergleich</span>
+				               	 	</h:link>
+					             </li>
+					             </ui:fragment>
+					             <ui:fragment rendered="#{permissionBean.hasPermission('controlling','read')}">
+					             <li id="menu_item_controlling_voList" >
+					                 <h:link outcome="/controlling/voList" >
+				               	 		<i class="fa fa-bar-chart-o"></i>
+					             		<span class="nav-label">VO Vergleich</span>
+				               	 	</h:link>
+					             </li>
+					             </ui:fragment>
+					             
+					             <ui:fragment rendered="#{permissionBean.hasPermission('contract_list','read') or permissionBean.hasPermission('contract_list','read_own')}">
+					             <li id="menu_item_controlling_contractList">
+					                 <h:link outcome="/controlling/contractList" >
+				               	 		<i class="fa fa-bar-chart-o"></i>
+					             		<span class="nav-label">Verträge</span>
+				               	 	</h:link>
+					             </li>
+					             </ui:fragment>
+					             
+					             <ui:fragment rendered="#{permissionBean.hasPermission('invoice_list','read') or permissionBean.hasPermission('invoice_list','read_own')}">
+					             <li id="menu_item_controlling_invoiceList">
+					                 <h:link outcome="/controlling/invoiceList" >
+				               	 		<i class="fa fa-bar-chart-o"></i>
+					             		<span class="nav-label">Verkäufe</span>
+				               	 	</h:link>
+					             </li>
+					             </ui:fragment>
+					             
+					             <ui:fragment rendered="#{permissionBean.hasPermission('achievement','list')}">
+					             <li id="menu_item_controlling_achievementList" >
+					                 <h:link outcome="/controlling/achievementList" >
+				               	 		<i class="fa fa-bar-chart-o"></i>
+					             		<span class="nav-label">Leistungsziele</span>
+				               	 	</h:link>
+					             </li>
+					             </ui:fragment>
+					             
+					             <ui:fragment rendered="#{permissionBean.hasPermission('contract_list','read') or permissionBean.hasPermission('contract_list','read_own')}">
+					             <li id="menu_item_controlling_renewableContractList">
+					                 <h:link outcome="/controlling/renewableContractList" >
+				               	 		<i class="fa fa-bar-chart-o"></i>
+					             		<span class="nav-label">+24</span>
+				               	 	</h:link>
+					             </li>
+					             </ui:fragment>
+					        </ul>
+					 </li>
+
+
+		        </ui:fragment>
+                
+                
+                
+                 <ui:fragment rendered="#{permissionBean.hasPermission('calendar','read')}">
+
+					<li >
+		                	<a href="#">
+			             			<i class="fa fa-fw fa-calendar"></i> 
+			             		<span class="nav-label">Kalender</span> <span class="fa arrow"></span>
+		                	</a>
+		                    <ul class="nav nav-second-level collapse">
+		                    
+					             <ui:fragment rendered="#{permissionBean.hasPermission('calendar','read')}">
+					             <li id="menu_item_calendar_user" >
+					                 <h:link outcome="/calendar/user" >
+					             		<span class="nav-label">Mitarbeiter Kalender</span>
+				               	 	</h:link>
+					             </li>
+					             </ui:fragment>
+		                    
+					             <ui:fragment rendered="#{permissionBean.hasPermission('calendar','read')}">
+					             <li id="menu_item_calendar_shop" >
+					                 <h:link outcome="/calendar/shop" >
+					             		<span class="nav-label">Filial Kalender</span>
+				               	 	</h:link>
+					             </li>
+					             </ui:fragment>
+		                    
+					             <ui:fragment rendered="#{permissionBean.hasPermission('calendar','read')}">
+					             <li id="menu_item_calendar_userList" >
+					                 <h:link outcome="/calendar/userList" >
+					             		<span class="nav-label">MA Übersicht</span>
+				               	 	</h:link>
+					             </li>
+					             </ui:fragment>
+		                    
+					             <ui:fragment rendered="#{permissionBean.hasPermission('calendar','read')}">
+					             <li id="menu_item_calendar_shopList" >
+					                 <h:link outcome="/calendar/shopList" >
+					             		<span class="nav-label">Filial Übersicht</span>
+				               	 	</h:link>
+					             </li>
+					             </ui:fragment>
+		                    
+					             <ui:fragment rendered="#{permissionBean.hasPermission('calendar','read')}">
+					             <li id="menu_item_calendar_shopGroupList" >
+					                 <h:link outcome="/calendar/shopGroupList" >
+					             		<span class="nav-label">Filial Gruppen</span>
+				               	 	</h:link>
+					             </li>
+					             </ui:fragment>
+		                    
+					             <ui:fragment rendered="#{permissionBean.hasPermission('calendar','read')}">
+					             <li id="menu_item_calendar_shopList3" >
+					                 <h:link outcome="/calendar/shopList3" >
+					             		<span class="nav-label">Filial Übersicht beta</span>
+				               	 	</h:link>
+					             </li>
+					             </ui:fragment>
+		                    
+					             <ui:fragment rendered="#{permissionBean.hasPermission('calendar','read')}">
+					             <li id="menu_item_calendar_yearView" >
+					                 <h:link outcome="/calendar/yearView" >
+					             		<span class="nav-label">Jahres Übersicht</span>
+				               	 	</h:link>
+					             </li>
+					             </ui:fragment>
+		                    
+					             <ui:fragment rendered="#{permissionBean.hasPermission('vacation_request','write')}">
+					             <li id="menu_item_calendar_vacationRequest" >
+					                 <h:link outcome="/calendar/vacationRequest" >
+					             		<span class="nav-label">Urlaubsantrag</span>
+				               	 	</h:link>
+					             </li>
+					             </ui:fragment>
+					             
+					             
+					        </ul>
+					 </li>
+
+
+		        </ui:fragment>
+                
+     
+      
+                <ui:fragment >
+	                <li id="menu_item_companyFileList" >
+	               	 	<h:link outcome="/files/companyFileList" >
+	               	 		<i class="fa fa-files-o"></i>
+		             		<span class="nav-label">Firmen Dateien</span>
+	               	 	</h:link>
+			        </li>   
+		        </ui:fragment> 
+      
+                <ui:fragment >
+	                <li id="menu_item_task_tasklist" >
+	               	 	<h:link outcome="/task/taskList" >
+	               	 		<i class="fa fa-tasks"></i>
+		             		<span class="nav-label">Aufgaben</span>
+	               	 	</h:link>
+			        </li>   
+		        </ui:fragment>   
+     
+     
+     			<ui:fragment rendered="#{permissionBean.hasPermission('stockManagement','edit')}">
+
+					<li>
+		                	<a href="#">
+			             			<i class="fa fa-fw fa-gears"></i> 
+			             		<span class="nav-label">WaWi</span> <span class="fa arrow"></span>
+		                	</a>
+		                    <ul class="nav nav-second-level collapse">
+		                    
+					             <ui:fragment rendered="#{permissionBean.hasPermission('stockManagement','edit')}">
+					             <li id="menu_item_stockManagement_cashRegister" >
+				               	 	
+					                <h:commandLink action="/stockManagement/cashRegister" >
+				               	 		<i class="fa fa-sign-in"></i>
+					             		<span class="nav-label">Kassenstand</span>
+				               	 	</h:commandLink>
+				               	 	
+				               	 	
+					             </li>
+					             <li id="menu_item_stockManagement_movement_in" >
+				               	 	
+					                <h:commandLink action="/stockManagement/movement/in"   actionListener="#{stockMovementBean.newStockImport()}">
+				               	 		<i class="fa fa-sign-in"></i>
+					             		<span class="nav-label">Wareneingang</span>
+				               	 	</h:commandLink>
+				               	 	
+				               	 	
+					             </li>
+					             <li id="menu_item_stockManagement_movement_out" >
+				               	 	
+					                <h:commandLink action="/stockManagement/movement/out"   actionListener="#{stockMovementBean.newStockExport()}">
+				               	 		<i class="fa fa-sign-out"></i>
+					             		<span class="nav-label">Warenausgang</span>
+				               	 	</h:commandLink>
+				               	 	
+				               	 	
+					             </li>
+					             <li id="menu_item_stockManagement_movement_list" >
+				               	 	
+					                <h:commandLink action="/stockManagement/movement/list" >
+				               	 		<i class="fa fa-group"></i>
+					             		<span class="nav-label">Warenbewegungen</span>
+				               	 	</h:commandLink>
+				               	 	
+				               	 	
+					             </li>
+					             <li id="menu_item_stockManagement_movement_open" >
+				               	 	
+					                <h:commandLink action="/stockManagement/movement/open" >
+				               	 		<i class="fa fa-group"></i>
+					             		<span class="nav-label">Offene Warenbewegungen</span>
+				               	 	</h:commandLink>
+				               	 	
+				               	 	
+					             </li>
+					             <li id="menu_item_stockManagement_stockLevel" >
+				               	 	
+					                <h:commandLink action="/stockManagement/stockLevel" >
+				               	 		<i class="fa fa-group"></i>
+					             		<span class="nav-label">Warenbestand</span>
+				               	 	</h:commandLink>
+				               	 	
+				               	 	
+					             </li>
+					             </ui:fragment>
+					             
+		                    
+					             
+					             
+					        </ul>
+					        
+					         
+					 </li>
+
+
+		        </ui:fragment>
+		        
+		        
+                
+                
+                 <ui:fragment rendered="#{permissionBean.hasPermission('management','read')}">
+
+					<li>
+		                	<a href="#">
+			             			<i class="fa fa-fw fa-gears"></i> 
+			             		<span class="nav-label">Verwaltung</span> <span class="fa arrow"></span>
+		                	</a>
+		                    <ul class="nav nav-second-level collapse">
+		                    
+					             <ui:fragment rendered="#{permissionBean.hasPermission('management','read')}">
+					             <li id="menu_item_management_customer_list" >
+					                 <h:link outcome="/management/customer/list" >
+				               	 		<i class="fa fa-group"></i>
+					             		<span class="nav-label">Kunden Liste</span>
+				               	 	</h:link>
+					             </li>
+					             </ui:fragment>
+					             
+		                    
+					             <ui:fragment rendered="#{permissionBean.hasPermission('management','read')}">
+					             <li id="menu_item_management_user_userList" >
+					                 <h:link outcome="/management/user/userList" >
+				               	 		<i class="fa fa-group"></i>
+					             		<span class="nav-label">Mitarbeiter</span>
+				               	 	</h:link>
+					             </li>
+					             </ui:fragment>
+					             
+					             
+					             <ui:fragment rendered="#{permissionBean.hasPermission('achievement','list')}">
+					             <li id="menu_item_management_achievementList" >
+					                 <h:link outcome="/management/achievementList" >
+				               	 		<i class="fa fa-group"></i>
+					             		<span class="nav-label">Leistungsziele</span>
+				               	 	</h:link>
+					             </li>
+					             </ui:fragment>
+		                    
+					             <ui:fragment rendered="#{permissionBean.hasPermission('management','read')}">
+					             <li id="menu_item_management_user_holiday">
+					                 <h:link outcome="/management/user/holiday" >
+				               	 		<i class="fa fa-group"></i>
+					             		<span class="nav-label">Urlaubsplanung</span>
+				               	 	</h:link>
+					             </li>
+					             </ui:fragment>
+		                    
+					             <ui:fragment rendered="#{permissionBean.hasPermission('vacation_request','ack')}">
+					             <li id="menu_item_management_vacationRequest" >
+					                 <h:link outcome="/management/user/vacationRequest" >
+				               	 		<i class="fa fa-group"></i>
+					             		<span class="nav-label">Urlaubsanträge</span>
+				               	 	</h:link>
+					             </li>
+					             </ui:fragment>
+					             
+					             <ui:fragment rendered="#{permissionBean.hasPermission('management','read')}">
+					             <li id="menu_item_management_user_parentTime" >
+					                 <h:link outcome="/management/user/parentTime" >
+				               	 		<i class="fa fa-group"></i>
+					             		<span class="nav-label">Elternzeit Planung</span>
+				               	 	</h:link>
+					             </li>
+					             </ui:fragment>
+					             
+					             <ui:fragment rendered="#{permissionBean.hasPermission('accounting','read')}">
+
+									<li>
+						                	<a href="#">
+							             		<i class="fa fa-fw fa-table"></i> 
+							             		<span class="nav-label">Abrechnung</span> <span class="fa arrow"></span>
+						                	</a>
+						                    <ul class="nav nav-third-level">
+						                    
+									             <ui:fragment rendered="#{permissionBean.hasPermission('accounting','import')}">
+									             <li id="menu_item_management_accounting_import" >
+									                 <h:link outcome="/management/accounting/import" >
+								               	 		<i class="fa fa-upload"></i>
+									             		<span class="nav-label">Import</span>
+								               	 	</h:link>
+									             </li>
+									             </ui:fragment>
+						                    
+									             <ui:fragment rendered="#{permissionBean.hasPermission('accounting','read')}">
+									             <li id="menu_item_management_accounting_adjustment" >
+									                 <h:link outcome="/management/accounting/adjustment" >
+								               	 		<i class="fa fa-exchange"></i>
+									             		<span class="nav-label">Abgleich</span>
+								               	 	</h:link>
+									             </li>
+									             </ui:fragment>
+						                    
+									             <ui:fragment rendered="#{permissionBean.hasPermission('accounting','edit')}">
+									             <li id="menu_item_management_accounting_associationList" >
+									                 <h:link outcome="/management/accounting/associationList" >
+								               	 		<i class="fa fa-exchange"></i>
+									             		<span class="nav-label">Zuweisungen</span>
+								               	 	</h:link>
+									             </li>
+									             </ui:fragment>
+						                    
+									             <ui:fragment rendered="#{permissionBean.hasPermission('accounting','edit')}">
+									             <li id="menu_item_management_accounting_payrollList" >
+									                 <h:link outcome="/management/accounting/payrollList" >
+								               	 		<i class="fa fa-table"></i>
+									             		<span class="nav-label">Löhne</span>
+								               	 	</h:link>
+									             </li>
+									             </ui:fragment>
+						                    
+									             <ui:fragment rendered="#{permissionBean.hasPermission('accounting','edit')}">
+									             <li id="menu_item_management_accounting_manualCommission" >
+									                 <h:link outcome="/management/accounting/manualCommission" >
+								               	 		<i class="fa fa-star"></i>
+									             		<span class="nav-label">Punkte Zuweisungen</span>
+								               	 	</h:link>
+									             </li>
+									             </ui:fragment>
+						                    
+									        </ul>
+									 </li>
+				
+				
+						        </ui:fragment>
+						        
+					             
+					             <ui:fragment rendered="#{permissionBean.hasPermission('import','write')}">
+					             <li id="menu_item_management_import_import" >
+					                 <h:link outcome="/management/import/import" >
+				               	 		<i class="fa fa-group"></i>
+					             		<span class="nav-label">Daten Import</span>
+				               	 	</h:link>
+					             </li>
+					             </ui:fragment>
+					             
+					             
+					        </ul>
+					        
+					         
+					 </li>
+
+
+		        </ui:fragment>
+                
+                
+                
+                
+                 <ui:fragment rendered="#{permissionBean.hasPermission('settings','read')}">
+
+					<li>
+		                	<a href="#">
+			             			<i class="fa fa-fw fa-gears"></i> 
+			             		<span class="nav-label">Einstellungen</span> <span class="fa arrow"></span>
+		                	</a>
+		                    <ul class="nav nav-second-level collapse">
+					             <ui:fragment rendered="#{permissionBean.hasPermission('settings','read')}">
+					             <li id="menu_item_settings_system" class="#{view.viewId == '/settings/system.xhtml' ? 'active_XXX' : ''}">
+					                 <h:link outcome="/settings/system" >
+				               	 		<i class="fa fa-toggle-on"></i>
+					             		<span class="nav-label">System</span>
+				               	 	</h:link>
+					             </li>
+					             </ui:fragment>
+					             <ui:fragment rendered="#{permissionBean.hasPermission('settings','read')}">
+					             <li id="menu_item_settings_userList" >
+					                 <h:link outcome="/settings/userList" >
+				               	 		<i class="fa fa-group"></i>
+					             		<span class="nav-label">Mitarbeiter</span>
+				               	 	</h:link>
+					             </li>
+					             </ui:fragment>
+					             <ui:fragment rendered="#{permissionBean.hasPermission('settings','read')}">
+					             <li id="menu_item_settings_userGroupList" >
+					                 <h:link outcome="/settings/userGroupList" >
+				               	 		<i class="fa fa-group"></i>
+					             		<span class="nav-label">MA-Gruppen</span>
+				               	 	</h:link>
+					             </li>
+					             </ui:fragment>
+					             <ui:fragment rendered="#{permissionBean.hasPermission('settings','read')}">
+					             <li id="menu_item_settings_shopList" >
+					                 <h:link outcome="/settings/shopList" >
+				               	 		<i class="fa fa-building-o"></i>
+					             		<span class="nav-label">Filialen</span>
+				               	 	</h:link>
+					             </li>
+					             </ui:fragment>
+					             <ui:fragment rendered="#{permissionBean.hasPermission('settings','read')}">
+					             <li id="menu_item_settings_shopGroupList" >
+					                 <h:link outcome="/settings/shopGroupList" >
+				               	 		<i class="fa fa-building-o"></i>
+					             		<span class="nav-label">Filial-Gruppen</span>
+				               	 	</h:link>
+					             </li>
+					             </ui:fragment>
+					             <ui:fragment rendered="#{permissionBean.hasPermission('settings','read')}">
+					             <li id="menu_item_settings_stockList" >
+					                 <h:link outcome="/settings/stockList" >
+				               	 		<i class="fa fa-building-o"></i>
+					             		<span class="nav-label">Lager</span>
+				               	 	</h:link>
+					             </li>
+					             </ui:fragment>
+					             <ui:fragment rendered="#{permissionBean.hasPermission('settings','read')}">
+					             <li id="menu_item_settings_supplierList" >
+					                 <h:link outcome="/settings/supplierList" >
+				               	 		<i class="fa fa-building-o"></i>
+					             		<span class="nav-label">Lieferanten</span>
+				               	 	</h:link>
+					             </li>
+					             </ui:fragment>
+					             <ui:fragment rendered="#{permissionBean.hasPermission('settings','read')}">
+					             <li id="menu_item_settings_voManagement" >
+					                 <h:link outcome="/settings/voManagement" >
+				               	 		<i class="fa fa-codepen"></i>
+					             		<span class="nav-label">VO Management</span>
+				               	 	</h:link>
+					             </li>
+					             </ui:fragment>
+					             <ui:fragment rendered="#{permissionBean.hasPermission('settings','read')}">
+					             <li id="menu_item_settings_vendorList" >
+					                 <h:link outcome="/settings/vendorList" >
+				               	 		<i class="fa fa-codepen"></i>
+					             		<span class="nav-label">Anbieter</span>
+				               	 	</h:link>
+					             </li>
+					             </ui:fragment>
+					             <ui:fragment rendered="#{permissionBean.hasPermission('settings','read')}">
+					             <li id="menu_item_settings_productCategoryList" >
+					                 <h:link outcome="/settings/productCategoryList" >
+				               	 		<i class="fa fa-codepen"></i>
+					             		<span class="nav-label">Produkt Kategorien</span>
+				               	 	</h:link>
+					             </li>
+					             </ui:fragment>
+					             <ui:fragment rendered="#{permissionBean.hasPermission('settings','read')}">
+					             <li id="menu_item_settings_productCombinationList" >
+					                 <h:link outcome="/settings/productCombinationList" >
+				               	 		<i class="fa fa-codepen"></i>
+					             		<span class="nav-label">Produkt Kombi.</span>
+				               	 	</h:link>
+					             </li>
+					             </ui:fragment>
+					             <ui:fragment rendered="#{permissionBean.hasPermission('settings','read')}">
+					             <li id="menu_item_settings_productStatisticList" >
+					                 <h:link outcome="/settings/productStatisticList" >
+				               	 		<i class="fa fa-codepen"></i>
+					             		<span class="nav-label">Produkt Statistik.</span>
+				               	 	</h:link>
+					             </li>
+					             </ui:fragment>
+					             <ui:fragment rendered="#{permissionBean.hasPermission('settings','read')}">
+					             <li id="menu_item_settings_productList" >
+					                 <h:link outcome="/settings/productList" >
+				               	 		<i class="fa fa-codepen"></i>
+					             		<span class="nav-label">Produkte</span>
+				               	 	</h:link>
+					             </li>
+					             </ui:fragment>
+					             <ui:fragment rendered="#{permissionBean.hasPermission('settings','read')}">
+					             <li id="menu_item_settings_revenueLevelMatrix" >
+					                 <h:link outcome="/settings/revenueLevelMatrix" >
+				               	 		<i class="fa fa-codepen"></i>
+					             		<span class="nav-label">AU/GU Matrix</span>
+				               	 	</h:link>
+					             </li>
+					             </ui:fragment>
+					             <ui:fragment rendered="#{permissionBean.hasPermission('settings','read')}">
+					             <li id="menu_item_settings_productCommissionList" >
+					                 <h:link outcome="/settings/productCommissionList" >
+				               	 		<i class="fa fa-codepen"></i>
+					             		<span class="nav-label">Sonder Kond.</span>
+				               	 	</h:link>
+					             </li>
+					             </ui:fragment>
+					             
+					             <ui:fragment rendered="#{permissionBean.hasPermission('settings','read')}">
+					             <li id="menu_item_settings_stockManagementSettings" >
+					                 <h:link outcome="/settings/stockManagementSettings" >
+				               	 		<i class="fa fa-list"></i>
+					             		<span class="nav-label">WaWi Einstellungen</span>
+				               	 	</h:link>
+					             </li>
+					             </ui:fragment>
+					             
+					             <ui:fragment rendered="#{permissionBean.hasPermission('settings','read')}">
+					             <li id="menu_item_settings_paymentList" >
+					                 <h:link outcome="/settings/paymentList" >
+				               	 		<i class="fa fa-list"></i>
+					             		<span class="nav-label">Zahlungsarten</span>
+				               	 	</h:link>
+					             </li>
+					             </ui:fragment>
+					             
+					             <ui:fragment rendered="#{permissionBean.hasPermission('settings','read')}">
+					             <li id="menu_item_settings_lists" >
+					                 <h:link outcome="/settings/lists" >
+				               	 		<i class="fa fa-list"></i>
+					             		<span class="nav-label">Listen</span>
+				               	 	</h:link>
+					             </li>
+					             </ui:fragment>
+					        </ul>
+					 </li>
+
+
+		        </ui:fragment>
+                
+                
+                
+                
+                <ui:fragment rendered="#{permissionBean.hasPermission('support','read')}">
+
+					<li>
+		                	<a href="#">
+			             		<i class="fa fa-fw fa-life-ring"></i> 
+			             		<span class="nav-label">Support</span> <span class="fa arrow"></span>
+		                	</a>
+		                    <ul class="nav nav-second-level collapse">
+		                    
+					             <ui:fragment rendered="#{permissionBean.hasPermission('support','read')}">
+					             <li id="menu_item_support_faq" >
+					                 <h:link outcome="/support/faq" >
+				               	 		<i class="fa fa-question"></i>
+					             		<span class="nav-label">FAQ</span>
+				               	 	</h:link>
+					             </li>
+					             </ui:fragment>
+		                    
+					             <ui:fragment rendered="false">
+					             <li id="menu_item_support_featureRequests" >
+					                 <h:link outcome="/support/featureRequests" >
+				               	 		<i class="fa fa-lightbulb-o"></i>
+					             		<span class="nav-label">Funktionsanfragen</span>
+				               	 	</h:link>
+					             </li>
+					             </ui:fragment>
+		                    
+					             <ui:fragment rendered="false">
+					             <li id="menu_item_support_bugTracker" >
+					                 <h:link outcome="/support/bugTracker" >
+				               	 		<i class="fa fa-bug"></i>
+					             		<span class="nav-label">BUG-Tracker</span>
+				               	 	</h:link>
+					             </li>
+					             </ui:fragment>
+		                    
+					             <ui:fragment rendered="#{permissionBean.hasPermission('support','read')}">
+					             <li id="menu_item_support_contact">
+					                 <h:link outcome="/support/contact" >
+				               	 		<i class="fa fa-envelope"></i>
+					             		<span class="nav-label">Kontakt</span>
+				               	 	</h:link>
+					             </li>
+					             </ui:fragment>
+		                    
+					             <ui:fragment rendered="#{permissionBean.hasPermission('support','read')}">
+					             <li id="menu_item_support_releaseNotes" >
+					                 <h:link outcome="/support/releaseNotes" >
+				               	 		<i class="fa fa-file-text-o"></i>
+					             		<span class="nav-label">Versionshinweise</span>
+				               	 	</h:link>
+					             </li>
+					             </ui:fragment>
+					             <ui:fragment rendered="#{permissionBean.hasPermission('support','read')}">
+
+									<li >
+						                	<a href="#">
+							             		<i class="fa fa-fw fa-book"></i> 
+							             		<span class="nav-label">Dokumentation</span> <span class="fa arrow"></span>
+						                	</a>
+						                    <ul class="nav nav-third-level">
+						                    
+									             <ui:fragment rendered="#{permissionBean.hasPermission('support','read')}">
+									             <li id="menu_item_support_docs_kapitel1">
+									                 <h:link outcome="/support/docs/kapitel1" >
+								               	 		<i class="fa fa-bookmark"></i>
+									             		<span class="nav-label">Kapitel XX</span>
+								               	 	</h:link>
+									             </li>
+									             </ui:fragment>
+						                    
+									        </ul>
+									 </li>
+				
+				
+						        </ui:fragment>
+					             
+					        </ul>
+					 </li>
+
+
+		        </ui:fragment>
+                
+                
+                
+                
+                
+            </ul>
+      
+      </h:form>
+      
+	</ui:composition>
+</html>

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+	  xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+	<h:body>
+	
+    	<ui:composition template="/WEB-INF/template/common/commonLayout.xhtml">
+    		<ui:param name="heading1" value="VO Übersicht" />
+    		
+    		<ui:define name="content">
+    		
+    		
+		        <ui:repeat value="#{sortingBean.orderRankableList( VOBean.VOList )}" var="vo" varStatus="status">
+		        
+		        	<ui:include src="/WEB-INF/include/sales/entityOverviewPanel.xhtml" >
+		        		<ui:param name="index" value="#{status.index +1}" />
+		        		<ui:param name="element" value="#{vo}" />
+		        	</ui:include>
+	    		</ui:repeat>
+                    
+    		</ui:define>
+    		
+    		
+    	</ui:composition>
+    </h:body>
+</html>

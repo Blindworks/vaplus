@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:body>
+
+
+	<ui:composition template="/WEB-INF/template/common/commonLayout.xhtml">
+
+		<ui:param name="heading1" value="Lieferschein #{stockMovementBean.selectedStockPickslip.number}" />
+
+		<ui:define name="content">
+		
+
+    		<div class="row">
+				<div class="col-lg-12">
+				
+			            <div class="ibox float-e-margins">
+			                <div class="ibox-title">
+			                    <h5>Lieferschein Details</h5>
+			                    <div class="ibox-tools">
+			                    </div>
+			                </div>
+			                <div class="ibox-content">
+			                
+			                <h:form class="form-horizontal" >
+								<div class="form-group">
+									
+									<label class="col-sm-2 control-label">Lieferschein Datum</label>
+									<div class="col-sm-4 form-control-static">
+										<h:outputText value="#{stockMovementBean.selectedStockPickslip.effectiveDate}" >
+											<f:convertDateTime pattern="dd.MM.yyyy" timeZone="CET" />
+										</h:outputText>
+									</div>
+									
+									<label class="col-sm-2 control-label">erstellt am</label>
+									<div class="col-sm-4 form-control-static">
+										<h:outputText value="#{stockMovementBean.selectedStockPickslip.creationDate}" >
+											<f:convertDateTime pattern="dd.MM.yyyy HH:mm:ss" timeZone="CET" />
+										</h:outputText>
+									</div>
+								</div>
+			                
+								
+								<div class="form-group">
+									<label class="col-sm-2 control-label">erstellt von</label>
+									<div class="col-sm-4 form-control-static">
+										<h:outputText value="#{stockMovementBean.selectedStockPickslip.user}" >
+										</h:outputText>
+									</div>
+									<label class="col-sm-2 control-label">erstellt in</label>
+									<div class="col-sm-4 form-control-static">
+										<h:outputText value="#{stockMovementBean.selectedStockPickslip.shop}" >
+										</h:outputText>
+									</div>
+								</div>
+								
+			                
+								<div class="form-group">
+									<label class="col-sm-2 control-label">Quell-Lager</label>
+									<div class="col-sm-4 form-control-static">
+										<h:outputText value="#{stockMovementBean.selectedStockPickslip.src_stock}" >
+										</h:outputText>
+									</div>
+									<label class="col-sm-2 control-label">Ziel-Lager</label>
+									<div class="col-sm-4 form-control-static">
+										<h:outputText value="#{stockMovementBean.selectedStockPickslip.dst_stock}" >
+										</h:outputText>
+									</div>
+								</div>
+								
+								<div class="form-group">
+									<label class="col-sm-2 control-label">Lieferant</label>
+									<div class="col-sm-4 form-control-static">
+										<h:outputText value="#{stockMovementBean.selectedStockPickslip.supplier}" />
+									</div>
+									<label class="col-sm-2 control-label">Referenz Lieferschein</label>
+									<div class="col-sm-4 form-control-static">
+										<h:outputText value="#{stockMovementBean.selectedStockPickslip.pickslipReference.number}" rendered="#{not empty stockMovementBean.selectedStockPickslip.pickslipReference.id}" />
+									</div>
+								</div>
+								
+								
+								
+								<div class="form-group">
+									<label class="col-sm-2 control-label">Kunde</label>
+									<div class="col-sm-4 form-control-static">
+										<h:outputText value="#{stockMovementBean.selectedStockPickslip.customer}" />
+									</div>
+									<label class="col-sm-2 control-label">Bestellung</label>
+									<div class="col-sm-4 form-control-static">
+										<h:outputText value="#{stockMovementBean.selectedStockPickslip.order.number}" rendered="#{not empty stockMovementBean.selectedStockPickslip.order}" />
+									</div>
+								</div>
+								
+									<div class="form-group productList">
+										<label class="col-sm-2 control-label">Artikelliste</label>
+										<div class="col-sm-10">
+										
+										<ui:repeat var="stockMovement" value="#{stockMovementBean.selectedStockPickslip.stockMovementList}">
+												<div class="stockMovement row">
+													<div class="col-sm-1 form-control-static">
+														<h:outputText value="#{stockMovement.quantity}" >
+															<f:convertNumber maxFractionDigits="4" minFractionDigits="0" />	
+														</h:outputText>
+													</div>
+													<div class="col-sm-4 form-control-static">
+														
+														
+														<h:commandLink action="/stockManagement/productHistory" >
+															<f:setPropertyActionListener value="#{stockMovement.product}" target="#{stockBean.selectedProduct}" />
+															#{stockMovement.product.name}
+													    </h:commandLink>
+													</div>
+													<div class="col-sm-3 form-control-static">
+														#{stockMovement.serial}
+													</div>
+													<div class="col-sm-2 form-control-static">
+														<h:outputText value="#{stockMovement.purchasePrice}" >
+															<f:convertNumber maxFractionDigits="2" minFractionDigits="2" />	
+														</h:outputText> €
+													</div>
+												</div>
+										</ui:repeat>
+										
+										</div>
+									</div>
+								
+								
+								
+								<div class="form-group">
+									<label class="col-sm-2 control-label">Interne Info</label>
+									<div class="col-sm-10 form-control-static">
+										<h:outputText value="#{stockMovementBean.selectedStockPickslip.note}" />
+									</div>
+								</div>
+
+				             </h:form>   
+			                
+			                </div>
+            			</div>
+            			
+            			
+    			</div>
+    		</div>
+		  
+    		## REFERENZ LIEFERSCHEINE: (REINPORTS)
+    		nicht als Liste, sondern als boxem mit Details artikeln und info texten
+
+		</ui:define>
+
+
+	</ui:composition>
+</h:body>
+</html>

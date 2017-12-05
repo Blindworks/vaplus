@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core">
+
+<h:body>
+	<ui:composition template="/WEB-INF/mailTemplate/layout.xhtml">
+		<ui:param name="title" value="Willkommen #{userName} bei VA+" />
+
+		<ui:define name="content">
+	        <tr>
+	            <td class="content-block">
+	                Um Ihr Konto bei VA+ nutzen zu können, 
+	                müssen Sie zuerst Ihren Login anlegen.
+	            </td>
+	        </tr>
+	        <tr>
+	            <td class="content-block aligncenter">
+	                <a href="#{secureLink}" class="btn-primary">Los gehts</a>
+	            </td>
+	        </tr>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

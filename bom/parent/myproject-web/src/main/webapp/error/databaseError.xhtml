@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core">
+
+<h:body>
+
+
+
+	<ui:composition template="/WEB-INF/template/common/commonLayout.xhtml">
+	
+		<ui:param name="heading1" value="DB Error" />
+	
+		<ui:define name="content">
+
+			<div class="middle-box text-center animated fadeInDown">
+				<h1>Ups</h1>
+				<br/>
+				<h3 class="font-bold">Datenbank Fehler</h3>
+
+				
+				<div class="error-desc">
+					Datenbank Version ist nicht aktuell<br/>
+					Das automatisches Update schlug fehl!
+					<p class="text-danger">Bitte kontaktieren Sie den Support</p>
+				</div>
+			</div>
+
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:body>
+
+
+	<f:metadata>
+		<f:event type="preRenderView" listener="#{customerBean.checkIfCustomerLogged}" />
+	</f:metadata>
+
+	<ui:composition template="/WEB-INF/template/common/commonLayout.xhtml">
+	
+		<ui:param name="heading1" value="Externer Kunde #{customerBean.selectedExternalCustomer.customerId}" />
+
+		<ui:define name="content">
+	        <h:form class="form-horizontal" id="externalCustomerForm">
+
+
+    		<div class="row">
+				<div class="col-lg-12">
+				
+					
+			            <div class="ibox float-e-margins">
+			                <div class="ibox-title">
+			                    <h5>Externer Kunde</h5>
+			                    <div class="ibox-tools">
+			                    
+									    <h:commandLink  class="btn btn-xs btn-primary " action="#{customerBean.saveSelectedExternalCustomer}"  rendered="#{customerBean.selectedExternalCustomerEditable}">
+									    	<f:ajax execute="@form" render="externalCustomerForm"/>
+										   <i class="fa fa-save"></i>
+										</h:commandLink>
+									    
+									    <h:commandLink  class="btn btn-xs btn-primary "  action="#{customerBean.toggleSelectedExternalCustomerEditable}" rendered="#{customerBean.selectedExternalCustomerEditable}">
+										   <f:ajax render="externalCustomerForm"/>
+										   <i class="fa fa-times"></i>
+										</h:commandLink>
+									    <h:commandLink  class="btn btn-xs btn-primary " action="#{customerBean.toggleSelectedExternalCustomerEditable}"  rendered="#{not customerBean.selectedExternalCustomerEditable}">
+										   <f:ajax render="externalCustomerForm"/>
+										   <i class="fa fa-pencil"></i>
+										</h:commandLink>
+			                    </div>
+			                </div>
+			                <div class="ibox-content">
+								
+								
+								<div class="form-group">
+									<label class="col-sm-2 control-label">KdNr. / ARC</label>
+									<div class="col-sm-4">
+										<p class="form-control-static">
+											<h:outputText value="#{customerBean.selectedExternalCustomer.customerId}" rendered="#{not customerBean.selectedExternalCustomerEditable}" />
+											<h:inputText value="#{customerBean.selectedExternalCustomer.customerId}"  rendered="#{customerBean.selectedExternalCustomerEditable}" />
+										</p>
+									</div>
+									<label class="col-sm-2 control-label">Kennwort</label>
+									<div class="col-sm-4">
+										<p class="form-control-static">
+											<h:outputText value="#{customerBean.selectedExternalCustomer.password}" rendered="#{not customerBean.selectedExternalCustomerEditable}" />
+											<h:inputText value="#{customerBean.selectedExternalCustomer.password}"  rendered="#{customerBean.selectedExternalCustomerEditable}" />
+										</p>
+									</div>
+								</div>
+								
+		
+			                </div>
+            			</div>
+            			
+            			
+    			</div>
+    		</div>
+
+    		<div class="row">
+				<div class="col-lg-12">
+				
+					
+			            <div class="ibox float-e-margins">
+			                <div class="ibox-title">
+			                    <h5>Zugeordnete Verträge</h5>
+			                    <div class="ibox-tools">
+			                    </div>
+			                </div>
+			                <div class="ibox-content">
+								
+								<ui:repeat var="contract" value="#{customerBean.selectedExternalCustomer.contractList}">
+								
+									<div class="row">
+										<div class="col-lg-1">
+											##{contract.id}
+										</div>
+										<div class="col-lg-7">
+											#{contract.cachedTariff.productName}
+										</div>
+										<div class="col-lg-4">
+											#{contract.callingNumber}
+										</div>
+									</div>
+								
+								</ui:repeat>
+								
+								
+		
+			                </div>
+            			</div>
+            			
+            			
+    			</div>
+    		</div>
+	        </h:form>
+
+		</ui:define>
+
+
+	</ui:composition>
+</h:body>
+</html>

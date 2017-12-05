@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"	
+	xmlns:p="http://primefaces.org/ui">
+
+<h:body>
+
+	<f:metadata>
+		<f:event type="preRenderView" listener="#{customerBean.checkIfCustomerLogged}" />
+	</f:metadata>
+
+	<ui:composition template="/WEB-INF/template/common/commonLayout.xhtml">
+
+		<ui:param name="heading1" value="Aktivitäten" />
+		
+		<ui:define name="content">
+		
+		<div class="row animated fadeInRight">
+                <div class="col-lg-12">
+                <div class="ibox float-e-margins">
+                    <h:form>
+                	<div class="text-center float-e-margins p-md">
+                	<!-- 
+	                    <span>Neue Aktivität erstellen: </span>
+	                   
+	                    <a href="#" class="btn btn-xs btn-primary" id="lightVersion">Light version</a>
+	                    <a href="#" class="btn btn-xs btn-primary" id="lightVersion">Light version</a>
+	                    <h:commandButton value="Neue Aktivität" action="note" class="btn btn-xs btn-primary">
+	                    </h:commandButton>
+	                    <h:commandButton value="Neue Aktivität" action="note" class="btn btn-xs btn-primary">
+	                    </h:commandButton>
+	                    <h:commandButton value="Neue Aktivität" action="note" class="btn btn-xs btn-primary"></h:commandButton>
+	                    <a href="#" class="btn btn-xs btn-primary" id="lightVersion">Light version</a>
+	                    <h:commandLink value="Neue Aktivität" action="note" class="btn btn-xs btn-primary"></h:commandLink>
+	                    <h:commandLink value="Neue Aktivität" action="note" class="btn btn-xs btn-primary"></h:commandLink>
+	                  -->   
+                    </div>
+                    <div class="" id="ibox-content">
+                        <div id="vertical-timeline" class="vertical-container center-orientation light-timeline">
+                        
+                        
+                        
+                        
+
+							<ui:repeat var="activity" value="#{customerBean.timeline}">
+								<h:panelGroup rendered="#{activity['class'].simpleName == 'PhoneContractEntity'}">
+		                            <div class="vertical-timeline-block">
+		                                <div class="vertical-timeline-icon blue-bg">
+		                                    <i class="fa fa-file-text"></i>
+		                                </div>
+		
+		                                <div class="vertical-timeline-content">
+		                                    <h2>
+		                                    	#{activity.cachedTariff.productName} 
+		                                    	<ui:fragment rendered="#{activity.canceled}">
+			                    					<span class="label label-danger pull-right">STORNIERT</span>
+			                    				</ui:fragment> 
+			                    			</h2>
+		                                   
+		                                    <p><ui:repeat var="option" value="#{activity.cachedTariffOptionList}">#{option.productName} </ui:repeat>
+		                                    	
+ 											</p>
+ 											<p>
+	 											Vertrag: #{activity.id}<br/>
+	 											<ui:fragment rendered="#{activity.extensionOfTerm}">VVL<br/></ui:fragment>
+	 											<ui:fragment rendered="#{activity.debidCreditChange}">DC Wechsel<br/></ui:fragment>
+	 											Rufnummer: #{activity.callingNumber}<br/>
+	 											KundenNr: #{activity.externalCustomer.customerId}
+ 											</p>
+		                                    <p>Laufzeit: <h:outputText value="#{activity.effectiveDate}" >
+              											<f:convertDateTime pattern="dd.MM.yyyy"  timeZone="CET"/>
+ 													</h:outputText> - <h:outputText value="#{activity.expiryDate}" >
+              											<f:convertDateTime pattern="dd.MM.yyyy" timeZone="CET" />
+ 													</h:outputText>
+ 											</p>
+ 											
+ 											<p>
+	 											MA: #{activity.user.name}<br/>
+	 											Shop: #{activity.shop.name} 
+ 											</p>
+		                                    <p>#{activity.info}</p>
+		                                    
+											<h:commandLink action="contractView" class="btn btn-sm btn-success">
+												<f:setPropertyActionListener value="#{activity}" target="#{contractBean.selectedContract}" />
+												Vertrag ansehen 
+										    </h:commandLink>
+		                                    
+		                                    
+		                                    <span class="vertical-date">
+		                                        
+	                                        	<h:outputText value="#{activity.creationDate}" >
+             										<f:convertDateTime binding="#{helperBean.convertDate}"  timeZone="CET"/>
+												</h:outputText>
+												<br />
+		                                       
+		                                        
+		                                        <small>
+		                                        	<h:outputText value="#{activity.creationDate}" >
+              											<f:convertDateTime pattern="dd.MM.yyyy" timeZone="CET" />
+ 													</h:outputText>
+		                                        </small>
+		                                    </span>
+		                                </div>
+		                            </div>
+								</h:panelGroup>
+								
+								<h:panelGroup rendered="#{activity['class'].simpleName == 'InvoiceEntity'}">
+		                            <div class="vertical-timeline-block">
+		                                <div class="vertical-timeline-icon blue-bg">
+		                                    <i class="fa fa-bank"></i>
+		                                </div>
+		
+		                                <div class="vertical-timeline-content">
+		                                    <h2>#{activity.cancelation ? 'Gutschrift' : 'Rechnung'} Nr. #{activity.number}</h2>
+		                                    <p>Produkte: 
+		                                    	
+ 											</p>
+											<div class="row">
+										<ui:repeat var="invoiceItem" value="#{activity.invoiceItemList}">
+														<div class="col-sm-2">
+															#{invoiceItem.quantity}
+														</div>
+														<div class="col-sm-6">
+															#{invoiceItem.title}
+														</div>
+														<div class="col-sm-4 text-right">
+															<h:outputText value="#{invoiceItem.commission.grossPrice}" >
+					                        					<f:convertNumber maxFractionDigits="2" minFractionDigits="2" />
+					                        				</h:outputText> <i class="fa fa-euro"></i>
+														</div>
+														
+										</ui:repeat>
+										
+										</div>
+		                                    <p>Rechnungsdatum: <h:outputText value="#{activity.effectiveDate}" >
+              											<f:convertDateTime pattern="dd.MM.yyyy"  timeZone="CET"/>
+ 													</h:outputText>
+ 											</p>
+		                                    <p>#{activity.note}</p>
+		                                    
+											<h:commandLink action="invoiceView" class="btn btn-sm btn-success" >
+												<f:setPropertyActionListener value="#{activity}" target="#{saleBean.selectedInvoice}" />
+												Rechnung ansehen 
+										    </h:commandLink>
+		                                    
+		                                    <span class="vertical-date">
+		                                        
+	                                        	<h:outputText value="#{activity.creationDate}" >
+             										<f:convertDateTime binding="#{helperBean.convertDate}"  timeZone="CET"/>
+												</h:outputText>
+												<br />
+		                                       
+		                                        
+		                                        <small>
+		                                        	<h:outputText value="#{activity.creationDate}" >
+              											<f:convertDateTime pattern="dd.MM.yyyy" timeZone="CET" />
+ 													</h:outputText>
+		                                        </small>
+		                                    </span>
+		                                </div>
+		                            </div>
+								</h:panelGroup>
+								<h:panelGroup rendered="#{activity['class'].simpleName == 'OrderEntity'}">
+		                            <div class="vertical-timeline-block">
+		                                <div class="vertical-timeline-icon blue-bg">
+		                                    <i class="fa fa-bank"></i>
+		                                </div>
+		
+		                                <div class="vertical-timeline-content">
+		                                	<h:panelGroup rendered="#{empty activity.subsidyContract}">
+		                                    	<h2>Bestellung Nr. #{activity.number}</h2>
+		                                    </h:panelGroup>
+		                                	<h:panelGroup rendered="#{not empty activity.subsidyContract}">
+		                                    	<h2>FH Verkauf Nr. #{activity.id}</h2>
+		                                    </h:panelGroup>
+		                                    <p>Produkte: 
+		                                    	
+ 											</p>
+											<div class="row">
+										<ui:repeat var="orderItem" value="#{activity.orderItemList}">
+														<div class="col-sm-2">
+															#{orderItem.quantity}
+														</div>
+														<div class="col-sm-6">
+															#{orderItem.title}
+														</div>
+														<div class="col-sm-4 text-right">
+															<h:outputText value="#{orderItem.commission.grossPrice}" >
+					                        					<f:convertNumber maxFractionDigits="2" minFractionDigits="2" />
+					                        				</h:outputText> <i class="fa fa-euro"></i>
+														</div>
+														
+										</ui:repeat>
+										
+										</div>
+		                                    <p>Buchungsdatum: <h:outputText value="#{activity.effectiveDate}" >
+              											<f:convertDateTime pattern="dd.MM.yyyy"  timeZone="CET"/>
+ 													</h:outputText>
+ 											</p>
+		                                    <p>#{activity.info}</p>
+		                                    
+		                                    
+		                                    <span class="vertical-date">
+		                                        
+	                                        	<h:outputText value="#{activity.creationDate}" >
+             										<f:convertDateTime binding="#{helperBean.convertDate}"  timeZone="CET"/>
+												</h:outputText>
+												<br />
+		                                       
+		                                        
+		                                        <small>
+		                                        	<h:outputText value="#{activity.creationDate}" >
+              											<f:convertDateTime pattern="dd.MM.yyyy" timeZone="CET" />
+ 													</h:outputText>
+		                                        </small>
+		                                    </span>
+		                                </div>
+		                            </div>
+								</h:panelGroup>
+								
+								<h:panelGroup rendered="#{activity['class'].simpleName == 'NoteEntity'}">
+		                            <div class="vertical-timeline-block">
+		                                <div class="vertical-timeline-icon yellow-bg">
+		                                    <i class="fa fa-info"></i>
+		                                </div>
+		
+		                                <div class="vertical-timeline-content">
+		                                    <h2>Notiz</h2>
+		                                    <p>#{activity.content}</p>
+		                                    
+		                                    
+		                                    
+		                                    <span class="vertical-date">
+		                                        
+	                                        	<h:outputText value="#{activity.creationDate}" >
+             										<f:convertDateTime binding="#{helperBean.convertDate}" timeZone="CET" />
+												</h:outputText>
+												<br />
+		                                       
+		                                        
+		                                        <small>
+		                                        	<h:outputText value="#{activity.creationDate}" >
+              											<f:convertDateTime pattern="dd.MM.yyyy" timeZone="CET" />
+ 													</h:outputText>
+		                                        </small>
+		                                    </span>
+		                                </div>
+		                            </div>
+								</h:panelGroup>
+								
+								<h:panelGroup rendered="#{activity['class'].simpleName == 'BaseContractCancellationEntity'}">
+		                            <div class="vertical-timeline-block">
+		                                <div class="vertical-timeline-icon red-bg">
+		                                    <i class="fa fa-times"></i>
+		                                </div>
+		
+		                                <div class="vertical-timeline-content">
+		                                    <h2>
+		                                    	Stornierungsbuchung
+			                    			</h2>
+		                                   
+ 											<p>
+	 											Vertrag: #{activity.contract.cachedTariff.productName}<br/>
+	 											VertragsNr.: #{activity.contract.id}<br/>
+	 											Rufnummer: #{activity.contract.callingNumber}<br/>
+	 											KundenNr: #{activity.contract.externalCustomer.customerId}
+ 											</p>
+		                                    <p>#{activity.note}</p>
+		                                    
+		                                    
+		                                    <span class="vertical-date">
+		                                        
+	                                        	<h:outputText value="#{activity.creationDate}" >
+             										<f:convertDateTime binding="#{helperBean.convertDate}"  timeZone="CET"/>
+												</h:outputText>
+												<br />
+		                                       
+		                                        
+		                                        <small>
+		                                        	<h:outputText value="#{activity.creationDate}" >
+              											<f:convertDateTime pattern="dd.MM.yyyy" timeZone="CET" />
+ 													</h:outputText>
+		                                        </small>
+		                                    </span>
+		                                </div>
+		                            </div>
+								</h:panelGroup>
+								
+								<h:panelGroup rendered="#{activity['class'].simpleName == 'ContractStatusChangeEntity'}">
+		                            <div class="vertical-timeline-block">
+		                                <div class="vertical-timeline-icon blue-bg">
+		                                    <i class="fa fa-file-text"></i>
+		                                </div>
+		
+		                                <div class="vertical-timeline-content">
+		                                    <h2>
+		                                    	Vertragsstatus geändert 
+			                    			</h2>
+			                    			
+		                                    <p>#{activity.oldStatus} >> #{activity.newStatus}
+ 											</p>
+ 											<p>
+	 											Vertrag: #{activity.contract.id}<br/>
+	 											Tarif: #{activity.contract.cachedTariff.productName}<br/>
+	 											Rufnummer: #{activity.contract.callingNumber}<br/>
+ 											</p>
+ 											
+ 											<p>
+	 											MA: #{activity.user.name}<br/>
+	 											Shop: #{activity.shop.name} 
+ 											</p>
+		                                    <p>NOTIZ:<br/>#{activity.note}</p>
+		                                    
+		                                    
+		                                    
+		                                    <span class="vertical-date">
+		                                        
+	                                        	<h:outputText value="#{activity.creationDate}" >
+             										<f:convertDateTime binding="#{helperBean.convertDate}"  timeZone="CET"/>
+												</h:outputText>
+												<br />
+		                                       
+		                                        
+		                                        <small>
+		                                        	<h:outputText value="#{activity.creationDate}" >
+              											<f:convertDateTime pattern="dd.MM.yyyy" timeZone="CET" />
+ 													</h:outputText>
+		                                        </small>
+		                                    </span>
+		                                   
+		                                </div>
+		                            </div>
+								</h:panelGroup>
+								
+							</ui:repeat>
+							
+							
+
+<!-- 
+                            <div class="vertical-timeline-block">
+                                <div class="vertical-timeline-icon yellow-bg">
+                                    <i class="fa fa-info"></i>
+                                </div>
+
+                                <div class="vertical-timeline-content">
+                                    <h2>Notiz</h2>
+                                    <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since.</p>
+                                    <span class="vertical-date">
+                                        Heute <br />
+                                        <small>Dez 24</small>
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="vertical-timeline-block">
+                                <div class="vertical-timeline-icon blue-bg">
+                                    <i class="fa fa-file-text"></i>
+                                </div>
+
+                                <div class="vertical-timeline-content">
+                                    <h2>Vertrag "MegaTarif Complete" abgeschlossen</h2>
+                                    <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since.</p>
+                                    <a href="#" class="btn btn-sm btn-success"> Vertrag ansehen </a>
+                                    <span class="vertical-date">
+                                        Heute <br />
+                                        <small>Dez 24</small>
+                                    </span>
+                                </div>
+                            </div>
+                            
+                            <div class="vertical-timeline-block">
+                                <div class="vertical-timeline-icon lazur-bg">
+                                    <i class="fa fa-briefcase"></i>
+                                </div>
+
+                                <div class="vertical-timeline-content">
+                                    <h2>Kundentermin</h2>
+                                    <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since.
+                                    </p>
+                                    <a href="#" class="btn btn-sm btn-primary"> Im Kalender zeigen</a>
+                                    <span class="vertical-date">
+                                        Heute <br />
+                                        <small>Dec 24</small>
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="vertical-timeline-block">
+                                <div class="vertical-timeline-icon navy-bg">
+                                    <i class="fa fa-phone"></i>
+                                </div>
+
+                                <div class="vertical-timeline-content">
+                                    <h2>Kunde über VVL Informiert</h2>
+                                    <p>Kunde hat interesse gezeigt. Will einen Complete tarif mit Handy.</p>
+                                    <span class="vertical-date">Gestern <br /><small>Dec 23</small></span>
+                                </div>
+                            </div>
+
+                            <div class="vertical-timeline-block">
+                                <div class="vertical-timeline-icon lazur-bg">
+                                    <i class="fa fa-comments"></i>
+                                </div>
+
+                                <div class="vertical-timeline-content">
+                                    <h2>Kundebesuch in Filiale 2</h2>
+                                    <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since.</p>
+                                    <span class="vertical-date">Letze Woche <br /><small>Dec 23</small></span>
+                                </div>
+                            </div>
+                            
+                            -->
+                        </div>
+
+                    </div>
+                        </h:form>
+                </div>
+            </div>
+            </div>
+		
+		</ui:define>
+
+
+	</ui:composition>
+</h:body>
+</html>

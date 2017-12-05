@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:body>
+
+
+	<ui:composition>
+		
+		<div class="modal inmodal" id="retailProductModal" tabindex="-1"
+			role="dialog" aria-hidden="true" style="display: none;"
+			data-keyboard="true" data-backdrop="static">
+				<div class="modal-dialog">
+					<div class="modal-content animated bounceInRight">
+					<h:form class="form-horizontal" id="retailProductModalForm">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal">
+								<span aria-hidden="true">×</span><span class="sr-only">Close</span>
+							</button>
+							<i class="fa fa-user modal-icon"></i>
+							<h:panelGroup rendered="#{retailProductBean.foreignWare}">
+								<h4 class="modal-title">Fremd Ware zubuchen?</h4>
+							</h:panelGroup>
+							
+							<h:panelGroup rendered="#{not retailProductBean.foreignWare}">
+								<h4 class="modal-title">Artikel zubuchen?</h4>
+							</h:panelGroup>
+							<small class="font-bold">Barcode einscannen oder Artikel suchen.</small>
+						</div>
+						<div class="modal-body">
+							<h:messages  class="list-group-item danger"/>
+								
+                        	<div class="form-group">
+                        		<h:inputText id="ean" 
+                        			autocomplete="off" 
+                        			class="chosen-select-no-single form-control col-sm-8" 
+                        			a:placeholder="EAN" 
+                        			value="#{retailProductBean.ean}">
+												<f:ajax event="change" />
+								</h:inputText>
+                        	</div>
+                        	<div class="form-group">
+                        		<h:selectOneMenu 
+                        			id="retailProduct"
+                        			disabled="#{retailProductBean.eanProductFound}"
+                        			onkeydown="return event.keyCode != 13;"
+                        			a:data-placeholder="Artikel wählen ..."
+												value="#{retailProductBean.product}"
+												class="chosen-select-no-single form-control col-sm-10"
+												converter="#{baseProductConverter}">
+												<f:selectItem itemValue="" itemLabel=""/>
+												<f:selectItems value="#{retailProductBean.productList}" var="product"
+													itemValue="#{product}" itemLabel="#{product.name}" />
+												<f:validateRequired />
+												<f:ajax event="change" render="retailProductModalForm" onevent="productSelected" />
+								</h:selectOneMenu>
+                        	</div>
+                        	<h:panelGroup rendered="#{retailProductBean.product.serialRequired}">
+                        	<div class="form-group">
+                        		<h:inputText 
+                        			id="serial"
+                        			value="#{retailProductBean.serial}" 
+                        			autocomplete="off" 
+                        			a:placeholder="IMEI / Seriennummer"
+                        			class="form-control">
+														<f:validateRequired />
+                        			<f:ajax event="change" render="retailProductModalForm" onevent="updatePluginsEvent" />
+								</h:inputText>
+                        	</div>
+                        	</h:panelGroup>
+                        	<div class="form-group">
+								<h:commandButton class="btn btn-primary form-control" value="Hinzufügen" action="#{retailProductBean.checkProduct}" >
+									<f:ajax render="retailProductModalForm" onevent="retailProductSelected"/>
+								</h:commandButton>
+							</div>
+							<h:inputHidden id="error" value="#{retailProductBean.error}" />
+							<h:inputHidden id="finish" value="#{retailProductBean.finish}" />
+							
+                        	<div class="hide">
+                        		<ui:insert name="submitButton">
+								</ui:insert>
+                        	</div>
+                        </div>
+						</h:form>
+					</div>
+				</div>
+		</div>
+		
+				<h:outputScript>
+					function retailProductSelected(){
+						updatePlugins();
+						if($('#retailProductModalForm\\:error').val() == "true"){
+							$('#retailProductModalForm\\:ean').focus();
+							return;
+						}
+						else if($('#retailProductModalForm\\:finish').val() == "true"){
+							$('#retailProductModalForm\\:submitButton').click();
+							
+						}else{
+							$('#retailProductModalForm\\:serial').focus();
+						}
+							
+					}
+					function closeRetailProductModal(){
+						updatePlugins();
+						$('#retailProductModal').modal('hide');
+					}
+					
+					function openRetailProductModal(){
+						updatePlugins();
+						$('#retailProductModal').modal('show');
+					}
+		
+					$( document ).ready(function() {
+						$('#retailProductModal').on('shown.bs.modal', function() {
+							window.setTimeout(function(){
+						      $('#retailProductModalForm\\:ean').focus();
+						    }, 500);
+						})
+					});
+					
+						
+				</h:outputScript>
+
+	</ui:composition>
+</h:body>
+</html>

@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+    xmlns:f="http://java.sun.com/jsf/core">
+
+	<h:body>
+    
+	<f:metadata>
+		<f:event listener="#{FEPluginBean.includeFlot}" type="preRenderComponent"></f:event>
+	</f:metadata>
+	
+    	<ui:composition template="/WEB-INF/template/common/commonLayout.xhtml">
+    	
+    	
+    		<ui:define name="heading">
+    		
+		        	<ui:include src="/WEB-INF/include/sales/entityOverviewPanel.xhtml" >
+		        		<ui:param name="showTitleInCell" value="true" />
+		        		<ui:param name="title" value="Willkommen" />
+		        		<ui:param name="element" value="#{userBean.activeUser}" />
+		        	</ui:include>
+    		
+    		</ui:define>
+    	
+    	
+ 			<ui:param name="heading1" value="Dashboard" />
+ 
+    		<ui:define name="content">
+    		<h:panelGroup rendered="#{modulBean.developmentView}">
+        	<div class="row">
+                    
+                    <!-- 
+                    <div class="col-lg-4">
+                        <div class="ibox float-e-margins ibox-dark">
+                            <div class="ibox-title">
+                                <h5>Elsbeth</h5>
+                            </div>
+                            <div class="ibox-content">
+                                <h1 class="no-margins">36</h1>
+                                <div class="stat-percent font-bold text-danger">noch 58 <i class="fa fa-male"></i></div>
+                                <small>Calls</small>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-4">
+                        <div class="ibox float-e-margins ibox-dark">
+                            <div class="ibox-title">
+                                <h5>CS Wert</h5>
+                            </div>
+                            <div class="ibox-content">
+                                <h1 class="no-margins">5.63</h1>
+                                <div class="stat-percent font-bold text-green">4.25 <i class="fa fa-level-up"></i></div>
+                                <small>dieser Monat</small>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-4">
+                        <div class="ibox float-e-margins ibox-dark">
+                            <div class="ibox-title">
+                                <h5>MS Wert</h5>
+                            </div>
+                            <div class="ibox-content">
+                                <h1 class="no-margins">2.63</h1>
+                                <div class="stat-percent font-bold text-danger">8.47 <i class="fa fa-level-down"></i></div>
+                                <small>dieser Monat</small>
+                            </div>
+                        </div>
+                    </div>
+                    
+                     -->
+                    
+		</div>
+		</h:panelGroup>
+		
+		
+		<div class="row">
+                <div class="col-lg-6">
+                
+                <ui:repeat var="achievement" value="#{achievementBean.ownActiveAchievementList}">
+                	<ui:include src="/WEB-INF/include/achievement/achievement.xhtml" >
+		        		<ui:param name="achievement" value="#{achievement}" />
+		        	</ui:include>
+               	</ui:repeat>
+                
+                    
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                            <h5>Eigenes Konto</h5>
+                        </div>
+                        <div class="ibox-content no-padding">
+                            <ul class="list-group">
+                                <li class="list-group-item">
+                                	<span class="badge badge-primary">
+                                		<h:outputText value="#{userBean.calculateRemainingVacation(userBean.activeUser,helperBean.thisYear())}" >
+	                                                	<f:convertNumber maxFractionDigits="1" minFractionDigits="0" />
+	                                    </h:outputText>
+	                                </span>
+                                	Urlaub verfügbar
+                                </li>
+                            </ul>
+                            <ul class="list-group">
+                                <li class="list-group-item">
+                                	<span class="badge badge-danger">#{helperBean.minToString( userBean.getOvertime(userBean.activeUser))}</span>
+                                	Überstunden
+                                </li>
+                            </ul>
+                            <ul class="list-group">
+                                <li class="list-group-item">
+                                	<span class="badge badge-warning">
+                                	<h:outputText value="#{userBean.activeUser.pointGoal}" >
+												<f:convertNumber maxFractionDigits="4" minFractionDigits="0" />
+	                                </h:outputText>
+                                	</span>
+                                	Punktziel
+                                </li>
+                            </ul>
+                        </div>
+                        
+                        
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                            <h5>Timeline</h5>
+                        </div>
+
+                        <div class="ibox-content inspinia-timeline">
+								
+							<ui:repeat var="activity" value="#{userBean.timeline}">
+							
+							
+	                            <div class="timeline-item">
+	                                <div class="row">
+								
+				                    <h:panelGroup rendered="#{activity['class'].simpleName == 'ManualCommissionEntity'}">
+					                    <div class="col-xs-3 date">
+	                                        <i class="fa fa-star"></i>
+	                                        <h:outputText value="#{activity.creationDate}" converter="#{NamedDateTimeConverter}" >
+													<f:convertDateTime binding="#{helperBean.convertTime}"  timeZone="CET"/>
+												</h:outputText>
+	                                        <br />
+	                                        <small class="text-navy">
+	                                        	<h:outputText value="#{activity.creationDate}" converter="#{NamedDateTimeConverter}" >
+													<f:convertDateTime binding="#{helperBean.convertDate}"  timeZone="CET"/>
+												</h:outputText>
+											</small>
+	                                    </div>
+	                                    <div class="col-xs-9 content no-top-border">
+	                                        <p class="m-b-xs"><strong>Manuelle Punktekorrektur</strong></p>
+	
+	                                        <p><span class="#{activity.commission.points lt 0 ? 'text-red' : '' }">
+	                                        		<h:outputText value="#{activity.commission.points}" >
+															<f:convertNumber maxFractionDigits="4" minFractionDigits="0" />
+				                                	</h:outputText>
+											<i class="fa fa-star"></i>
+											</span>
+											<br/><br/>
+											
+											gültig am	<h:outputText value="#{activity.effectiveDate}" >
+															<f:convertDateTime type="date" pattern="dd.MM.yy" timeZone="CET"/>
+														</h:outputText>
+											<br/><br/>
+											<h:outputText value="#{helperBean.nl2br(activity.note)}" escape="false" />
+											</p>
+	                                    </div>
+				                    </h:panelGroup>
+								
+				                    <h:panelGroup rendered="#{activity['class'].simpleName == 'PhoneContractEntity'}">
+					                    <div class="col-xs-3 date">
+	                                        <i class="fa fa-file-text"></i>
+	                                        <h:outputText value="#{activity.creationDate}" converter="#{NamedDateTimeConverter}" >
+													<f:convertDateTime binding="#{helperBean.convertTime}"  timeZone="CET"/>
+												</h:outputText>
+	                                        <br />
+	                                        <small class="text-navy">
+	                                        	<h:outputText value="#{activity.creationDate}" converter="#{NamedDateTimeConverter}" >
+													<f:convertDateTime binding="#{helperBean.convertDate}"  timeZone="CET"/>
+												</h:outputText>
+											</small>
+	                                    </div>
+	                                    <div class="col-xs-9 content no-top-border">
+	                                        <p class="m-b-xs"><strong>Vertrag #{activity.id}</strong></p>
+	
+	                                        <p>#{activity.customer.name}<br/>
+	                                        #{activity.cachedTariff.productName}</p>
+	
+	                                    </div>
+				                    </h:panelGroup>
+								
+				                    <h:panelGroup rendered="#{activity['class'].simpleName == 'OrderEntity'}">
+					                    <div class="col-xs-3 date">
+	                                        <i class="fa fa-bank"></i>
+	                                        <h:outputText value="#{activity.creationDate}" converter="#{NamedDateTimeConverter}" >
+													<f:convertDateTime binding="#{helperBean.convertTime}"  timeZone="CET"/>
+												</h:outputText>
+	                                        <br />
+	                                        <small class="text-navy">
+	                                        	<h:outputText value="#{activity.creationDate}" converter="#{NamedDateTimeConverter}" >
+													<f:convertDateTime binding="#{helperBean.convertDate}"  timeZone="CET"/>
+												</h:outputText>
+											</small>
+	                                    </div>
+	                                    <div class="col-xs-9 content no-top-border">
+	                                        <p class="m-b-xs"><strong>Verkauf #{activity.id}</strong></p>
+	
+	                                        <p>#{activity.customer.name}</p>
+	
+	                                    </div>
+				                    </h:panelGroup>
+				                    
+				                    <h:panelGroup rendered="#{activity['class'].simpleName == 'EventEntity'}">
+									<div>EVENT: <h:outputText value="#{activity.id}" /></div>
+				                    </h:panelGroup>
+				                    
+				                    <h:panelGroup rendered="#{activity['class'].simpleName == 'NoteEntity'}">
+									<div>NOTE: <h:outputText value="#{activity.id}" /></div>
+				                    </h:panelGroup>
+				                    
+				                    
+				                    <h:panelGroup rendered="#{activity['class'].simpleName == 'BaseContractCancellationEntity'}">
+					                    <div class="col-xs-3 date">
+	                                        <i class="fa fa-times"></i>
+	                                        <h:outputText value="#{activity.creationDate}" converter="#{NamedDateTimeConverter}" >
+													<f:convertDateTime binding="#{helperBean.convertTime}"  timeZone="CET"/>
+												</h:outputText>
+	                                        <br />
+	                                        <small class="text-navy">
+	                                        	<h:outputText value="#{activity.creationDate}" converter="#{NamedDateTimeConverter}" >
+													<f:convertDateTime binding="#{helperBean.convertDate}"  timeZone="CET"/>
+												</h:outputText>
+											</small>
+	                                    </div>
+	                                    <div class="col-xs-9 content no-top-border">
+	                                        <p class="m-b-xs">
+	                                        	<strong>Stornierungsbuchung</strong>
+	                                        	<span class="text-danger pull-right">
+				                                    <h:outputText value="#{activity.commission.points}" >
+															<f:convertNumber maxFractionDigits="4" minFractionDigits="0" />
+				                                	</h:outputText>
+				                                    <i class="fa fa-star"></i>
+			                                    </span>
+	                                        </p>
+	                                        <p>
+		                                        #{activity.customer.name}<br />
+		                                        #{activity.contract.cachedTariff.productName}<br />
+		                                        #{activity.contract.callingNumber}<br/>
+		                                        
+ 											</p>
+	
+	                                    </div>
+				                    </h:panelGroup>
+				                    
+	                                </div>
+	                            </div>
+							</ui:repeat>
+
+<!-- 
+                            <div class="timeline-item">
+                                <div class="row">
+                                    <div class="col-xs-3 date">
+                                        <i class="fa fa-file-text"></i>
+                                        13:45
+                                        <br />
+                                        <small class="text-navy">vor 1 Stunde</small>
+                                    </div>
+                                    <div class="col-xs-7 content no-top-border">
+                                        <p class="m-b-xs"><strong>Vertrag</strong></p>
+
+                                        <p>Hans Dieter</p>
+                                        <p>Red 3 Sub 20</p>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="timeline-item">
+                                <div class="row">
+                                    <div class="col-xs-3 date">
+                                        <i class="fa fa-file-text"></i>
+                                        10:19
+                                        <br />
+                                        <small class="text-navy">vor 4 Stunden</small>
+                                    </div>
+                                    <div class="col-xs-7 content no-top-border">
+                                        <p class="m-b-xs"><strong>Vertrag</strong></p>
+
+                                        <p>Max Mustermann</p>
+                                        <p>Red 1,5 Sub 10</p>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="timeline-item">
+                                <div class="row">
+                                    <div class="col-xs-3 date">
+                                        <i class="fa fa-phone"></i>
+                                        9:39
+                                        <br />
+                                        <small class="text-navy">vor 5 Stunden</small>
+                                    </div>
+                                    <div class="col-xs-7 content">
+                                        <p class="m-b-xs"><strong>Elsbeth Call</strong></p>
+                                        <p>Maria Kaiser</p>
+                                        <p>Kundin ist glücklich.</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="timeline-item">
+                                <div class="row">
+                                    <div class="col-xs-3 date">
+                                        <i class="fa fa-phone"></i>
+                                        9:35
+                                        <br />
+                                        <small class="text-navy">vor 5 Stunden</small>
+                                    </div>
+                                    <div class="col-xs-7 content">
+                                        <p class="m-b-xs"><strong>Elsbeth Call</strong></p>
+                                        <p>John Doe</p>
+                                        <p>Kunde mag net</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="timeline-item">
+                                <div class="row">
+                                    <div class="col-xs-3 date">
+                                        <i class="fa fa-phone"></i>
+                                        9:28
+                                        <br />
+                                        <small class="text-navy">vor 5 Stunden</small>
+                                    </div>
+                                    <div class="col-xs-7 content">
+                                        <p class="m-b-xs"><strong>Elsbeth Call</strong></p>
+                                        <p>Max Mustermann</p>
+                                        <p>Kunde will heute vorbei kommen.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            
+                             -->
+                             
+                             
+                        </div>
+                    </div>
+                </div>
+
+                </div>
+
+                
+                
+    			
+    		</ui:define>
+    	</ui:composition>
+    </h:body>
+</html>

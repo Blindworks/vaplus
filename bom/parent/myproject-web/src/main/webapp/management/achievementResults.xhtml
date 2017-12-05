@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+  	xmlns:c="http://java.sun.com/jstl/core">
+
+<h:body>
+
+	<ui:composition template="/WEB-INF/template/common/commonLayout.xhtml">
+
+		<ui:param name="heading1" value="Leistungsziel: #{achievementBean.selectedAchievement.name}" />
+		
+		<ui:define name="headingContent">
+		<h:form>
+				<h:commandLink action="#{achievementBean.calculateAchievementGoalAttainment(achievementBean.selectedAchievement)}" class="btn btn-xs btn-primary pull-right" title="Ergebnisse">
+							<i class="fa fa-refresh"></i> 
+				</h:commandLink>
+		</h:form>		
+		</ui:define>
+		
+		<ui:define name="content">
+		
+		
+    		<div class="row">
+    		
+				<div class="col-lg-12">
+    		
+    		
+			    	<h:panelGroup rendered="#{achievementBean.selectedAchievement.targetReached}">
+			                <div class="widget navy-bg">
+		                        <div class="row vertical-align">
+		                            <div class="col-xs-3">
+		                                <i class="fa fa-thumbs-up fa-2x"></i>
+		                            </div>
+		                            <div class="col-xs-9 text-right">
+		                                <h2 class="font-bold"><h:outputText value="#{achievementBean.selectedAchievement.achievedCommission}" ><f:convertNumber maxFractionDigits="2" minFractionDigits="2" /></h:outputText> €</h2>
+		                            </div>
+		                        </div>
+		                    </div>
+                    </h:panelGroup>
+			    	<h:panelGroup rendered="#{not achievementBean.selectedAchievement.targetReached}">
+    		
+			                <div class="widget red-bg">
+		                        <div class="row vertical-align">
+		                            <div class="col-xs-3">
+		                                <i class="fa fa-times fa-2x"></i>
+		                            </div>
+		                            <div class="col-xs-9 text-right">
+		                                <h2 class="font-bold">nicht erfüllt</h2>
+		                            </div>
+		                        </div>
+		                    </div>
+                    </h:panelGroup>
+    			</div>
+				<div class="col-lg-12">
+			            <div class="ibox float-e-margins">
+			                <div class="ibox-title">
+			                    <h5>Ziele:</h5>
+			                    
+			                </div>
+			                <div class="ibox-content">
+			                
+							
+							
+			<ui:fragment rendered="#{not empty achievementBean.selectedAchievement.totalPieceTarget}">
+               <ui:include src="/WEB-INF/include/achievement/progress.xhtml" >
+        		<ui:param name="name" value="gesamt Stücke Ziel" />
+        		<ui:param name="unit" value="Stk." />
+        		<ui:param name="goalAttainment" value="#{achievementBean.selectedAchievement.pieceGoalAttainment}" />
+        		<ui:param name="ownGoalAttainment" value="#{achievementBean.getUserPieceGoalAttainment(achievementBean.selectedAchievement, userBean.activeUser)}" />
+        		<ui:param name="singleTarget" value="#{achievementBean.selectedAchievement.totalPieceTarget}" />
+        		<ui:param name="maxTarget" value="#{achievementBean.selectedAchievement.totalPieceTarget.target}" />
+        		<ui:param name="progressBarClass" value="#{achievementBean.selectedAchievement.totalPieceTargetReached ? 'progress-bar-success' : 'progress-bar-danger'}" />
+        		<ui:param name="hideOwnAttainment" value="true" />
+        	</ui:include>
+        </ui:fragment>
+              
+              <ui:fragment rendered="#{not empty achievementBean.selectedAchievement.totalSumTarget}">
+               <ui:include src="/WEB-INF/include/achievement/progress.xhtml" >
+        		<ui:param name="name" value="gesamt Summen Ziel" />
+        		<ui:param name="unit" value="€" />
+        		<ui:param name="goalAttainment" value="#{achievementBean.selectedAchievement.sumGoalAttainment}" />
+        		<ui:param name="ownGoalAttainment" value="#{achievementBean.getUserSumGoalAttainment(achievementBean.selectedAchievement, userBean.activeUser)}" />
+        		<ui:param name="singleTarget" value="#{achievementBean.selectedAchievement.totalSumTarget}" />
+        		<ui:param name="maxTarget" value="#{achievementBean.selectedAchievement.totalSumTarget.target}" />
+        		<ui:param name="progressBarClass" value="#{achievementBean.selectedAchievement.totalSumTargetReached ? 'progress-bar-success' : 'progress-bar-danger'}" />
+        		<ui:param name="hideOwnAttainment" value="true" />
+        	</ui:include>
+        </ui:fragment>
+              
+              <ui:fragment rendered="#{not empty achievementBean.selectedAchievement.totalAquiredRevenueTarget}">
+               <ui:include src="/WEB-INF/include/achievement/progress.xhtml" >
+        		<ui:param name="name" value="gesamt AU Ziel" />
+        		<ui:param name="unit" value="€" />
+        		<ui:param name="goalAttainment" value="#{achievementBean.selectedAchievement.aquiredRevenueGoalAttainment}" />
+        		<ui:param name="ownGoalAttainment" value="#{achievementBean.getUserAquiredRevenueGoalAttainment(achievementBean.selectedAchievement, userBean.activeUser)}" />
+        		<ui:param name="singleTarget" value="#{achievementBean.selectedAchievement.totalAquiredRevenueTarget}" />
+        		<ui:param name="maxTarget" value="#{achievementBean.selectedAchievement.totalAquiredRevenueTarget.target}" />
+        		<ui:param name="progressBarClass" value="#{achievementBean.selectedAchievement.totalAquiredRevenueTargetReached ? 'progress-bar-success' : 'progress-bar-danger'}" />
+        		<ui:param name="hideOwnAttainment" value="true" />
+        	</ui:include>
+        </ui:fragment>
+              
+              <ui:fragment rendered="#{not empty achievementBean.selectedAchievement.totalContractedRevenueTarget}">
+               <ui:include src="/WEB-INF/include/achievement/progress.xhtml" >
+        		<ui:param name="name" value="gesamt GU Ziel" />
+        		<ui:param name="unit" value="€" />
+        		<ui:param name="goalAttainment" value="#{achievementBean.selectedAchievement.contractedRevenueGoalAttainment}" />
+        		<ui:param name="ownGoalAttainment" value="#{achievementBean.getUserContractedRevenueGoalAttainment(achievementBean.selectedAchievement, userBean.activeUser)}" />
+        		<ui:param name="singleTarget" value="#{achievementBean.selectedAchievement.totalContractedRevenueTarget}" />
+        		<ui:param name="maxTarget" value="#{achievementBean.selectedAchievement.totalContractedRevenueTarget.target}" />
+        		<ui:param name="progressBarClass" value="#{achievementBean.selectedAchievement.totalContractedRevenueTargetReached ? 'progress-bar-success' : 'progress-bar-danger'}" />
+        		<ui:param name="hideOwnAttainment" value="true" />
+        	</ui:include>
+        </ui:fragment>
+              
+              
+              <ui:fragment rendered="#{achievementBean.selectedAchievement.pieceTargetList.size() gt 0}">
+               <ui:include src="/WEB-INF/include/achievement/progress.xhtml" >
+        		<ui:param name="name" value="Stücke Ziel" />
+        		<ui:param name="unit" value="Stk." />
+        		<ui:param name="goalAttainment" value="#{achievementBean.selectedAchievement.pieceGoalAttainment}" />
+        		<ui:param name="ownGoalAttainment" value="#{achievementBean.getUserPieceGoalAttainment(achievementBean.selectedAchievement, userBean.activeUser)}" />
+        		<ui:param name="targetList" value="#{achievementBean.selectedAchievement.pieceTargetList}" />
+        		<ui:param name="maxTarget" value="#{achievementBean.selectedAchievement.maxPieceTarget}" />
+        		<ui:param name="progressBarClass" value="#{achievementBean.selectedAchievement.pieceTargetReached ? 'progress-bar-success' : 'progress-bar-danger'}" />
+        		<ui:param name="hideOwnAttainment" value="true" />
+        	</ui:include>
+        </ui:fragment>
+              
+              <ui:fragment rendered="#{achievementBean.selectedAchievement.sumTargetList.size() gt 0}">
+               <ui:include src="/WEB-INF/include/achievement/progress.xhtml" >
+        		<ui:param name="name" value="Summen Ziel" />
+        		<ui:param name="unit" value="€" />
+        		<ui:param name="goalAttainment" value="#{achievementBean.selectedAchievement.sumGoalAttainment}" />
+        		<ui:param name="ownGoalAttainment" value="#{achievementBean.getUserSumGoalAttainment(achievementBean.selectedAchievement, userBean.activeUser)}" />
+        		<ui:param name="targetList" value="#{achievementBean.selectedAchievement.sumTargetList}" />
+        		<ui:param name="maxTarget" value="#{achievementBean.selectedAchievement.maxSumTarget}" />
+        		<ui:param name="progressBarClass" value="#{achievementBean.selectedAchievement.sumTargetReached ? 'progress-bar-success' : 'progress-bar-danger'}" />
+        		<ui:param name="hideOwnAttainment" value="true" />
+        	</ui:include>
+        </ui:fragment>
+              
+              <ui:fragment rendered="#{achievementBean.selectedAchievement.aquiredRevenueTargetList.size() gt 0}">
+               <ui:include src="/WEB-INF/include/achievement/progress.xhtml" >
+        		<ui:param name="name" value="AU Ziel" />
+        		<ui:param name="unit" value="€" />
+        		<ui:param name="goalAttainment" value="#{achievementBean.selectedAchievement.aquiredRevenueGoalAttainment}" />
+        		<ui:param name="ownGoalAttainment" value="#{achievementBean.getUserAquiredRevenueGoalAttainment(achievementBean.selectedAchievement, userBean.activeUser)}" />
+        		<ui:param name="targetList" value="#{achievementBean.selectedAchievement.aquiredRevenueTargetList}" />
+        		<ui:param name="maxTarget" value="#{achievementBean.selectedAchievement.maxAquiredRevenueTarget}" />
+        		<ui:param name="progressBarClass" value="#{achievementBean.selectedAchievement.aquiredRevenueTargetReached ? 'progress-bar-success' : 'progress-bar-danger'}" />
+        		<ui:param name="hideOwnAttainment" value="true" />
+        	</ui:include>
+        </ui:fragment>
+              
+              <ui:fragment rendered="#{achievementBean.selectedAchievement.contractedRevenueTargetList.size() gt 0}">
+               <ui:include src="/WEB-INF/include/achievement/progress.xhtml" >
+        		<ui:param name="name" value="GU Ziel" />
+        		<ui:param name="unit" value="€" />
+        		<ui:param name="goalAttainment" value="#{achievementBean.selectedAchievement.contractedRevenueGoalAttainment}" />
+        		<ui:param name="ownGoalAttainment" value="#{achievementBean.getUserContractedRevenueGoalAttainment(achievementBean.selectedAchievement, userBean.activeUser)}" />
+        		<ui:param name="targetList" value="#{achievementBean.selectedAchievement.contractedRevenueTargetList}" />
+        		<ui:param name="maxTarget" value="#{achievementBean.selectedAchievement.maxContractedRevenueTarget}" />
+        		<ui:param name="progressBarClass" value="#{achievementBean.selectedAchievement.contractedRevenueTargetReached ? 'progress-bar-success' : 'progress-bar-danger'}" />
+        		<ui:param name="hideOwnAttainment" value="true" />
+        	</ui:include>
+        </ui:fragment>
+							
+							
+							
+							
+							</div>
+								
+								
+						</div>	
+			</div>
+			
+			<div class="col-lg-12">
+	            <div class="ibox float-e-margins">
+	                <div class="ibox-title">
+	                    <h5>Details:</h5>
+	                    
+	                </div>
+	                <div class="ibox-content">
+	                		<ui:repeat var="user" value="#{achievementBean.selectedAchievement.acquisitionSourceUserList}">
+	                			<ui:include src="/WEB-INF/include/achievement/achievementUserResult.xhtml" >
+        							<ui:param name="user" value="#{user}" />
+        							<ui:param name="achievement" value="#{achievementBean.selectedAchievement}" />
+        						</ui:include>
+	                		</ui:repeat>
+	                </div>
+	           </div>
+			</div>
+			           
+			
+			
+		</div>
+
+
+		</ui:define>
+
+
+	</ui:composition>
+</h:body>
+</html>

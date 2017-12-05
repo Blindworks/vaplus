@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"	
+	xmlns:p="http://primefaces.org/ui">
+
+<h:body>
+
+
+
+	<f:metadata>
+		<f:event type="preRenderView" listener="#{customerBean.checkIfCustomerLogged}" />
+	</f:metadata>
+	
+	<ui:composition template="/WEB-INF/template/common/commonLayout.xhtml">
+
+		<ui:param name="heading1" value="#{customerBean.selectedCustomer.name}" />
+		
+		<ui:define name="content">
+		
+		
+				
+		
+		<div class="row">
+	            <div class="col-lg-8">
+	            
+	            <div class="row">
+                    <div class="col-lg-4">
+                        <div class="ibox float-e-margins">
+                            <div class="ibox-title">
+                                <h5>mtl. Gesamtpreis</h5>
+                            </div>
+                            <div class="ibox-content text-right">
+                                <h1 class="no-margins">
+                                
+                                    <h:outputText value="#{customerBean.getMonthlyTotal(customerBean.selectedCustomer)}" >
+											<f:convertNumber maxFractionDigits="2" minFractionDigits="2" />
+                                	</h:outputText>
+                                    <i class="fa fa-euro"></i>
+                                </h1>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="ibox float-e-margins">
+                            <div class="ibox-title">
+                                <h5>Vertrags Punkte</h5>
+                            </div>
+                            <div class="ibox-content text-right">
+                            
+                            	<h1 class="no-margins">
+                                    <h:outputText value="#{customerBean.getContractPoints(customerBean.selectedCustomer)}" >
+											<f:convertNumber maxFractionDigits="4" minFractionDigits="0" />
+                                	</h:outputText>
+                                    <i class="fa fa-star"></i>
+                                </h1>
+                            
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="ibox float-e-margins">
+                            <div class="ibox-title">
+                                <h5>Retail Punkte</h5>
+                            </div>
+                            <div class="ibox-content text-right">
+                                <h1 class="no-margins">
+                                    <h:outputText value="#{customerBean.getRetailPoints(customerBean.selectedCustomer)}" >
+											<f:convertNumber maxFractionDigits="4" minFractionDigits="0" />
+                                	</h:outputText>
+                                    <i class="fa fa-star"></i>
+                                </h1>
+                            </div>
+                        </div>
+                    </div>
+                    
+            </div>
+	            
+            <div class="ibox ">
+                        <div class="ibox-title">
+                            <h5>Aktuelle Verträge <span class="badge badge-success">#{customerBean.contractMap.contractCount}</span></h5>
+                        </div>
+                        <div class="ibox-content">
+                        	<h:form>
+
+                            <div class="dd" id="contractList">
+                                <ol class="dd-list">
+                                
+                                	<ui:repeat var="customerId" value="#{customerBean.contractMap.customerIdList}">
+                                		<li class="dd-item" >
+                                			<div>#{customerId}
+                                			
+                                			<h:panelGroup rendered="#{ not empty customerBean.contractMap.getCustomerList(customerId).password}">
+                                				<span class="label label-default pull-right" style="line-height: 14px;" data-container="body" data-toggle="popover" data-placement="right" data-content="Passwort: #{customerBean.contractMap.getCustomerList(customerId).password}" data-original-title="" title=""><i class="fa fa-lock"> </i></span>
+                                			</h:panelGroup>
+                                			
+                                			<h:panelGroup rendered="#{customerBean.contractMap.getCustomerList(customerId).containsExtensionOfTheTermContract}">
+                                				<span class="label label-danger pull-right" style="line-height: 14px;">+24</span>
+                                			</h:panelGroup>
+                                			
+                                			</div>
+                                        	<ol class="dd-list">
+                                			<ui:repeat var="contract" value="#{customerBean.contractMap.getCustomerList(customerId).contractList}">
+	                                            <li class="dd-item " >
+                                                	<div class="row">
+                                                		<div class="col-sm-6 no-padding no-margins">
+                                                			<h:commandLink action="contractView" class="text-default">
+																<f:setPropertyActionListener value="#{contract}" target="#{contractBean.selectedContract}" />
+																<h:outputText value="#{contract.cachedTariff.productName}" />
+														    </h:commandLink>
+                                                		</div>
+                                                		<div class="col-sm-4 no-padding no-margins">
+                                                			<span class="pull-right"><h:outputText value="#{contract.callingNumber}" /></span>
+                                                		</div>
+                                                		<div class="col-sm-2 no-padding no-margins">
+	                                                		<h:panelGroup rendered="#{ not empty contract.userPassword}">
+				                                				<span class="label label-default pull-right" style="line-height: 14px;" data-container="body" data-toggle="popover" data-placement="right" data-content="Passwort: #{contract.userPassword}" data-original-title="" title=""><i class="fa fa-lock"> </i></span>
+				                                			</h:panelGroup>
+		                                                    
+				                                			<h:panelGroup rendered="#{contractBean.isContractAbleToExtensionOfTheTerm(contract)}">
+				                                				<span class="label label-danger pull-right" style="line-height: 14px;">+24</span>
+				                                			</h:panelGroup>
+				                                			
+				                                			<h:panelGroup rendered="#{contract.extensionOfTheTermPermission and contract.daysTillExpiration > 0}">
+				                                				<span class="label label-warning pull-right" style="line-height: 14px;">#{contract.daysTillExpiration} Tage</span>
+				                                			</h:panelGroup>
+				                                			
+															<span class="label label-warning pull-right" style="line-height: 14px;"><h:outputText value="#{contract.status.name}" /></span>
+                                                		</div>
+                                                    </div>
+	                                            </li>
+                                			</ui:repeat>
+                                			</ol>
+                                		</li>
+                                	</ui:repeat>
+
+                                </ol>
+                            </div>
+							</h:form>
+
+                        </div>
+
+                    </div>
+            
+                            
+            
+	                    
+	                    
+	            </div>
+	            <div class="col-lg-4">
+	            <div class="ibox ">
+
+                        <div class="ibox-content">
+                            <div class="tab-content">
+                                <div id="contact-1" class="tab-pane active">
+                                    <div class="row">
+                						<div class="col-sm-12">
+                							<h:form>
+                                            <h2>#{customerBean.selectedCustomer.name}</h2>
+                                            <h:panelGroup rendered="#{customerBean.selectedCustomer.company and not empty customerBean.selectedCustomer.firstname}">
+                                            	<p>#{customerBean.selectedCustomer.firstname} #{customerBean.selectedCustomer.lastname}</p>
+                                            </h:panelGroup>
+                                            
+                                            
+                                            <h:panelGroup rendered="#{not empty customerBean.selectedCustomer.contactPerson}">
+                                            	<strong>Kontaktperson</strong>
+                                                <p>#{customerBean.selectedCustomer.contactPerson}</p>
+                                            </h:panelGroup>
+                                            
+											<strong>int. KdNr.</strong>
+                                            <p>#{customerBean.selectedCustomer.id}</p>
+                                            
+											<strong>nationalität</strong>
+                                            <p>#{customerBean.selectedCustomer.nationality.nationality}</p>
+
+											<strong>Adresse</strong>
+                                            <p>
+                                                #{customerBean.selectedCustomer.address.street} #{customerBean.selectedCustomer.address.streetNumber}<br />
+                                                <h:panelGroup rendered="#{not empty customerBean.selectedCustomer.address.addressline}">
+                                                #{customerBean.selectedCustomer.address.addressline}<br />
+                                                </h:panelGroup>
+                                                #{customerBean.selectedCustomer.address.country}-#{customerBean.selectedCustomer.address.zip} #{customerBean.selectedCustomer.address.city}<br />
+                                                
+                                                 <h:panelGroup rendered="#{not empty customerBean.selectedCustomer.tel}">
+                                                <i class="fa fa-phone"> </i> #{customerBean.selectedCustomer.tel}<br />
+                                                </h:panelGroup>
+                                                
+                                                 <h:panelGroup rendered="#{not empty customerBean.selectedCustomer.fax}">
+                                                <i class="fa fa-fax"> </i> #{customerBean.selectedCustomer.fax}<br />
+                                                </h:panelGroup>
+                                                
+                                                 <h:panelGroup rendered="#{not empty customerBean.selectedCustomer.email}">
+                                                <i class="fa fa-envelope"> </i> #{customerBean.selectedCustomer.email}
+                                                </h:panelGroup>
+                                            </p>
+                                            
+                                            <h:panelGroup rendered="#{not empty customerBean.selectedCustomer.bday}">
+                                            <strong>Geburtsdatum</strong>
+                                            	<p>
+                                            	<h:outputText value="#{customerBean.selectedCustomer.bday}" >
+													<f:convertDateTime pattern="dd.MM.yyyy" timeZone="CET"/>
+												</h:outputText>
+                                             	</p>
+                                            </h:panelGroup>
+                                            
+                                            <strong>Kunde seit</strong>
+                                             <p>
+                                            	<h:outputText value="#{customerBean.selectedCustomer.creationDate}" >
+													<f:convertDateTime pattern="dd.MM.yyyy" timeZone="CET"/>
+												</h:outputText>
+											</p>
+											
+                                            <ui:fragment rendered="#{not empty customerBean.selectedCustomer.paymentAccount}">
+                                            <strong>Buchungskonto</strong>
+                                             <p>
+                                            	<h:commandLink action="/controlling/paymentAccount" >
+													<f:setPropertyActionListener value="#{customerBean.selectedCustomer.paymentAccount}" target="#{paymentAccountBean.selectedPaymentAccount}" />
+													<h:outputText value="#{customerBean.selectedCustomer.paymentAccount.id}" />
+												</h:commandLink>
+											</p>
+											</ui:fragment>
+                                            
+                                            <strong>Kunden-Filiale</strong>
+                                             <p>
+                                            	<h:outputText value="#{customerBean.selectedCustomer.shop}" rendered="#{ not empty customerBean.selectedCustomer.shop}" />
+                                            	<h:outputText value="nicht zugewiesen" rendered="#{ empty customerBean.selectedCustomer.shop}" />
+											</p>
+                                            
+                                            <strong>Kundenbetreuer</strong>
+                                             <p>
+                                            	<h:outputText value="#{customerBean.selectedCustomer.accountManager}" rendered="#{ not empty customerBean.selectedCustomer.accountManager}" />
+                                            	<h:outputText value="nicht zugewiesen" rendered="#{ empty customerBean.selectedCustomer.accountManager}" />
+											</p>
+                                             
+                                            <h:panelGroup rendered="#{not empty customerBean.selectedCustomer.commercialRegisterId}">
+                                            <strong>Handelsregister</strong>
+                                             <p><h:outputText value="#{customerBean.selectedCustomer.commercialRegisterId}" /></p>
+                                             </h:panelGroup>
+                                             </h:form>
+                                           </div>
+                                    </div>
+                                    <div class="client-detail">
+                                    <div class="slimScrollDiv" style="position: relative; overflow: hidden; width: auto; height: 100%;"><div class="full-height-scroll" style="overflow: hidden; width: auto; height: 100%;">
+
+										<h:panelGroup rendered="#{not empty customerBean.selectedCustomer.note and customerBean.selectedCustomer.note.content.length() > 0}">
+                                        <strong>Notiz</strong>
+                                        <p>
+                                            <h:outputText value="#{customerBean.selectedCustomer.note.content}" />
+                                        </p>
+                                        <hr />
+                                        </h:panelGroup>
+                                        <strong>letze Aktivitäten</strong>
+                                        
+                                        
+							
+                                        <div id="vertical-timeline" class="vertical-container dark-timeline">
+                                        
+							<ui:repeat var="activity" value="#{customerBean.timeline}">
+							
+								<div class="vertical-timeline-block">
+								
+				                    <h:panelGroup rendered="#{activity['class'].simpleName == 'PhoneContractEntity'}">
+				                    
+				                    	<div class="vertical-timeline-icon gray-bg">
+                                               <i class="fa fa-file-text"></i>
+                                        </div>
+                                        <div class="vertical-timeline-content">
+                                               <p>Vertrag #{activity.id}<br/>
+                                                #{activity.cachedTariff.productName}
+                                               	<br/>
+                                               	<h:panelGroup rendered="#{not empty activity.info}">
+                                                    <small><i class="fa fa-file-text-o"> </i> #{activity.info}
+                                                    </small>
+                                                </h:panelGroup>
+                                               </p>
+                                               <span class="vertical-date small text-muted">
+                                               		<h:outputText value="#{activity.creationDate}" converter="#{NamedDateTimeConverter}" >
+														<f:convertDateTime binding="#{helperBean.convertTime}"  timeZone="CET"/>
+													</h:outputText>
+											   </span>
+                                        </div>
+				                    </h:panelGroup>
+				                    <h:panelGroup rendered="#{activity['class'].simpleName == 'OrderEntity'}">
+				                    
+				                    	<div class="vertical-timeline-icon gray-bg">
+                                               <i class="fa fa-bank"></i>
+                                        </div>
+                                        <div class="vertical-timeline-content">
+                                               <p>Verkauf #{activity.id}<br/>
+                                               	<h:panelGroup rendered="#{not empty activity.info}">
+                                                    <small><i class="fa fa-file-text-o"> </i> #{activity.info}
+                                                    </small>
+                                                </h:panelGroup>
+                                               </p>
+                                               <span class="vertical-date small text-muted">
+                                               		<h:outputText value="#{activity.creationDate}" converter="#{NamedDateTimeConverter}" >
+														<f:convertDateTime binding="#{helperBean.convertTime}"  timeZone="CET"/>
+													</h:outputText>
+											   </span>
+                                        </div>
+				                    </h:panelGroup>
+				                    <h:panelGroup rendered="#{activity['class'].simpleName == 'EventEntity'}">
+									<div>EVENT: <h:outputText value="#{activity.id}" /></div>
+				                    </h:panelGroup>
+				                    <h:panelGroup rendered="#{activity['class'].simpleName == 'NoteEntity'}">
+									<div>NOTE: <h:outputText value="#{activity.id}" /></div>
+				                    </h:panelGroup>
+				                    
+	                            </div>
+							</ui:repeat>
+							
+                                        <!-- 
+                                            <div class="vertical-timeline-block">
+                                                <div class="vertical-timeline-icon gray-bg">
+                                                    <i class="fa fa-coffee"></i>
+                                                </div>
+                                                <div class="vertical-timeline-content">
+                                                    <p>Verkaufsberatung
+                                                    </p>
+                                                    <span class="vertical-date small text-muted"> 12:34 - 12.06.2015 </span>
+                                                </div>
+                                            </div>
+                                            <div class="vertical-timeline-block">
+                                                <div class="vertical-timeline-icon gray-bg">
+                                                    <i class="fa fa-briefcase"></i>
+                                                </div>
+                                                <div class="vertical-timeline-content">
+                                                    <p>Neuer Vertrag (Smart S) abgeschlossen
+                                                    <br/>
+                                                    <small><i class="fa fa-file-text-o"> </i>  AP frei
+                                                    </small>
+                                                    </p>
+                                                    
+                                                    <span class="vertical-date small text-muted"> 16:26 - 10.05.2015 </span>
+                                                </div>
+                                            </div>
+                                            <div class="vertical-timeline-block">
+                                                <div class="vertical-timeline-icon gray-bg">
+                                                    <i class="fa fa-bolt"></i>
+                                                </div>
+                                                <div class="vertical-timeline-content">
+                                                    <p>There are many variations of passages of Lorem Ipsum available.
+                                                    </p>
+                                                    <span class="vertical-date small text-muted"> 06:10 pm - 11.03.2014 </span>
+                                                </div>
+                                            </div>
+                                            <div class="vertical-timeline-block">
+                                                <div class="vertical-timeline-icon navy-bg">
+                                                    <i class="fa fa-warning"></i>
+                                                </div>
+                                                <div class="vertical-timeline-content">
+                                                    <p>The generated Lorem Ipsum is therefore.
+                                                    </p>
+                                                    <span class="vertical-date small text-muted"> 02:50 pm - 03.10.2014 </span>
+                                                </div>
+                                            </div>
+                                            <div class="vertical-timeline-block">
+                                                <div class="vertical-timeline-icon gray-bg">
+                                                    <i class="fa fa-coffee"></i>
+                                                </div>
+                                                <div class="vertical-timeline-content">
+                                                    <p>Conference on the sales results for the previous year.
+                                                    </p>
+                                                    <span class="vertical-date small text-muted"> 2:10 pm - 12.06.2014 </span>
+                                                </div>
+                                            </div>
+                                            <div class="vertical-timeline-block">
+                                                <div class="vertical-timeline-icon gray-bg">
+                                                    <i class="fa fa-briefcase"></i>
+                                                </div>
+                                                <div class="vertical-timeline-content">
+                                                    <p>Many desktop publishing packages and web page editors now use Lorem.
+                                                    </p>
+                                                    <span class="vertical-date small text-muted"> 4:20 pm - 10.05.2014 </span>
+                                                </div>
+                                            </div>
+                                             -->
+                                        </div>
+                                        
+                                    </div>
+                                    
+                                    </div>
+                                    
+                                    </div>
+                                    
+                                    
+                                </div>
+                                
+                                
+                            </div>
+                            
+                        </div>
+                        <h:form class="form-horizontal">
+                        <h:commandLink class="btn btn-xs btn-danger confirm-btn form-control" action="#{customerBean.deleteCustomer}" immediate="true" rendered="#{customerBean.selectedCustomer.id gt 0 and customerBean.selectedCustomer.deleted eq false}">
+										 <i class="fa fa-trash"></i> Kunde löschen	
+						</h:commandLink>
+						</h:form>
+                    </div>
+	            
+	            
+                    
+	            	
+	            </div>
+	        </div>
+	        
+	        <script>
+         $(document).ready(function(){
+
+             $('#contractList').nestable();
+
+         });
+    </script>
+		
+
+		</ui:define>
+
+
+	</ui:composition>
+</h:body>
+</html>

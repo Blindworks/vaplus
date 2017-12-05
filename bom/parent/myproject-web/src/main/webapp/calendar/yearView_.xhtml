@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+		xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:f="http://java.sun.com/jsf/core"	
+	xmlns:c="http://java.sun.com/jstl/core"	
+	xmlns:p="http://primefaces.org/ui">
+
+<h:body>
+
+	<f:metadata>
+		<f:event listener="#{FEPluginBean.includeChosen}" type="preRenderComponent"></f:event>
+		<f:event listener="#{FEPluginBean.includeFullCalendar}" type="preRenderComponent"></f:event>
+		<f:event listener="#{FEPluginBean.includeDatepicker}" type="preRenderComponent"></f:event>
+	</f:metadata>
+
+	<ui:composition template="/WEB-INF/template/common/commonLayout.xhtml">
+
+		<ui:param name="bodyClass" value="right-sidebar-closed" />
+		<ui:param name="heading1" value="Jahres Übersicht" />
+		
+		
+		<ui:define name="content">
+
+		
+		
+		<div class="row">
+			<h:panelGroup id="pageContent">
+			
+		    <div id="calendar_year" class="calendar" data-shopid="#{propertyBean.externalCalendarId}" data-month="04"></div>
+			
+			<div class="col-lg-12">
+			
+		            <div class="ibox float-e-margins">
+		                <div class="ibox-content">
+		                	<div class="fc-toolbar">
+		                						
+		                				<div class="fc-right">
+		                					<div class="fc-button-group">
+		                						<button type="button" onclick="prevWeek();" class="fc-prev-button fc-button fc-state-default fc-corner-left"><span class="fc-icon fc-icon-left-single-arrow"></span></button>
+		                						<button type="button" onclick="nextWeek();" class="fc-next-button fc-button fc-state-default fc-corner-right"><span class="fc-icon fc-icon-right-single-arrow"></span></button>
+		                					</div>
+		                				</div>
+		                				<div class="fc-center">
+		                					<h2 class="calendarDuration"></h2>
+		                				</div>
+		                				<div class="fc-clear"></div></div>
+		                				
+		                		<div class="row">
+		                			<div class="col-md-3">
+		                				<div id="calendar_01_#{propertyBean.externalCalendarId}" class="calendar" data-shopid="#{propertyBean.externalCalendarId}" data-month="01"></div>
+		                			</div>
+		                			<div class="col-md-3">
+		                				<div id="calendar_02_#{propertyBean.externalCalendarId}" class="calendar" data-shopid="#{propertyBean.externalCalendarId}" data-month="02"></div>
+		                			</div>
+		                			<div class="col-md-3">
+		                				<div id="calendar_03_#{propertyBean.externalCalendarId}" class="calendar" data-shopid="#{propertyBean.externalCalendarId}" data-month="03"></div>
+		                			</div>
+		                		</div>
+		                				
+		                		<div class="row">
+		                			<div class="col-md-3">
+		                				<div id="calendar_04_#{propertyBean.externalCalendarId}" class="calendar" data-shopid="#{propertyBean.externalCalendarId}" data-month="04"></div>
+		                			</div>
+		                			<div class="col-md-3">
+		                				<div id="calendar_05_#{propertyBean.externalCalendarId}" class="calendar" data-shopid="#{propertyBean.externalCalendarId}" data-month="05"></div>
+		                			</div>
+		                			<div class="col-md-3">
+		                				<div id="calendar_06_#{propertyBean.externalCalendarId}" class="calendar" data-shopid="#{propertyBean.externalCalendarId}" data-month="06"></div>
+		                			</div>
+		                		</div>
+		                				
+		                		<div class="row">
+		                			<div class="col-md-3">
+		                				<div id="calendar_07_#{propertyBean.externalCalendarId}" class="calendar" data-shopid="#{propertyBean.externalCalendarId}" data-month="07"></div>
+		                			</div>
+		                			<div class="col-md-3">
+		                				<div id="calendar_08_#{propertyBean.externalCalendarId}" class="calendar" data-shopid="#{propertyBean.externalCalendarId}" data-month="08"></div>
+		                			</div>
+		                			<div class="col-md-3">
+		                				<div id="calendar_09_#{propertyBean.externalCalendarId}" class="calendar" data-shopid="#{propertyBean.externalCalendarId}" data-month="09"></div>
+		                			</div>
+		                		</div>
+		                				
+		                		<div class="row">
+		                			<div class="col-md-3">
+		                				<div id="calendar_10_#{propertyBean.externalCalendarId}" class="calendar" data-shopid="#{propertyBean.externalCalendarId}" data-month="10"></div>
+		                			</div>
+		                			<div class="col-md-3">
+		                				<div id="calendar_11_#{propertyBean.externalCalendarId}" class="calendar" data-shopid="#{propertyBean.externalCalendarId}" data-month="11"></div>
+		                			</div>
+		                			<div class="col-md-3">
+		                				<div id="calendar_12_#{propertyBean.externalCalendarId}" class="calendar" data-shopid="#{propertyBean.externalCalendarId}" data-month="12"></div>
+		                			</div>
+		                		</div>
+
+		                </div>
+		            </div>
+	            
+	        </div>
+	            
+	            
+	            
+			</h:panelGroup>
+	            
+	    </div>
+		
+		<h:form id="eventLoadingForm">
+				<h:inputHidden id="eventId" value="#{eventBean.selectedEventUuid}" />
+		        <h:inputHidden id="calendarId" value="#{eventBean.selectedCalendarId}" />
+				<h:commandButton id="loadEventBtn" value="laden" action="#{eventBean.loadSelectedEvent}" style="display:none;" >
+					<f:ajax execute="@form" render="eventModalForm" onevent="showEventModal" />
+				</h:commandButton>
+        </h:form>
+        
+		
+		<h:outputScript>
+		
+		
+		
+		
+		function prevYear(){
+			$('.calendar').fullCalendar( 'prev' );
+			refreshDateElement();
+		}
+		function nextYear(){
+			$('.calendar').fullCalendar( 'next' );
+			refreshDateElement();
+		}
+		
+		function refreshDateElement(){
+			$('h2.calendarDuration').text($('.calendar').first().fullCalendar('getView').title);
+		
+		}
+		
+		function afterPageReload(){
+			initCalendar();
+			loadChosenElements();
+		}
+
+		function refetchEvents(){
+			$('.calendar').fullCalendar('refetchEvents');
+		}
+		
+	    $(document).ready(function() {
+			initCalendar();
+	    });
+
+    
+    
+    	var calendarRangeStart,calendarRangeEnd;
+    		
+    	function changeDraggableTimeRange(start, end){
+    	
+    		if(start.isSame(calendarRangeStart) &amp;&amp; end.isSame(calendarRangeEnd)){
+    			return;
+    		}
+    		
+ 			$('#calendarDraggableListForm\\:calendarRangeStart').val(start.format());
+			$('#calendarDraggableListForm\\:calendarRangeEnd').val(end.format());
+    		reloadDraggable();
+    		
+    		calendarRangeStart = start;
+    		calendarRangeEnd = end;
+    	}
+    		
+    	function reloadDraggable(){
+			$('#calendarDraggableListForm\\:calendarRangeSubmit').click();
+    	}
+    
+    	
+    	function initCalendar(){
+    		
+	         
+	         $('.calendar').each(function( index ) {
+	         
+    			var shopId = $(this).data('shopid');
+    			var month = $(this).data('month');
+    			
+			  	//initSingleCalendar('#calendar_'+month+'_'+shopId,shopId,month);
+			 });
+	
+	        
+	        refreshDateElement();
+	        
+	       $("#calendar_year").fullCalendar({
+			header: {
+				left: 'prev,next today',
+				center: 'title',
+				right: 'year,month,agendaWeek,agendaDay'
+			},
+			firstMonth: 8, // september
+			//firstMonth: 0,
+			//lastMonth: 6,
+			defaultDate: '2015-01-12',
+			defaultView: 'year',
+			selectable: true,
+			selectHelper: true,
+			select: function(start, end) {
+				var title = prompt('Event Title:');
+				var eventData;
+				if (title) {
+					eventData = {
+						title: title,
+						start: start,
+						end: end
+					};
+					$('#calendar').fullCalendar('renderEvent', eventData, true); // stick? = true
+				}
+				$('#calendar').fullCalendar('unselect');
+			},
+			firstDay: 0,
+			editable: true,
+			eventLimit: true, // allow "more" link when too many events
+			events: [
+				{
+					title: 'Long event',
+					start: '2015-01-07',
+					end: '2015-01-10'
+				},
+				{
+					title: 'Background Yearview Dev',
+					start: '2015-01-04',
+					end: '2015-01-19',
+					rendering: 'background'
+				},
+				{
+					id: 999,
+					title: 'Repeating Event',
+					start: '2015-01-09T16:00:00'
+				},
+				{
+					id: 999,
+					title: 'Repeating Event',
+					start: '2015-01-16T16:00:00'
+				},
+				{
+					title: 'Long over months',
+					start: '2015-01-29',
+					end: '2015-02-02'
+				},
+				{
+					title: 'All Day Event',
+					start: '2015-03-01'
+				},
+				{
+					title: 'Conference',
+					start: '2015-11-11',
+					end: '2015-11-13'
+				},
+				{
+					title: 'Meeting',
+					start: '2015-11-12T10:30:00',
+					end: '2015-11-12T12:30:00'
+				},
+				{
+					title: 'Lunch',
+					start: '2015-11-12T12:00:00'
+				},
+				{
+					title: 'Meeting',
+					start: '2015-11-12T14:30:00'
+				},
+				{
+					title: 'Happy Hour',
+					start: '2014-11-12T17:30:00'
+				},
+				{
+					title: 'Dinner',
+					start: '2014-11-12T20:00:00'
+				},
+				{
+					title: 'Birthday Party',
+					start: '2014-11-13T07:00:00'
+				},
+				{
+					title: 'Click for Google',
+					url: 'http://google.com/',
+					start: '2015-03-28'
+				}
+			]
+		});
+	       
+	       
+	       
+    	}
+    	
+    	function initSingleCalendar(calendarId, shopId, month){
+    	
+    		$(calendarId).fullCalendar({
+	            header: {left: '',center: 'title', right: ''},
+	            allDayDefault: false,
+	            droppable: false,
+	            editable: false,
+	            displayEventEnd: true,
+	            fixedWeekCount: false,
+	            defaultView : "month",
+	            height: 'auto',
+	            defaultDate: '2015-'+month+'-01',
+	            
+	            
+				eventSources: [
+							<ui:repeat var="user" value="#{userBean.userList}" varStatus="status">
+							{
+								url: '/sockets/calendar/fullCalendar.json',
+								className: 'color-#{user.color}',
+								editable: false,
+					            data: {
+					                shop: shopId,
+					                user: '#{user.uuid}'
+					            }
+							},
+		            		</ui:repeat>
+	            ],
+				
+	            
+	            eventClick: function(event, jsEvent, view) {
+	            	$('#eventModal .modal-header, #eventModal .modal-body, #eventModal .modal-footer').empty();
+                	$('#eventLoadingForm\\:eventId').val(event.id);
+                	$('#eventLoadingForm\\:loadEventBtn').click();
+	            },
+			  	eventRender: function(event, element) {
+				    if(event.user != undefined)
+				    	element.find('.fc-title').append("<br/>" + event.user); 
+				}
+	        });
+    	
+    	}
+
+
+		</h:outputScript>
+		
+		
+	<h:form id="eventForm"  class="form-horizontal">
+	            
+	        <h:panelGroup rendered="#{calendarBean.calendarEditable}">
+	        	<span class="hide userNameField">#{eventBean.selectedEvent.user.name}</span>
+	        	<span class="hide shopNameField">#{eventBean.selectedEvent.shop.name}</span>
+	        	<span class="hide eventTypeField">#{eventBean.selectedEvent.eventType.title}</span>
+	        	
+	        	<h:inputHidden id="eventTmpId" value="#{eventBean.selectedEventTempUuid}" class="hide" />
+	        	<h:inputHidden id="calendarId" value="#{eventBean.selectedCalendarId}" class="hide" />
+	        	<h:inputHidden id="eventId" value="#{eventBean.selectedEventUuid}" class="hide" />
+	        	<h:inputHidden id="shopId" value="#{eventBean.selectedShopUuid}" class="hide" />
+				<h:inputText id="userId" value="#{eventBean.selectedUserUuid}" class="hide" >
+					<f:ajax event="change" render="newEventModalHead" onevent="updatePluginsEvent"  />
+				</h:inputText>
+				<h:inputText value="#{eventBean.selectedEvent.title}" class="hide" />
+				<h:inputText id="effectiveDate" value="#{eventBean.selectedEvent.effectiveDate}" class="hide" >
+					<f:convertDateTime pattern="dd.MM.yyyy HH:mm" timeZone="CET" />
+					<f:ajax event="change" render="effectiveTime expiryTime" onevent="updatePluginsEvent"  />
+				</h:inputText>
+				<h:inputText id="expiryDate" value="#{eventBean.selectedEvent.expiryDate}" class="hide" >
+					<f:convertDateTime pattern="dd.MM.yyyy HH:mm" timeZone="CET" />
+					<f:ajax event="change" render="effectiveTime expiryTime" onevent="updatePluginsEvent"  />
+				</h:inputText>
+				<h:commandButton id="clearEventBtn" value="update" action="#{eventBean.clearSelectedEvent}" style="display:none;" >
+					<f:ajax execute="@form" />
+				</h:commandButton>
+				<h:commandButton id="updateEventBtn" value="update" action="#{eventBean.updateSelectedEvent}" style="display:none;" >
+					<f:ajax execute="@form" render="eventForm" onevent="submitUpdateEventForm" onerror="refetchEvents" />
+				</h:commandButton>
+				<h:commandButton id="saveEventBtn" value="save" action="#{eventBean.saveSelectedEvent}" style="display:none;" >
+					<f:ajax execute="@form" render="eventForm" onevent="submitSaveEvent" onerror="refetchEvents" />
+				</h:commandButton>
+			</h:panelGroup>
+	</h:form>
+
+	<div class="modal inmodal" id="eventModal" tabindex="-1" role="dialog" aria-hidden="true" style="display: none;">
+		
+	    <div class="modal-dialog">
+	        <div class="modal-content animated fadeIn">
+	        	<h:form id="eventModalForm" class="form-horizontal">
+	            <div class="modal-header">
+	                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+	                <i class="fa fa-clock-o modal-icon"></i>
+	                <h4 class="modal-title">#{eventBean.selectedEvent.eventType.title}</h4>
+	            </div>
+	            <div class="modal-body">
+		        	<span class="hide eventIdField">#{eventBean.selectedEvent.uuid}</span>
+		        	<span class="hide calendarIdField">#{eventBean.selectedCalendarId}</span>
+		        	<span class="hide userNameField">#{eventBean.selectedEvent.user.name}</span>
+		        	<span class="hide shopNameField">#{eventBean.selectedEvent.shop.name}</span>
+		        	<span class="hide eventTypeField">#{eventBean.selectedEvent.eventType.title}</span>
+		        	<span class="hide allDayField">#{eventBean.selectedEvent.allDay}</span>
+	            	<span class="hide effectiveDateField">
+	            		<h:outputText value="#{eventBean.selectedEvent.effectiveDate}" >
+							<f:convertDateTime pattern="yyyy-MM-dd'T'HH:mm:ss.SSSXXX" timeZone="CET" />
+		            	</h:outputText>
+		            </span>
+	            	<span class="hide expiryDateField">
+	            		<h:outputText value="#{eventBean.selectedEvent.expiryDate}" >
+							<f:convertDateTime pattern="yyyy-MM-dd'T'HH:mm:ss.SSSXXX" timeZone="CET" />
+		            	</h:outputText>
+		            </span>
+	            	
+	            	
+	            	
+	            	<h:panelGroup rendered="#{ not calendarBean.calendarEditable}">
+		            	<div class="row">
+		            		<div class="col-lg-4">Mitarbeiter: </div>
+		            		<div class="col-lg-8"><h:outputText value="#{eventBean.selectedEvent.user.name}" /></div>
+		            	</div>
+		            	<div class="row">
+		            		<div class="col-lg-4">Filiale: </div>
+		            		<div class="col-lg-8">
+		            			<h:outputText value="#{eventBean.selectedEvent.shop.name}" rendered="#{ not empty eventBean.selectedEvent.shop}" />
+		            			<h:outputText value="Außer Haus" rendered="#{ empty eventBean.selectedEvent.shop}" />
+		            		</div>
+		            	</div>
+		            	<div class="row">
+		            		<div class="col-lg-4">Zeitraum: </div>
+		            		<div class="col-lg-8">
+		            		
+		            			<h:outputText value="#{eventBean.selectedEvent.effectiveDate}" rendered="#{eventBean.selectedEvent.allDay}" >
+									<f:convertDateTime pattern="dd.MM.yyyy" timeZone="CET" />
+		            			</h:outputText>
+		            		
+		            			<h:panelGroup rendered="#{not eventBean.selectedEvent.allDay}">
+			            			<h:outputText value="#{eventBean.selectedEvent.effectiveDate}" >
+										<f:convertDateTime pattern="dd.MM.yyyy HH:mm" timeZone="CET" />
+			            			</h:outputText> 
+			            			-
+			            			<h:outputText value="#{eventBean.selectedEvent.expiryDate}" >
+										<f:convertDateTime pattern="dd.MM.yyyy HH:mm" timeZone="CET" />
+			            			</h:outputText>
+		            			</h:panelGroup>
+		            		</div>
+		            	</div>
+		            	<h:panelGroup rendered="#{eventBean.selectedEvent.workingTime}">
+			            	<div class="row">
+			            		<div class="col-lg-4">Arbeitszeit</div>
+			            		<div class="col-lg-8">
+			            			<h:outputText value="#{helperBean.minToString(eventBean.selectedEvent.user.fullDayWorkingTime)}" rendered="#{eventBean.selectedEvent.allDay}" />
+			            			<h:outputText value="#{helperBean.minToString( eventBean.selectedEvent.workingDuration)}" rendered="#{ not ceventBean.selectedEvent.allDay}" />
+			            		</div>
+			            	</div>
+			            	<div class="row">
+			            		<div class="col-lg-4">Pause</div>
+			            		<div class="col-lg-8">
+			            			<h:panelGroup rendered="#{eventBean.selectedEvent.pauseLength gt 0}">
+			            				<h:outputText value="#{eventBean.selectedEvent.pauseLength}" /> min
+			            			</h:panelGroup>
+			            			<h:panelGroup rendered="#{eventBean.selectedEvent.pauseLength lt 1}">
+			            				<h:outputText value="keine" /> 
+			            			</h:panelGroup>
+			            		</div>
+			            	</div>
+			            </h:panelGroup>
+		            	<div class="row">
+		            		<div class="col-lg-4">Notizen</div>
+		            		<div class="col-lg-8">
+		            			<h:outputText value="#{eventBean.selectedEvent.note}" />
+		            		</div>
+		            	</div>
+	            	</h:panelGroup>
+	            	
+	            	<h:panelGroup rendered="#{calendarBean.calendarEditable}">
+		            	<div class="form-group">
+		            			<label class="col-lg-2 control-label">Mitarbeiter:</label>
+			            		<div class="col-lg-10">
+			            			<p class="form-control-static">
+			            				<h:outputText value="#{eventBean.selectedEvent.user.name}" />
+			            			</p>
+			            		</div>
+			            </div>
+			            <div class="form-group">
+	            			<label class="col-lg-2 control-label">Filiale:</label>
+		            		<div class="col-lg-10">
+		            			<h:panelGroup rendered="#{ empty eventBean.selectedEvent.shop}">
+		            				<p class="form-control-static">
+		            					<h:outputText value="Außer Haus" />
+		            				</p>
+		            			</h:panelGroup>
+		            			<h:panelGroup rendered="#{ not empty eventBean.selectedEvent.shop}">
+		            				<p class="form-control-static">
+		            					<h:outputText value="#{eventBean.selectedEvent.shop.name}" />
+		            				</p>
+		            				<h:selectOneMenu value="#{eventBean.selectedEvent.shop}" 
+		            						rendered="false"
+											class="chosen-select-no-single-class form-control" 
+											converter="#{shopConverter}" >
+										<f:selectItems value="#{shopBean.shopList}" var="shop" itemValue="#{shop}" itemLabel="#{shop.name}" />
+									</h:selectOneMenu>
+		            			</h:panelGroup>
+		            		</div>
+		            	</div>
+		            	<div class="form-group">
+							<label class="col-lg-2 control-label">ganztägig</label>
+							<div class="col-lg-10">
+								<h:panelGroup  id="allDayWrapper">
+								<h:selectBooleanCheckbox id="allDay" class="i-checks" value="#{eventBean.selectedEvent.allDay}" >
+									<f:ajax event="change" listener="#{eventBean.updatePauseLength}" render="effectiveTime expiryTime pauseInfo" onevent="updatePluginsEvent"  />
+								</h:selectBooleanCheckbox>
+								</h:panelGroup>
+							</div>
+						</div>
+		            
+			            <div class="form-group">
+							<label class="col-lg-2 control-label">Zeitraum</label>
+							<div class="col-lg-10">
+								<div class="input-timerange input-group">
+									<h:inputText id="effectiveTime" type="text" class="form-control" value="#{eventBean.selectedEvent.effectiveDate}" a:data-mask="99:99" disabled="#{eventBean.selectedEvent.allDay}">
+										<f:convertDateTime pattern="HH:mm" timeZone="CET" />
+										<f:ajax event="change" listener="#{eventBean.updatePauseLength}" render="effectiveDate expiryDate pauseInfo" onevent="updatePluginsEvent"  />
+		                             </h:inputText>
+		                             <span class="input-group-addon">bis</span>
+		                             <h:inputText id="expiryTime" type="text" class="form-control" value="#{eventBean.selectedEvent.expiryDate}" a:data-mask="99:99" disabled="#{eventBean.selectedEvent.allDay}">
+		                            	<f:convertDateTime pattern="HH:mm" timeZone="CET" />
+										<f:ajax event="change" listener="#{eventBean.updatePauseLength}" render="effectiveDate expiryDate pauseInfo" onevent="updatePluginsEvent"  /> 
+		                             </h:inputText>
+	                             </div>
+							</div>
+						</div>
+						
+						<h:panelGroup id="pauseInfo">
+			            	<div class="form-group">
+								<label class="col-lg-2 control-label">Pause</label>
+								<div class="col-lg-10">
+			            			<h:panelGroup rendered="#{eventBean.selectedEvent.pauseLength gt 0}">
+			            				<h:outputText value="#{eventBean.selectedEvent.pauseLength}" /> min
+			            			</h:panelGroup>
+			            			<h:panelGroup rendered="#{eventBean.selectedEvent.pauseLength lt 1}">
+			            				<h:outputText value="keine" /> 
+			            			</h:panelGroup>
+								</div>
+							</div>
+						</h:panelGroup>
+						
+		            	<div class="form-group">
+		            		<div class="col-lg-2 control-label">Notizen</div>
+		            		<div class="col-lg-10">
+								<h:inputTextarea id="note" value="#{eventBean.selectedEvent.note}" class="form-control" />
+		            		</div>
+		            	</div>
+	            	</h:panelGroup>
+	            	
+	            </div>
+	            <div class="modal-footer">
+					<h:commandButton value="speichern" rendered="#{calendarBean.calendarEditable}"
+						action="#{eventBean.updateSelectedEvent}" class="btn btn-default" >
+						<f:ajax execute="@form" render="eventModalForm" onevent="submitUpdateEventModalForm" onerror="refetchEvents" />
+					</h:commandButton>
+						
+					<h:commandButton value="löschen" onclick="removeEvent('#{eventBean.selectedEvent.uuid}');"
+						rendered="#{calendarBean.calendarEditable}"
+						action="#{eventBean.deleteSelectedEvent}" class="btn btn-danger" >
+						<f:ajax execute="@form" onevent="hideEventModal" onerror="hideEventModalFetchEvents" />
+					</h:commandButton>
+	            </div>
+	    		</h:form>
+	        </div>
+	    </div>
+	</div>
+
+	<div class="modal inmodal" id="newEventModal" tabindex="-1" role="dialog" aria-hidden="true" style="display: none;">
+	
+	
+
+	
+	
+	
+				
+	    <div class="modal-dialog">
+	        <div class="modal-content animated fadeIn">
+	        	<h:form id="eventModalUpdateForm"  class="form-horizontal">
+	            <div class="modal-header">
+	            	<h:panelGroup id="newEventModalHead">
+		                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+		                <i class="fa fa-clock-o modal-icon"></i>
+		                <h4 class="modal-title">Termin für #{eventBean.selectedEvent.user.name}</h4>
+	                </h:panelGroup>
+	            </div>
+	            <div class="modal-body">
+	            
+	        <h:panelGroup rendered="#{calendarBean.calendarEditable}">
+	        	<span class="hide userNameField">#{eventBean.selectedEvent.user.name}</span>
+	        	<span class="hide shopNameField">#{eventBean.selectedEvent.shop.name}</span>
+	        	<span class="hide eventTypeField">#{eventBean.selectedEvent.eventType.title}</span>
+	        	<h:inputText id="eventTmpId" value="#{eventBean.selectedEventTempUuid}" class="hide" />
+	        	<h:inputText id="calendarId" value="#{eventBean.selectedCalendarId}" class="hide" />
+	        	<h:inputText id="eventId" value="#{eventBean.selectedEventUuid}" class="hide" />
+	        	<h:inputText id="shopId" value="#{eventBean.selectedShopUuid}" class="hide" />
+				<h:inputText id="userId" value="#{eventBean.selectedUserUuid}" class="hide" >
+					<f:ajax event="change" render="newEventModalHead" onevent="updatePluginsEvent"  />
+				</h:inputText>
+				<h:inputText value="#{eventBean.selectedEvent.title}" class="hide" />
+				<h:inputText id="effectiveDate" value="#{eventBean.selectedEvent.effectiveDate}" class="hide" >
+					<f:convertDateTime pattern="dd.MM.yyyy HH:mm" timeZone="CET" />
+					<f:ajax event="change" render="effectiveTime expiryTime" onevent="updatePluginsEvent"  />
+				</h:inputText>
+				<h:inputText id="expiryDate" value="#{eventBean.selectedEvent.expiryDate}" class="hide" >
+					<f:convertDateTime pattern="dd.MM.yyyy HH:mm" timeZone="CET" />
+					<f:ajax event="change" render="effectiveTime expiryTime" onevent="updatePluginsEvent"  />
+				</h:inputText>
+				<h:commandButton id="clearEventBtn" value="update" action="#{eventBean.clearSelectedEvent}" style="display:none;" >
+					<f:ajax execute="@form" />
+				</h:commandButton>
+				<h:commandButton id="updateEventBtn" value="update" action="#{eventBean.updateSelectedEvent}" style="display:none;" >
+					<f:ajax execute="@form" render="eventForm" onevent="submitUpdateEventForm" onerror="refetchEvents" />
+				</h:commandButton>
+			</h:panelGroup>
+	            
+	            
+	            
+	            
+		            <div class="form-group">
+						<label class="col-lg-2 control-label">Event Typ</label>
+						<div class="col-lg-10" >
+							<h:selectOneMenu value="#{eventBean.selectedEvent.eventType}" a:data-placeholder="Event Typ wählen ..."
+									class="chosen-select-full-width form-control" 
+									converter="#{eventTypeConverter}" >
+							<f:selectItem itemValue="" itemLabel=""/>
+							<f:selectItems value="#{eventBean.selectableEventTypeList}" var="eventType" itemValue="#{eventType}" itemLabel="#{eventType.shortName} - #{eventType.title}" />
+							<f:ajax event="change" listener="#{eventBean.presetSelectedEventTime}" render="effectiveTime expiryTime effectiveDate expiryDate allDayWrapper workingTimeGroup" onevent="updatePluginsEvent" />
+							</h:selectOneMenu>
+						</div>
+					</div>
+	            
+		            <div class="form-group">
+						<label class="col-lg-2 control-label">ganztägig</label>
+						<div class="col-lg-10">
+							<h:panelGroup  id="allDayWrapper">
+							<h:selectBooleanCheckbox id="allDay" class="i-checks" value="#{eventBean.selectedEvent.allDay}" >
+								<f:ajax event="change" listener="#{eventBean.updatePauseLength}" render="effectiveTime expiryTime workingTimeGroup" onevent="updatePluginsEvent"  />
+							</h:selectBooleanCheckbox>
+							</h:panelGroup>
+						</div>
+					</div>
+	            
+		            <div class="form-group">
+						<label class="col-lg-2 control-label">Zeitraum</label>
+						<div class="col-lg-10">
+							<div class="input-timerange input-group">
+								<h:inputText id="effectiveTime" type="text" class="form-control" value="#{eventBean.selectedEvent.effectiveDate}" a:data-mask="99:99" disabled="#{eventBean.selectedEvent.allDay}">
+									<f:convertDateTime pattern="HH:mm" timeZone="CET" />
+									<f:ajax event="change" listener="#{eventBean.updatePauseLength}" render="effectiveDate expiryDate workingTimeGroup" onevent="updatePluginsEvent"  />
+	                             </h:inputText>
+	                             <span class="input-group-addon">bis</span>
+	                             <h:inputText id="expiryTime" type="text" class="form-control" value="#{eventBean.selectedEvent.expiryDate}" a:data-mask="99:99" disabled="#{eventBean.selectedEvent.allDay}">
+	                            	<f:convertDateTime pattern="HH:mm" timeZone="CET" />
+									<f:ajax event="change" listener="#{eventBean.updatePauseLength}" render="effectiveDate expiryDate workingTimeGroup" onevent="updatePluginsEvent"  /> 
+	                             </h:inputText>
+                             </div>
+						</div>
+					</div>
+					
+					<h:panelGroup id="workingTimeGroup">
+						<h:panelGroup rendered="#{eventBean.selectedEvent.workingTime}">
+				            	<div class="form-group">
+				            		<label class="col-lg-2 control-label">Arbeitszeit</label>
+				            		<div class="col-lg-10">
+				            			<p class="form-control-static">
+					            			<h:outputText value="#{helperBean.minToString(eventBean.selectedEvent.user.fullDayWorkingTime)}" rendered="#{eventBean.selectedEvent.allDay}" />
+					            			<h:outputText value="#{helperBean.minToString( eventBean.selectedEvent.duration)}" rendered="#{ not eventBean.selectedEvent.allDay}" />
+				            			</p>
+				            		</div>
+				            	</div>
+				            	<div class="form-group">
+				            		<label class="col-lg-2 control-label">Pause</label>
+				            		<div class="col-lg-10">
+				            			<p class="form-control-static">
+					            			<h:panelGroup rendered="#{eventBean.selectedEvent.pauseLength gt 0}">
+					            				<h:outputText value="#{eventBean.selectedEvent.pauseLength}" /> min
+					            			</h:panelGroup>
+					            			<h:panelGroup rendered="#{eventBean.selectedEvent.pauseLength lt 1}">
+					            				<h:outputText value="keine" /> 
+					            			</h:panelGroup>
+				            			</p>
+				            		</div>
+				            	</div>
+				        </h:panelGroup>
+			        </h:panelGroup>
+	            
+		            <div class="form-group">
+						<label class="col-lg-2 control-label">Notizen</label>
+						<div class="col-lg-10">
+							<h:inputTextarea id="note" value="#{eventBean.selectedEvent.note}" class="form-control" />
+						</div>
+					</div>
+	            </div>
+	            <div class="modal-footer">
+					<h:commandButton id="saveEventBtn" class="btn btn-primary form-control" value="speichern" action="#{eventBean.saveSelectedEvent}" >
+						<f:ajax execute="@form" render="eventForm" onevent="submitSaveEvent" onerror="refetchEvents" />
+					</h:commandButton>
+	            </div>
+	            </h:form>
+	        </div>
+	    </div>
+	</div>
+
+		</ui:define>
+
+
+
+	</ui:composition>
+</h:body>
+</html>

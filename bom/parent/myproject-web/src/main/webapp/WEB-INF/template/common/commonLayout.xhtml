@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	  xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+
+<h:head>
+	<ui:include src="/WEB-INF/template/common/includes/headMinimal.xhtml" />
+	<ui:include src="/WEB-INF/template/common/includes/headExtended.xhtml" />
+	
+	<ui:insert name="script"></ui:insert>
+	
+	<ui:include src="/WEB-INF/template/common/includes/headMinimalCss.xhtml" />
+</h:head>
+
+	<f:metadata>
+		<f:event listener="#{userBean.checkSupervisorAccount()}" type="preRenderComponent"></f:event>
+		<f:event listener="#{shopBean.checkActiveShop()}" type="preRenderComponent"></f:event>
+	</f:metadata>
+
+<h:body class="#{bodyClass} #{debugBean.hideRightSideBar ? 'hidden-sidebar' : ''}">
+	<ui:insert name="wrapper">
+		<div id="wrapper">
+		
+			<!-- Navigation Bar -->
+			<ui:fragment rendered="true">
+			<nav class="navbar-default navbar-static-side hidden-print" role="navigation">
+				<div class="sidebar-collapse">
+					<ui:insert name="navBar">
+						<ui:include src="/WEB-INF/template/common/commonNavBar.xhtml" />
+					</ui:insert>
+				</div>
+			</nav>
+			</ui:fragment>
+
+			<!-- Page Wrapper -->
+			<div id="page-wrapper" class="gray-bg">
+
+				<!-- Top Navigation Bar -->
+				<ui:fragment rendered="true">
+				<div class="row border-bottom hidden-print">
+					<ui:insert name="topNavBar">
+						<ui:include src="/WEB-INF/template/common/commonTopNavBar.xhtml" />
+					</ui:insert>
+				</div>
+				</ui:fragment>
+
+
+				<!-- Heading -->
+				<ui:fragment rendered="true">
+				<div class="row wrapper border-bottom white-bg page-heading ">
+					<div class="col-sm-12">
+						<ui:insert name="heading">
+							<ui:include src="/WEB-INF/template/common/commonHeading.xhtml" />
+						</ui:insert>
+					</div>
+				</div>
+				</ui:fragment>
+
+				
+				<!-- Content -->
+				<ui:fragment rendered="true">
+				<div id="content">
+				<div id="content-wrapper" class="wrapper wrapper-content page-content-wrapper">
+					<h:panelGroup id="messages">
+						<h:messages globalOnly="true" />
+					</h:panelGroup>
+					<ui:insert name="content">
+						<ui:include src="/WEB-INF/template/common/commonContent.xhtml" />
+					</ui:insert>
+				</div>
+				</div>
+				</ui:fragment>
+				
+				<ui:insert name="sub-content">
+						
+				</ui:insert>
+				
+				<!-- Side Bar -->
+				<ui:fragment rendered="true">
+				<div id="right-sidebar" class="sidebar-open hidden-print">
+					<div class="sidebar-collapse">
+							<ui:insert name="sideBar">
+								<ui:include src="/WEB-INF/template/common/commonSideBar.xhtml" />
+							</ui:insert>
+					</div>
+				</div>
+				</ui:fragment>
+
+				<!-- Footer -->
+				<ui:fragment rendered="#{true}">
+				<div class="footer page-content-wrapper">
+					<ui:insert name="footer">
+						<ui:include src="/WEB-INF/template/common/commonFooter.xhtml" />
+					</ui:insert>
+				</div>
+				</ui:fragment>
+
+			</div>
+
+
+		</div>
+	</ui:insert>
+
+
+
+
+	
+
+	<!-- Theme -->
+	<h:outputScript name="theme.js" library="js"  />
+	
+</h:body>
+</html>

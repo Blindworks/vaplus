@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core">
+
+<h:body>
+	<ui:composition template="/WEB-INF/mailTemplate/layout.xhtml">
+		<ui:param name="title" value="Kennwort zurücksetzen" />
+
+		<ui:define name="content">
+	        <tr>
+	            <td class="content-block">
+	                Hallo #{name},<br/>
+	                Ihr VA+ Benutzername lautet: #{userName}
+	            </td>
+	        </tr>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"	
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+		xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:body>
+
+	<ui:composition template="/WEB-INF/template/common/commonLayout.xhtml">
+
+		<ui:param name="heading1" value="Leistungsziele" />
+		
+		
+		
+		<ui:define name="content">
+		
+			<div class="row">
+                
+                <ui:repeat var="achievement" value="#{achievementBean.activeAchievementList}">
+	                <div class="col-lg-6">
+	                	<ui:include src="/WEB-INF/include/achievement/achievement.xhtml" >
+			        		<ui:param name="achievement" value="#{achievement}" />
+			        	</ui:include>
+	               	</div>
+               	</ui:repeat>
+               	
+             </div>
+		
+		 
+		</ui:define>
+
+
+	</ui:composition>
+</h:body>
+</html>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core">
+
+<h:body>
+
+
+
+	<ui:composition template="/WEB-INF/template/common/commonErrorLayout.xhtml">
+	
+		<ui:param name="heading1" value="Fehler #{errorHandler.statusCode}" />
+	
+		<ui:define name="content">
+
+			<div class="middle-box text-center animated fadeInDown">
+				<h1>Ups</h1>
+				<br/>
+				<h3 class="font-bold">... das hätte nicht passieren dürfen!</h3>
+
+				
+				<div class="error-desc">
+					Entschultigen Sie bitte.<br/>
+					Wir haben diesen Fehler bereits dem Support gemeldet.<br/>
+					<br/>
+					<p class="text-danger"><h:outputText value="#{errorHandler.statusCode}: #{errorHandler.message}" /></p>
+				</div>
+			</div>
+
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

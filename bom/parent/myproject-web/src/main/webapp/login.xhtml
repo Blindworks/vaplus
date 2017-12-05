@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core">
+
+<h:body>
+	<ui:composition template="/WEB-INF/template/common/commonLayoutMinimal.xhtml">
+		<ui:param name="bodyClass" value="gray-bg" />
+		<ui:param name="boxClass" value="loginscreen" />
+
+		<ui:define name="wrapper">
+
+
+			<ui:decorate template="/WEB-INF/template/common/commonMiddleBox.xhtml">
+
+				<ui:define name="content">
+					<ui:fragment rendered="#{identity.loggedIn}">
+						<div>
+							Sie sind bereits eingeloggt. 
+						</div>
+
+						<h:form>
+							<h:commandButton value="abmelden"
+								action="#{loginController.logout}"
+								class="btn btn-lg btn-primary btn-block" />
+						</h:form>
+					</ui:fragment>
+					<h:form id="login-form" class="login-form"
+						rendered="#{not identity.loggedIn}">
+
+						<p:focus context="login-form" />
+
+						<h:panelGroup>
+							<div class="form-group">
+								<p:inputText id="user" value="#{loginCredentials.userId}"
+								placeholder="Benutzername" class="input-lg form-control " />
+							</div>
+							<div class="form-group">
+								<p:password id="password" value="#{loginCredentials.password}"
+								placeholder="Passwort" class="input-lg form-control " />
+							</div>
+
+						</h:panelGroup>
+						<ul class="error-list"></ul>
+
+						<div class="form-group">
+							<h:commandButton value="anmelden"
+							action="#{loginController.login}"
+							class="btn btn-lg btn-primary btn-block" />
+						</div>
+						<p><h:commandLink value="Passwort vergessen?" action="lostPassword" /></p>
+
+					</h:form>
+
+				</ui:define>
+
+			</ui:decorate>
+
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

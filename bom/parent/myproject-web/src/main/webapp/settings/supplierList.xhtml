@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+	  xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+	<h:body>
+	
+    	<ui:composition template="/WEB-INF/template/common/commonLayout.xhtml">
+    		<ui:param name="heading1" value="Lieferantenverwaltung" />
+    		
+    		<ui:define name="content">
+    		
+    		
+    		<div class="row">
+				<div class="col-lg-12">
+					<h:form id="supplierListForm">
+			            <div class="ibox float-e-margins">
+			                <div class="ibox-title">
+			                    <h5>Lieferanten Liste</h5>
+			                    <div class="ibox-tools">
+		                    		<h:panelGroup  rendered="#{permissionBean.hasPermission('settings','edit')}">
+			                    
+										<h:commandLink action="supplier" class="btn btn-xs btn-primary " rendered="#{supplierBean.supplierListEditable}">
+											<f:setPropertyActionListener value="" target="#{supplierBean.selectedSupplier}" />
+											<i class="fa fa-plus"></i>
+									    </h:commandLink>
+									    
+									    <h:commandLink  class="btn btn-xs btn-primary "  action="#{supplierBean.toggleSupplierListEditable}" rendered="#{supplierBean.supplierListEditable}">
+										   <f:ajax render="supplierListForm"/>
+										   <i class="fa fa-times"></i>
+										</h:commandLink>
+									    <h:commandLink  class="btn btn-xs btn-primary " action="#{supplierBean.toggleSupplierListEditable}"  rendered="#{not supplierBean.supplierListEditable}">
+										   <f:ajax render="supplierListForm"/>
+										   <i class="fa fa-pencil"></i>
+										</h:commandLink>
+									</h:panelGroup>
+			                    </div>
+			                </div>
+			                <div class="ibox-content">
+					    		
+					    		
+					    		<h:dataTable value="#{supplierBean.getSupplierList(true)}" var="supplier" class="table table-hover">
+					
+                                    <h:column>
+										<h:panelGroup rendered="#{supplier.enabled}"><i class="fa fa-check-square-o"></i></h:panelGroup>
+										<h:panelGroup rendered="#{not supplier.enabled}"><i class="fa fa-square-o"></i></h:panelGroup>
+                                    </h:column>
+									<h:column>
+										#{supplier.name}
+									</h:column>
+									
+									<h:column>
+										<h:outputText value="#{supplier.address.city}" />
+									</h:column>
+									
+									<h:column>
+										<h:outputText value="#{supplier.address.street} #{supplier.address.streetNumber}" />
+									</h:column>
+								   
+									<h:column>
+										<h:commandLink action="supplier" class="btn btn-xs btn-primary " rendered="#{supplierBean.supplierListEditable}">
+											<f:setPropertyActionListener value="#{supplier}" target="#{supplierBean.selectedSupplier}" />
+											<i class="fa fa-pencil"></i>
+									    </h:commandLink>
+									</h:column>
+								</h:dataTable>
+					    		
+					    		
+			                </div>
+			            </div>
+		            </h:form>
+		        </div>
+	            
+	            
+	        </div>
+    		
+            
+    		</ui:define>
+    		
+    		
+    	</ui:composition>
+    </h:body>
+</html>

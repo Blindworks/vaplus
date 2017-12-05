@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:c="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+	  xmlns:f="http://java.sun.com/jsf/core"
+	  xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:p="http://primefaces.org/ui">
+
+	<h:body>
+	
+	
+    	<ui:composition template="/WEB-INF/template/common/commonLayout.xhtml">
+    		<ui:param name="heading1" value="Kasse öffnen" />
+    		
+    		<ui:define name="content">
+    		
+    		<ui:fragment rendered="#{cashRegisterStatusBean.cashRegisterStatus}">
+    			<h3>Kasse bereits offen!</h3>
+    		</ui:fragment>
+    		<ui:fragment rendered="#{not cashRegisterStatusBean.cashRegisterStatus}">
+    		
+            <h:form  class="form-horizontal">
+            
+    		<div class="row">
+                <div class="col-lg-12">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                            <h5>Letzter Kassenstand: <h:outputText value="#{cashRegisterStatusBean.lastCumulativeSum}" ><f:convertNumber maxFractionDigits="2" minFractionDigits="2" /></h:outputText> €</h5>
+                        </div>
+                        <div class="ibox-content">
+                        	
+                        	
+                                <div class="form-group">
+                                
+                                	<label class="col-sm-2 control-label">geschlossen von:</label>
+                                	<div class="col-sm-10">
+                                		<p class="form-control-static">
+                                			<h:outputText value="#{cashRegisterStatusBean.lastCashRegisterStatus.user.name}" />
+                                		</p>
+                                	</div>
+                                </div>
+                                <div class="form-group">
+                                
+                                	<label class="col-sm-2 control-label">Datum:</label>
+                                	<div class="col-sm-10">
+                                		<p class="form-control-static">
+                                			<h:outputText value="#{cashRegisterStatusBean.lastCashRegisterStatus.effectiveDate}" >
+	                                			<f:convertDateTime type="date" pattern="dd.MM.yy HH:mm" timeZone="CET"/>
+                                			</h:outputText>
+                                		</p>
+                                	</div>
+                                </div>
+                                <div class="form-group">
+                                
+                                	<label class="col-sm-2 control-label">Kommentar:</label>
+                                	<div class="col-sm-10">
+                                		<p class="form-control-static">
+                                			<h:outputText value="#{cashRegisterStatusBean.lastCashRegisterStatus.note}" />
+                                		</p>
+                                	</div>
+                                	
+                                </div>
+                        	
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            
+            
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                            <h5>Kasseninhalt zählen</h5>
+                        </div>
+                        <div class="ibox-content">
+                            
+                                <div class="form-group">
+                                	<label class="col-sm-2 control-label">1 Cent Stücke</label>
+                                    <div class="col-sm-2">
+                                    	<h:inputText id="countHelper_001" value="#{cashRegisterStatusBean.countHelper_001}" validatorMessage="Anzahl angeben!" autocomplete="off" class="form-control #{ component.valid ? '' : 'error'}">
+							            	<f:convertNumber maxFractionDigits="0" minFractionDigits="0" />
+							            	<f:validateLongRange minimum = "0" maximum = "10000" />
+							            </h:inputText>
+										<h:messages for="countHelper_001"  />
+                                    </div>
+                                    
+                                	<label class="col-sm-2 control-label">2 Cent Stücke</label>
+                                    <div class="col-sm-2">
+                                    	<h:inputText id="countHelper_002" value="#{cashRegisterStatusBean.countHelper_002}" validatorMessage="Anzahl angeben!" autocomplete="off" class="form-control #{ component.valid ? '' : 'error'}">
+							            	<f:convertNumber maxFractionDigits="0" minFractionDigits="0" />
+							            	<f:validateLongRange minimum = "0" maximum = "10000" />
+							            </h:inputText>
+										<h:messages for="countHelper_002"  />
+                                    </div>
+                                    
+                                	<label class="col-sm-2 control-label">5 Cent Stücke</label>
+                                    <div class="col-sm-2">
+                                    	<h:inputText id="countHelper_005" value="#{cashRegisterStatusBean.countHelper_005}" validatorMessage="Anzahl angeben!" autocomplete="off" class="form-control #{ component.valid ? '' : 'error'}">
+							            	<f:convertNumber maxFractionDigits="0" minFractionDigits="0" />
+							            	<f:validateLongRange minimum = "0" maximum = "10000" />
+							            </h:inputText>
+										<h:messages for="countHelper_005"  />
+                                    </div>
+                                </div>
+                            
+                                <div class="form-group">
+                                	<label class="col-sm-2 control-label">10 Cent Stücke</label>
+                                    <div class="col-sm-2">
+                                    	<h:inputText id="countHelper_010" value="#{cashRegisterStatusBean.countHelper_010}" validatorMessage="Anzahl angeben!" autocomplete="off" class="form-control #{ component.valid ? '' : 'error'}">
+							            	<f:convertNumber maxFractionDigits="0" minFractionDigits="0" />
+							            	<f:validateLongRange minimum = "0" maximum = "10000" />
+							            </h:inputText>
+										<h:messages for="countHelper_010"  />
+                                    </div>
+                                    
+                                	<label class="col-sm-2 control-label">20 Cent Stücke</label>
+                                    <div class="col-sm-2">
+                                    	<h:inputText id="countHelper_020" value="#{cashRegisterStatusBean.countHelper_020}" validatorMessage="Anzahl angeben!" autocomplete="off" class="form-control #{ component.valid ? '' : 'error'}">
+							            	<f:convertNumber maxFractionDigits="0" minFractionDigits="0" />
+							            	<f:validateLongRange minimum = "0" maximum = "10000" />
+							            </h:inputText>
+										<h:messages for="countHelper_020"  />
+                                    </div>
+                                    
+                                	<label class="col-sm-2 control-label">50 Cent Stücke</label>
+                                    <div class="col-sm-2">
+                                    	<h:inputText id="countHelper_050" value="#{cashRegisterStatusBean.countHelper_050}" validatorMessage="Anzahl angeben!" autocomplete="off" class="form-control #{ component.valid ? '' : 'error'}">
+							            	<f:convertNumber maxFractionDigits="0" minFractionDigits="0" />
+							            	<f:validateLongRange minimum = "0" maximum = "10000" />
+							            </h:inputText>
+										<h:messages for="countHelper_050"  />
+                                    </div>
+                                </div>
+                            
+                                <div class="form-group">
+                                	<label class="col-sm-2 control-label">1 Euro Stücke</label>
+                                    <div class="col-sm-2">
+                                    	<h:inputText id="countHelper_1" value="#{cashRegisterStatusBean.countHelper_1}" validatorMessage="Anzahl angeben!" autocomplete="off" class="form-control #{ component.valid ? '' : 'error'}">
+							            	<f:convertNumber maxFractionDigits="0" minFractionDigits="0" />
+							            	<f:validateLongRange minimum = "0" maximum = "10000" />
+							            </h:inputText>
+										<h:messages for="countHelper_1"  />
+                                    </div>
+                                    
+                                	<label class="col-sm-2 control-label">2 Euro Stücke</label>
+                                    <div class="col-sm-2">
+                                    	<h:inputText id="countHelper_2" value="#{cashRegisterStatusBean.countHelper_2}" validatorMessage="Anzahl angeben!" autocomplete="off" class="form-control #{ component.valid ? '' : 'error'}">
+							            	<f:convertNumber maxFractionDigits="0" minFractionDigits="0" />
+							            	<f:validateLongRange minimum = "0" maximum = "10000" />
+							            </h:inputText>
+										<h:messages for="countHelper_2"  />
+                                    </div>
+                                    
+                                	<label class="col-sm-2 control-label">5 Euro Scheine</label>
+                                    <div class="col-sm-2">
+                                    	<h:inputText id="countHelper_5" value="#{cashRegisterStatusBean.countHelper_5}" validatorMessage="Anzahl angeben!" autocomplete="off" class="form-control #{ component.valid ? '' : 'error'}">
+							            	<f:convertNumber maxFractionDigits="0" minFractionDigits="0" />
+							            	<f:validateLongRange minimum = "0" maximum = "10000" />
+							            </h:inputText>
+										<h:messages for="countHelper_5"  />
+                                    </div>
+                                </div>
+                            
+                                <div class="form-group">
+                                	<label class="col-sm-2 control-label">10 Euro Scheine</label>
+                                    <div class="col-sm-2">
+                                    	<h:inputText id="countHelper_10" value="#{cashRegisterStatusBean.countHelper_10}" validatorMessage="Anzahl angeben!" autocomplete="off" class="form-control #{ component.valid ? '' : 'error'}">
+							            	<f:convertNumber maxFractionDigits="0" minFractionDigits="0" />
+							            	<f:validateLongRange minimum = "0" maximum = "10000" />
+							            </h:inputText>
+										<h:messages for="countHelper_10"  />
+                                    </div>
+                                    
+                                	<label class="col-sm-2 control-label">20 Euro Scheine</label>
+                                    <div class="col-sm-2">
+                                    	<h:inputText id="countHelper_20" value="#{cashRegisterStatusBean.countHelper_20}" validatorMessage="Anzahl angeben!" autocomplete="off" class="form-control #{ component.valid ? '' : 'error'}">
+							            	<f:convertNumber maxFractionDigits="0" minFractionDigits="0" />
+							            	<f:validateLongRange minimum = "0" maximum = "10000" />
+							            </h:inputText>
+										<h:messages for="countHelper_20"  />
+                                    </div>
+                                    
+                                	<label class="col-sm-2 control-label">50 Euro Scheine</label>
+                                    <div class="col-sm-2">
+                                    	<h:inputText id="countHelper_50" value="#{cashRegisterStatusBean.countHelper_50}" validatorMessage="Anzahl angeben!" autocomplete="off" class="form-control #{ component.valid ? '' : 'error'}">
+							            	<f:convertNumber maxFractionDigits="0" minFractionDigits="0" />
+							            	<f:validateLongRange minimum = "0" maximum = "10000" />
+							            </h:inputText>
+										<h:messages for="countHelper_50"  />
+                                    </div>
+                                </div>
+                            
+                                <div class="form-group">
+                                	<label class="col-sm-2 control-label">100 Euro Scheine</label>
+                                    <div class="col-sm-2">
+                                    	<h:inputText id="countHelper_100" value="#{cashRegisterStatusBean.countHelper_100}" validatorMessage="Anzahl angeben!" autocomplete="off" class="form-control #{ component.valid ? '' : 'error'}">
+							            	<f:convertNumber maxFractionDigits="0" minFractionDigits="0" />
+							            	<f:validateLongRange minimum = "0" maximum = "10000" />
+							            </h:inputText>
+										<h:messages for="countHelper_100"  />
+                                    </div>
+                                    
+                                	<label class="col-sm-2 control-label">200 Euro Scheine</label>
+                                    <div class="col-sm-2">
+                                    	<h:inputText id="countHelper_200" value="#{cashRegisterStatusBean.countHelper_200}" validatorMessage="Anzahl angeben!" autocomplete="off" class="form-control #{ component.valid ? '' : 'error'}">
+							            	<f:convertNumber maxFractionDigits="0" minFractionDigits="0" />
+							            	<f:validateLongRange minimum = "0" maximum = "10000" />
+							            </h:inputText>
+										<h:messages for="countHelper_200"  />
+                                    </div>
+                                    
+                                	<label class="col-sm-2 control-label">500 Euro Scheine</label>
+                                    <div class="col-sm-2">
+                                    	<h:inputText id="countHelper_500" value="#{cashRegisterStatusBean.countHelper_500}" validatorMessage="Anzahl angeben!" autocomplete="off" class="form-control #{ component.valid ? '' : 'error'}">
+							            	<f:convertNumber maxFractionDigits="0" minFractionDigits="0" />
+							            	<f:validateLongRange minimum = "0" maximum = "10000" />
+							            </h:inputText>
+										<h:messages for="countHelper_500"  />
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                
+                                	<label class="col-sm-2 control-label">Kommentar:</label>
+                                    <div class="col-sm-10">
+                                    	<h:inputTextarea id="comment" value="#{cashRegisterStatusBean.comment}" autocomplete="off" class="form-control #{ component.valid ? '' : 'error'}" validatorMessage="Korrektur Grund angeben!" >
+                                    		
+                                    	</h:inputTextarea>
+							            
+										<h:messages for="comment"  />
+                                    </div>
+                                </div>
+                            
+                                <div class="form-group">
+                                	<div class="col-sm-6">
+                         
+                                	
+                                	</div>
+                                    <div class="col-sm-4">
+                                    	<h:commandLink action="#{cashRegisterStatusBean.open}" class="btn btn-primary">
+                                    	<i class="fa fa-unlock"></i> öffnen
+                                    	</h:commandLink>
+                                    </div>
+                                </div>
+                                
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            
+            
+            <ui:fragment rendered="#{cashRegisterStatusBean.show_correction_booking}">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                            <h5>Korrekturbuchung</h5>
+                        </div>
+                        <div class="ibox-content">
+                            
+                                <div class="form-group">
+                                
+                                	<label class="col-sm-2 control-label">Betrag:</label>
+                                	<div class="col-sm-10">
+                                		<p class="form-control-static"><h:outputText value="#{cashRegisterStatusBean.correction_sum}" ><f:convertNumber maxFractionDigits="2" minFractionDigits="2" /></h:outputText> €</p>
+                                	</div>
+                                
+                                	<label class="col-sm-2 control-label">Verbuchen:</label>
+                                	<div class="col-sm-10">
+                                		<h:selectBooleanCheckbox value="#{cashRegisterStatusBean.book_correction}" 
+												class="form-control i-checks" >
+												<f:ajax event="change" />
+										</h:selectBooleanCheckbox>
+                                	</div>
+                                	
+                                <label class="col-sm-2 control-label">Grund:</label>
+                                    <div class="col-sm-10">
+                                    	<h:inputTextarea id="correction_comment" value="#{cashRegisterStatusBean.correction_comment}" autocomplete="off" class="form-control #{ component.valid ? '' : 'error'}" validatorMessage="Korrektur Grund angeben! (Mind. 30 Zeichen)" >
+                                    		<f:validateLength minimum="30"  disabled="#{not cashRegisterStatusBean.book_correction}"/>
+                                    	</h:inputTextarea>
+							            
+										<h:messages for="correction_comment"  />
+                                    </div>
+                                </div>
+
+                            
+                                
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </ui:fragment>
+           </h:form>
+            
+            </ui:fragment>
+    		</ui:define>
+    		
+    	</ui:composition>
+    </h:body>
+</html>

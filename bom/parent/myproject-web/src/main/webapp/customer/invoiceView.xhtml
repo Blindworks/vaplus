@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:body>
+
+
+
+	<f:metadata>
+		<f:event type="preRenderView" listener="#{customerBean.checkIfCustomerLogged}" />
+	</f:metadata>
+	
+	
+
+		
+	<ui:composition template="/WEB-INF/template/common/commonLayout.xhtml">
+	
+	
+		<ui:param name="heading1" value="Rechnungs Nr. #{saleBean.selectedInvoice.number}" />
+		
+		
+		
+	 	<ui:define name="headingContent">
+			<h:form class="form-horizontal" id="headerToolbar" >
+				    <h:outputLink  class="btn btn-xs btn-primary pull-right" value="#{saleBean.selectedInvoice.invoiceFile.URI}" target="_blank">
+					   <i class="fa fa-file-pdf-o"></i> Rechnung
+					</h:outputLink>
+					
+					
+					<h:commandButton class="btn btn-xs btn-primary" rendered="#{not saleBean.selectedInvoice.cancelation and not saleBean.selectedInvoice.canceled}" action="#{saleBean.cancelInvoice(saleBean.selectedInvoice)}" value="stornieren" />
+					
+					
+									
+					<ui:fragment rendered="#{saleBean.selectedInvoice.canceled}">
+                   		<span class="label label-danger">STORNIERT</span>
+                   	</ui:fragment> 
+			</h:form>
+	 	</ui:define>
+
+		<ui:define name="content">
+
+    		<div class="row">
+    		
+    			<div class="col-lg-6">
+    				 <div class="ibox float-e-margins">
+		                <div class="ibox-title">
+		                    <h5>Empfänger</h5>
+		                </div>
+		                <div class="ibox-content">
+		                    	<h:outputText value="#{saleBean.selectedInvoice.recipientLine1}" /><br />
+		                    	<h:outputText value="#{saleBean.selectedInvoice.recipientLine2}" /><br />
+		                    	<h:outputText value="#{saleBean.selectedInvoice.recipientLine3}" /><br />
+		                    	<h:outputText value="#{saleBean.selectedInvoice.recipientLine4}" /><br />
+		                    	<h:outputText value="#{saleBean.selectedInvoice.recipientLine5}" />
+		                </div>
+	               	</div>
+    			</div>
+    			<div class="col-lg-6">
+    				 <div class="ibox float-e-margins">
+		                <div class="ibox-title">
+		                    <h5>Details</h5>
+		                </div>
+		                <div class="ibox-content">
+		                	<h:form>
+		                	<div class="row">
+			                	<div class="col-sm-6">
+			                		RechnungsNr:
+			                	</div>
+			                	<div class="col-sm-6 text-right">
+			                		<h:outputText value="#{saleBean.selectedInvoice.number}" />
+			                	</div>
+		                	</div>
+		                	
+		                	<div class="row">
+			                	<div class="col-sm-6">
+			                		LieferscheinNr:
+			                	</div>
+			                	<div class="col-sm-6 text-right">
+			                		<h:outputText value="#{saleBean.selectedInvoice.stockPickslip.number}" />
+			                	</div>
+		                	</div>
+		                	
+		                	<div class="row">
+			                	<div class="col-sm-6">
+			                		BestellNr:
+			                	</div>
+			                	<div class="col-sm-6 text-right">
+			                		<h:outputText value="#{saleBean.selectedInvoice.stockPickslip.order.number}" />
+			                	</div>
+		                	</div>
+		                	
+		                	<div class="row">
+			                	<div class="col-sm-6">
+			                		Zahlungsart:
+			                	</div>
+			                	<div class="col-sm-6 text-right">
+			                		<h:outputText value="#{saleBean.selectedInvoice.payment.description}" />
+			                	</div>
+		                	</div>
+		                	
+		                	<div class="row">
+			                	<div class="col-sm-6">
+			                		Kundennummer:
+			                	</div>
+			                	<div class="col-sm-6 text-right">
+			                		<h:outputText value="#{saleBean.selectedInvoice.customer.id}" />
+			                	</div>
+		                	</div>
+		                	
+		                	<div class="row">
+			                	<div class="col-sm-6">
+			                		Buchungskonto:
+			                	</div>
+			                	<div class="col-sm-6 text-right">
+			                		<h:commandLink action="/controlling/paymentAccount" >
+										<f:setPropertyActionListener value="#{saleBean.selectedInvoice.customerAccount}" target="#{paymentAccountBean.selectedPaymentAccount}" />
+										<h:outputText value="#{saleBean.selectedInvoice.customerAccount.id}" />
+									</h:commandLink>
+			                	</div>
+		                	</div>
+		                	</h:form>
+		                </div>
+	               	</div>
+    			</div>
+    		
+    		
+				<div class="col-lg-12">
+				
+	                <h:form class="form-horizontal" id="contractForm">
+					
+			            <div class="ibox float-e-margins">
+			                <div class="ibox-title">
+			                    <h5>Rechnungs Details</h5>
+			                    <div class="ibox-tools">
+			                    
+			                    </div>
+			                </div>
+			                <div class="ibox-content">
+								
+								
+								<div class="row">
+									<div class="col-sm-12">
+								
+									<div class="form-group productList">
+										<label class="col-sm-2 control-label">Lager Ware</label>
+										<div class="col-sm-10">
+										
+										<ui:repeat var="invoiceItem" value="#{saleBean.selectedInvoice.invoiceItemList}">
+												<div class="row">
+														<div class="col-sm-1 control-label">
+															#{invoiceItem.quantity}
+														</div>
+														<div class="col-sm-3 control-label">
+															#{invoiceItem.title}
+														</div>
+														<div class="col-sm-2 control-label">
+															#{invoiceItem.serial}
+														</div>
+														<div class="col-sm-2 text-right control-label">
+															<h:outputText value="#{invoiceItem.unitGrossPrice}" >
+					                        					<f:convertNumber maxFractionDigits="2" minFractionDigits="2" />
+					                        				</h:outputText> <i class="fa fa-euro"></i>
+														</div>
+														<div class="col-sm-2 text-right control-label">
+															<h:outputText value="#{invoiceItem.commission.grossPrice}" >
+					                        					<f:convertNumber maxFractionDigits="2" minFractionDigits="2" />
+					                        				</h:outputText> <i class="fa fa-euro"></i>
+														</div>
+														<div class="col-sm-2 text-right text-navy control-label">
+															<h:outputText value="#{invoiceItem.commission.points}" >
+					                        					<f:convertNumber maxFractionDigits="4" minFractionDigits="0" />
+					                        				</h:outputText> <i class="fa fa-star"></i>
+														</div>
+														
+												</div>
+										</ui:repeat>
+										
+										</div>
+									</div>
+									
+									
+								<div class="form-group">
+									<div class="col-sm-2">
+									</div>
+									<div class="col-sm-10 text-right" >
+										<div class="row">
+										<label class="col-sm-6 control-label">Summe:</label>
+										<div class="col-sm-2">
+										
+										</div>
+										<div class="col-sm-2 text-right">
+											<p class="form-control-static">
+												<h:outputText value="#{saleBean.selectedInvoice.commission.grossPrice}">
+													<f:convertNumber maxFractionDigits="2" minFractionDigits="2" />
+												</h:outputText>
+												 <i class="fa fa-euro"></i>
+											</p>
+										</div>
+										<div class="col-sm-2 text-right">
+											<p class="form-control-static text-navy">
+												<h:outputText value="#{saleBean.selectedInvoice.commission.points}">
+													<f:convertNumber maxFractionDigits="4" minFractionDigits="0" />
+												</h:outputText>
+												 <i class="fa fa-star"></i>
+											</p>
+										</div>
+										</div>
+									
+									
+										
+									</div>
+								
+								</div>
+								
+								
+								<div class="form-group">
+									<label class="col-sm-2 control-label">Interne Info</label>
+									<div class="col-sm-10">
+										<p class="form-control-static">
+											<h:outputText value="#{saleBean.selectedInvoice.note}" />
+										</p>
+									</div>
+								</div>
+								
+								<div class="form-group">
+									<label class="col-sm-2 control-label">Re Einleitung</label>
+									<div class="col-sm-10">
+										<p class="form-control-static">
+											<h:outputText value="#{helperBean.nl2br(saleBean.selectedInvoice.introduction)}"  escape="false"/>
+										</p>
+									</div>
+								</div>
+								
+								<div class="form-group">
+									<label class="col-sm-2 control-label">Re Abschluss</label>
+									<div class="col-sm-10">
+										<p class="form-control-static">
+											<h:outputText value="#{helperBean.nl2br(saleBean.selectedInvoice.closing)}"  escape="false"/>
+										</p>
+									</div>
+								</div>
+								
+								<div class="form-group">
+									<label class="col-sm-2 control-label">Zahlungsinformationen</label>
+									<div class="col-sm-10">
+										<p class="form-control-static">
+											<h:outputText value="#{helperBean.nl2br(saleBean.selectedInvoice.paymentInformation)}"  escape="false"/>
+										</p>
+									</div>
+								</div>
+		
+		</div>
+		</div>
+		
+		
+			                </div>
+            			</div>
+            			
+	                </h:form>
+            			
+    			</div>
+    		</div>
+
+		</ui:define>
+
+
+	</ui:composition>
+</h:body>
+</html>

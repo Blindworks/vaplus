@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+		xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:f="http://java.sun.com/jsf/core"	
+	xmlns:p="http://primefaces.org/ui">
+
+<h:body>
+
+	<ui:composition template="/WEB-INF/template/common/commonLayout.xhtml">
+
+		<ui:param name="heading1" value="Elternzeit" />
+		
+		<ui:define name="content">
+	    <h:form class="form-horizontal" id="parentTimeForm">
+		
+		
+		
+		<div class="row">
+	            
+	            <div class="col-lg-12">
+	                <div class="wrapper wrapper-content animated fadeInUp">
+	
+	                    <div class="ibox">
+	                        <div class="ibox-title">
+									Elternzeit #{parentTimeBean.selectedParentTime.id gt 0 ? 'ändern' : 'planen'} 
+	                            <div class="ibox-tools">
+	                            	<ui:fragment rendered="#{parentTimeBean.selectedParentTime.id gt 0}">
+											<h:commandLink class="btn btn-xs btn-danger confirm-btn" action="#{parentTimeBean.deleteParentTime}" immediate="true" >
+												<i class="fa fa-trash"></i>
+										    </h:commandLink>
+										    
+											<h:commandLink class="btn btn-xs btn-primary" action="#{parentTimeBean.clearParentTime}" immediate="true" >
+												<i class="fa fa-times"></i>
+										    </h:commandLink>
+									</ui:fragment>
+									
+									<h:commandLink id="saveBtn" action="#{parentTimeBean.saveSelectedParentTime}" class="btn btn-xs btn-primary " >
+											<i class="fa fa-save"></i>
+									</h:commandLink>
+	                            </div>
+	                        </div>
+	                        <div class="ibox-content">
+				                     <div class="form-group">
+										<label class="col-lg-2 control-label">Mitarbeiter</label>
+	                        			<div class="col-lg-10">
+				                        	<h:selectOneMenu id="user" a:data-placeholder="Mitarbeiter wählen ..."
+														value="#{parentTimeBean.selectedParentTime.user}"
+														validatorMessage="Bitte Mitarbeiter wählen"
+														class="chosen-select-no-single form-control" converter="#{userConverter}" 
+														disabled="#{parentTimeBean.selectedParentTime.id gt 0}"
+														>
+														<f:selectItem itemValue="" itemLabel=""/>
+														<f:selectItems value="#{userBean.userList}" var="user"
+															itemValue="#{user}" itemLabel="#{user.name}" />
+														<f:validateRequired />
+														<f:ajax render="userParentTimeList" />
+											</h:selectOneMenu>
+										</div>
+									</div>                        	
+	                        	
+	                        	
+					            
+					            	<h:panelGroup id="holiday-wrapper">
+								            <div class="form-group">
+												<label class="col-lg-2 control-label">Zeitraum</label>
+												<div class="col-lg-10">
+													<div class="input-timerange input-group">
+														<h:inputText id="startDate" converterMessage="Startzeit konnte nicht als Datum interpretiert werden." autocomplete="off" class="form-control" value="#{parentTimeBean.selectedParentTime.effectiveDate}"  a:data-mask="99.99.9999">
+															<f:convertDateTime pattern="dd.MM.yyyy" timeZone="CET" />
+							                             </h:inputText>
+							                             <span class="input-group-addon">bis</span>
+							                             <h:inputText id="endDate" converterMessage="Endzeit konnte nicht als Datum interpretiert werden." autocomplete="off" class="form-control" value="#{parentTimeBean.selectedParentTime.expiryDate}" a:data-mask="99.99.9999" >
+							                            	<f:convertDateTime pattern="dd.MM.yyyy" timeZone="CET" />
+							                             </h:inputText>
+						                             </div>
+												</div>
+											</div>
+									</h:panelGroup>
+									
+									 <div class="form-group">
+										<label class="col-lg-2 control-label">Notizen</label>
+										<div class="col-lg-10">
+											<h:inputTextarea id="note" value="#{parentTimeBean.selectedParentTime.note}" class="form-control" />
+										</div>
+									</div>
+									
+	                        </div>
+	                    </div>
+	                </div>
+	            </div>
+	        </div>
+	        
+	        
+			<div class="row">
+	            
+	            <div class="col-lg-12">
+	            	
+	                <div class="wrapper wrapper-content animated fadeInUp">
+						<h:panelGroup id="userParentTimeList" >
+							<h:panelGroup rendered="#{not empty parentTimeBean.selectedParentTime.user}">
+			                    <div class="ibox">
+			                        <div class="ibox-title">
+											geplante Elternzeit von #{parentTimeBean.selectedParentTime.user}
+			                            <div class="ibox-tools">
+			                            </div>
+			                        </div>
+			                        <div class="ibox-content">
+			                        	<h:panelGroup rendered="#{parentTimeBean.getParentalTimeList(parentTimeBean.selectedParentTime.user).size() eq 0}">
+			                        		bisher keine Elternzeit geplant
+			                        	</h:panelGroup>
+			                        	<h:panelGroup rendered="#{parentTimeBean.getParentalTimeList(parentTimeBean.selectedParentTime.user).size() gt 0}">
+				                        		<h:dataTable class="table table-striped" value="#{parentTimeBean.getParentalTimeList(parentTimeBean.selectedParentTime.user)}" var="event">
+									
+													<h:column>
+									    				<f:facet name="header">von</f:facet>
+									    				<h:outputText value="#{event.effectiveDate}" >
+															<f:convertDateTime type="date" pattern="dd.MM.yy HH:mm" timeZone="CET"/>
+														</h:outputText>
+									    			</h:column>
+									    			
+													<h:column>
+									    				<f:facet name="header">bis</f:facet>
+									    				<h:outputText value="#{event.expiryDate}" >
+															<f:convertDateTime type="date" pattern="dd.MM.yy HH:mm" timeZone="CET"/>
+														</h:outputText>
+									    			</h:column>
+									    			
+													<h:column>
+									    				<f:facet name="header">Urlaubstage</f:facet>
+									    				<h:outputText value="#{holidayBean.getVacationDays(event)}"/>
+									    			</h:column>
+									    			
+													<h:column>
+									    				<f:facet name="header">Info</f:facet>
+									    				<h:outputText value="#{event.note.length() gt 50 ? event.note.substring(0,47).concat('...') : event.note}" />
+									    			</h:column>
+									    			
+													<h:column>
+													
+														<h:commandLink action="/management/user/parentTime" class="btn btn-sm btn-primary pull-right ">
+																<f:setPropertyActionListener value="#{event}" target="#{parentTimeBean.selectedParentTime}" />
+																<i class="fa fa-pencil"></i>
+														</h:commandLink>
+									    			</h:column>
+	
+												</h:dataTable>
+			                        	</h:panelGroup>
+			                        </div>
+			                    </div>
+	                    	</h:panelGroup>
+	                    </h:panelGroup>
+	                </div>
+	            </div>
+	        </div>
+		
+		</h:form>
+
+		</ui:define>
+
+
+	</ui:composition>
+</h:body>
+</html>

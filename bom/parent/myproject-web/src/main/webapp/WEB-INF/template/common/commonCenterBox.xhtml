@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" 
+    xmlns:f="http://java.sun.com/jsf/core">
+    
+	<ui:composition>
+	
+			<div class="center-box text-center #{boxClass} animated fadeInDown">
+		        <div>
+		            <div>
+		
+		                <h1 class="logo-name"><ui:insert name="logoName">VS+</ui:insert></h1>
+		
+		            </div>
+		            <ui:insert name="slogan">
+			            <h3>Willkommen bei VS+</h3>
+		            </ui:insert>
+		            
+		            
+					<h:messages/>
+					<ui:insert name="content"> 
+					
+					</ui:insert>
+		            
+		        </div>
+		    </div>
+	
+	</ui:composition>
+</html>

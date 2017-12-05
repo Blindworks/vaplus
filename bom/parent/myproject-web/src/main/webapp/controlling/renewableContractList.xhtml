@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"	
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+		xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:body>
+
+	<ui:composition template="/WEB-INF/template/common/commonLayout.xhtml">
+
+		<ui:param name="heading1" value="Verlängerbare Verträge" />
+		
+		
+		<ui:define name="headingContent">
+			<h:form class="form-horizontal hidden-print" id="headerToolbar">
+				<div class="form-group">
+					<div class="col-sm-2">
+						<h:selectOneMenu 
+									value="#{renewableContractListBean.shopFilter}"
+									class="chosen-select-no-single form-control" converter="#{shopConverter}" >
+									<f:selectItem itemValue="" itemLabel="Alle Filialen" />
+									<f:selectItems value="#{shopBean.shopList}" var="shop"
+										itemValue="#{shop}" itemLabel="#{shop.name}" />
+							<f:ajax render="renewableContractListForm" event="change" onevent="ajaxLoad" />
+						</h:selectOneMenu>
+					</div>
+					<h:panelGroup rendered="#{permissionBean.hasPermission('contract_list','read')}">
+					<div class="col-sm-2">
+						<h:selectOneMenu 
+									value="#{renewableContractListBean.userFilter}"
+									class="chosen-select-no-single form-control" converter="#{userConverter}" >
+									<f:selectItem itemValue="" itemLabel="Alle Mitarbeiter" />
+									<f:selectItems value="#{userBean.userList}" var="user"
+										itemValue="#{user}" itemLabel="#{user.name}" />
+							<f:ajax render="renewableContractListForm" event="change" onevent="ajaxLoad" />
+						</h:selectOneMenu>
+					</div>
+					</h:panelGroup>
+					<div class="col-sm-2">
+						<h:selectOneMenu 
+									value="#{renewableContractListBean.statusFilter}"
+									class="chosen-select-no-single form-control" converter="#{contractStatusConverter}" >
+									<f:selectItem itemValue="" itemLabel="Alle Stati" />
+									<f:selectItems value="#{contractBean.contractStatusList}" var="status"
+										itemValue="#{status}" itemLabel="#{status.name}" />
+							<f:ajax render="renewableContractListForm" event="change" onevent="ajaxLoad" />
+						</h:selectOneMenu>
+					</div>
+					<div class="col-sm-2">
+						<h:selectOneMenu 
+									value="#{renewableContractListBean.tariffFilter}"
+									class="chosen-select-no-single form-control" converter="#{baseProductConverter}" >
+									<f:selectItem itemValue="" itemLabel="Alle Verträge" />
+									<f:selectItems value="#{contractBean.getTariffList(true)}" var="tariff"
+										itemValue="#{tariff}" itemLabel="#{tariff.name}" />
+							<f:ajax render="renewableContractListForm" event="change" onevent="ajaxLoad" />
+						</h:selectOneMenu>
+					</div>
+				</div>
+			</h:form>
+   		</ui:define>
+		
+		<ui:define name="content">
+		
+		<div class="row">
+			<h:form id="renewableContractListForm" >
+                <div class="col-lg-12">
+                    <div class="ibox">
+                        <div class="ibox-content">
+							<h:dataTable id="renewableContractList" class="table dataTable table-striped" value="#{renewableContractListBean.contractListPart}" var="contract">
+								
+								<h:column>
+				    				<f:facet name="header">
+			    						<h:commandLink action="#{renewableContractListBean.toggleSortField_id()}" value="" >
+                                    		<f:ajax execute="@this" render="renewableContractList" />
+                                    		<span class="sortHeader sorting#{renewableContractListBean.sortField eq 'id' and renewableContractListBean.sortOrder eq 'asc' ? '_asc' : ''}#{renewableContractListBean.sortField eq 'id' and renewableContractListBean.sortOrder eq 'desc' ? '_desc' : ''}">
+                                    		#
+                                    		</span>
+	                                    </h:commandLink>
+				    				</f:facet>
+				    				<h:commandLink action="/customer/contractView" >
+										<f:setPropertyActionListener value="#{contract.customer}" target="#{customerBean.selectedCustomer}" />
+										<f:setPropertyActionListener value="#{contract}" target="#{contractBean.selectedContract}" />
+		                                <div>
+		                                    	#{contract.id}
+		                                </div>
+									</h:commandLink>
+				    			</h:column>
+								
+								<h:column>
+				    				<f:facet name="header">
+			    						<h:commandLink action="#{renewableContractListBean.toggleSortField_customer()}" value="" >
+                                    		<f:ajax execute="@this" render="renewableContractList" />
+                                    		<span class="sortHeader sorting#{renewableContractListBean.sortField eq 'customer' and renewableContractListBean.sortOrder eq 'asc' ? '_asc' : ''}#{renewableContractListBean.sortField eq 'customer' and renewableContractListBean.sortOrder eq 'desc' ? '_desc' : ''}">
+                                    		Kunde
+                                    		</span>
+	                                    </h:commandLink>
+				    				</f:facet>
+				    				<h:commandLink action="/customer/contractView" >
+										<f:setPropertyActionListener value="#{contract.customer}" target="#{customerBean.selectedCustomer}" />
+										<f:setPropertyActionListener value="#{contract}" target="#{contractBean.selectedContract}" />
+		                                <div>
+		                                    #{contract.customer.name}
+		                                </div>
+									</h:commandLink>
+				    			</h:column>
+								
+								<h:column>
+				    				<f:facet name="header">
+			    						<h:commandLink action="#{renewableContractListBean.toggleSortField_shop()}" value="" >
+                                    		<f:ajax execute="@this" render="renewableContractList" />
+                                    		<span class="sortHeader sorting#{renewableContractListBean.sortField eq 'shop' and renewableContractListBean.sortOrder eq 'asc' ? '_asc' : ''}#{renewableContractListBean.sortField eq 'shop' and renewableContractListBean.sortOrder eq 'desc' ? '_desc' : ''}">
+                                    		Kunden-Filiale
+                                    		</span>
+	                                    </h:commandLink>
+				    				</f:facet>
+				    				<h:commandLink action="/customer/contractView" >
+										<f:setPropertyActionListener value="#{contract.customer}" target="#{customerBean.selectedCustomer}" />
+										<f:setPropertyActionListener value="#{contract}" target="#{contractBean.selectedContract}" />
+		                                <div>
+		                                	<h:outputText value="#{contract.customer.shop.name}" rendered="#{not empty contract.customer.shop}"/>
+		                                </div>
+									</h:commandLink>
+				    			</h:column>
+								
+								<h:column>
+				    				<f:facet name="header">
+			    						<h:commandLink action="#{renewableContractListBean.toggleSortField_user()}" value="" >
+                                    		<f:ajax execute="@this" render="renewableContractList" />
+                                    		<span class="sortHeader sorting#{renewableContractListBean.sortField eq 'user' and renewableContractListBean.sortOrder eq 'asc' ? '_asc' : ''}#{renewableContractListBean.sortField eq 'user' and renewableContractListBean.sortOrder eq 'desc' ? '_desc' : ''}">
+                                    		Kundenbetreuer
+                                    		</span>
+	                                    </h:commandLink>
+	                                </f:facet>
+				    				<h:commandLink action="/customer/contractView" >
+										<f:setPropertyActionListener value="#{contract.customer}" target="#{customerBean.selectedCustomer}" />
+										<f:setPropertyActionListener value="#{contract}" target="#{contractBean.selectedContract}" />
+		                                <div>
+		                                	<h:outputText value="#{contract.customer.accountManager.name}" rendered="#{not empty contract.customer.accountManager}"/>
+		                                </div>
+									</h:commandLink>
+				    			</h:column>
+								
+								<h:column>
+				    				<f:facet name="header">
+			    						<h:commandLink action="#{renewableContractListBean.toggleSortField_callingNumber()}" value="" >
+                                    		<f:ajax execute="@this" render="renewableContractList" />
+                                    		<span class="sortHeader sorting#{renewableContractListBean.sortField eq 'callingNumber' and renewableContractListBean.sortOrder eq 'asc' ? '_asc' : ''}#{renewableContractListBean.sortField eq 'callingNumber' and renewableContractListBean.sortOrder eq 'desc' ? '_desc' : ''}">
+                                    		Rufnummer
+                                    		</span>
+	                                    </h:commandLink>
+				    				</f:facet>
+				    				
+				    				<h:commandLink action="/customer/contractView" >
+										<f:setPropertyActionListener value="#{contract.customer}" target="#{customerBean.selectedCustomer}" />
+										<f:setPropertyActionListener value="#{contract}" target="#{contractBean.selectedContract}" />
+										<div>
+		                                    #{contract.callingNumber}
+		                                </div>
+									</h:commandLink>
+				    			</h:column>
+								
+								<h:column>
+				    				<f:facet name="header">
+			    						<h:commandLink action="#{renewableContractListBean.toggleSortField_tariff()}" value="" >
+                                    		<f:ajax execute="@this" render="renewableContractList" />
+                                    		<span class="sortHeader sorting#{renewableContractListBean.sortField eq 'tariff' and renewableContractListBean.sortOrder eq 'asc' ? '_asc' : ''}#{renewableContractListBean.sortField eq 'tariff' and renewableContractListBean.sortOrder eq 'desc' ? '_desc' : ''}">
+                                    		Vertrag
+                                    		</span>
+	                                    </h:commandLink>
+	                                </f:facet>
+				    				<h:commandLink action="/customer/contractView" >
+										<f:setPropertyActionListener value="#{contract.customer}" target="#{customerBean.selectedCustomer}" />
+										<f:setPropertyActionListener value="#{contract}" target="#{contractBean.selectedContract}" />
+		                                <div>
+		                                    #{contract.cachedTariff.productName}
+		                                </div>
+									</h:commandLink>
+				    			</h:column>
+								
+								<h:column>
+				    				<f:facet name="header">
+			    						<h:commandLink action="#{renewableContractListBean.toggleSortField_expiryDate()}" value="" >
+                                    		<f:ajax execute="@this" render="renewableContractList" />
+                                    		<span class="sortHeader sorting#{renewableContractListBean.sortField eq 'expiryDate' and renewableContractListBean.sortOrder eq 'asc' ? '_asc' : ''}#{renewableContractListBean.sortField eq 'expiryDate' and renewableContractListBean.sortOrder eq 'desc' ? '_desc' : ''}">
+                                    		Vertragsende
+                                    		</span>
+	                                    </h:commandLink>
+				    				</f:facet>
+				    				<h:commandLink action="/customer/contractView" >
+										<f:setPropertyActionListener value="#{contract.customer}" target="#{customerBean.selectedCustomer}" />
+										<f:setPropertyActionListener value="#{contract}" target="#{contractBean.selectedContract}" />
+		                                <div>
+						    				<h:outputText value="#{contract.expiryDate}" >
+												<f:convertDateTime type="date" pattern="dd.MM.yy" timeZone="CET"/>
+											</h:outputText>
+		                                </div>
+									</h:commandLink>
+				    			</h:column>
+								
+								<h:column>
+				    				<f:facet name="header">
+			    						<h:commandLink action="#{renewableContractListBean.toggleSortField_status()}" value="" >
+                                    		<f:ajax execute="@this" render="renewableContractList" />
+                                    		<span class="sortHeader sorting#{renewableContractListBean.sortField eq 'status' and renewableContractListBean.sortOrder eq 'asc' ? '_asc' : ''}#{renewableContractListBean.sortField eq 'status' and renewableContractListBean.sortOrder eq 'desc' ? '_desc' : ''}">
+                                    		Status
+                                    		</span>
+	                                    </h:commandLink>
+				    				</f:facet>
+				    				<h:commandLink action="/customer/contractView" >
+										<f:setPropertyActionListener value="#{contract.customer}" target="#{customerBean.selectedCustomer}" />
+										<f:setPropertyActionListener value="#{contract}" target="#{contractBean.selectedContract}" />
+		                                <div>
+						    				<h:outputText value="#{contract.status.name}" >
+											</h:outputText>
+		                                </div>
+									</h:commandLink>
+				    			</h:column>
+								
+								<h:column>
+				    				<f:facet name="header">Laufzeit</f:facet>
+				    				<h:commandLink action="/customer/contractView" >
+										<f:setPropertyActionListener value="#{contract.customer}" target="#{customerBean.selectedCustomer}" />
+										<f:setPropertyActionListener value="#{contract}" target="#{contractBean.selectedContract}" />
+		                                <div>
+		                                <ui:fragment></ui:fragment>
+		                                	<ui:fragment rendered="#{contract.daysTillExpiration eq 0}">-</ui:fragment>
+						    				<ui:fragment rendered="#{contract.daysTillExpiration gt 0}">#{contract.daysTillExpiration} Tag<ui:fragment rendered="#{not (contract.daysTillExpiration eq 1)}">e</ui:fragment></ui:fragment>
+		                                </div>
+									</h:commandLink>
+				    			</h:column>
+			    			
+								
+							</h:dataTable>
+							
+							
+							
+							<div class="row">
+	                                        	<div class="col-sm-6">
+	                                        		<div class="dataTables_info" id="DataTables_Table_0_info" role="status" aria-live="polite">zeige Eintrag #{paginationBean.getOffset('RenewableContractList') + 1} bis #{paginationBean.getOffset('RenewableContractList') + paginationBean.getLimit('RenewableContractList')} von #{paginationBean.getMaxEntries('RenewableContractList')}</div>
+	                                        	</div>
+	                                        	<div class="col-sm-6">
+	                                        		<div class="dataTables_paginate paging_simple_numbers" >
+	                                        			<ul class="pagination">
+	                                        				<li class="paginate_button previous #{paginationBean.getPage('RenewableContractList') eq 1 ? 'disabled' : ''}" >
+	                                        					<h:commandLink action="#{renewableContractListBean.loadContractListPart()}" actionListener="#{paginationBean.previousPage('RenewableContractList')}">
+							                                		<f:ajax execute="@this" render="renewableContractListForm" />
+							                                		zurück
+							                                	</h:commandLink>
+	                                        				</li>
+	                                        				
+	                                        				<ui:fragment rendered="#{paginationBean.getPage('RenewableContractList') gt 3}">
+		                                        				<li class="paginate_button" >
+		                                        					<h:commandLink action="#{renewableContractListBean.loadContractListPart()}" actionListener="#{paginationBean.setPage('RenewableContractList',1)}">
+								                                		<f:ajax execute="@this" render="renewableContractListForm" />
+								                                		1
+								                                	</h:commandLink>
+		                                        				</li>
+	                                        				</ui:fragment>
+	                                        				
+	                                        				<ui:fragment rendered="#{paginationBean.getPage('RenewableContractList') gt 4}">
+		                                        				<li class="paginate_button disabled" aria-controls="DataTables_Table_0" tabindex="0" id="DataTables_Table_0_ellipsis">
+		                                        					<a href="#">…</a>
+		                                        				</li>
+	                                        				</ui:fragment>
+	                                        				
+	                                        				<ui:fragment rendered="#{paginationBean.getPrevPrevPageNumber('RenewableContractList') gt 0}">
+		                                        				<li class="paginate_button" >
+		                                        					<h:commandLink action="#{renewableContractListBean.loadContractListPart()}" actionListener="#{paginationBean.setPage('RenewableContractList',paginationBean.getPrevPrevPageNumber('RenewableContractList'))}">
+								                                		<f:ajax execute="@this" render="renewableContractListForm" />
+								                                		#{paginationBean.getPrevPrevPageNumber('RenewableContractList')}
+								                                	</h:commandLink>
+		                                        				</li>
+	                                        				</ui:fragment>
+	                                        				
+	                                        				<ui:fragment rendered="#{paginationBean.getPrevPageNumber('RenewableContractList') gt 0}">
+		                                        				<li class="paginate_button" >
+		                                        					<h:commandLink action="#{renewableContractListBean.loadContractListPart()}" actionListener="#{paginationBean.setPage('RenewableContractList',paginationBean.getPrevPageNumber('RenewableContractList') )}">
+								                                		<f:ajax execute="@this" render="renewableContractListForm" />
+								                                		#{paginationBean.getPrevPageNumber('RenewableContractList') }
+								                                	</h:commandLink>
+		                                        				</li>
+	                                        				</ui:fragment>
+	                                        				
+	                                        				<li class="paginate_button active" ><a href="#">#{paginationBean.getPage('RenewableContractList')}</a></li>
+	                                        				
+	                                        				
+	                                        				
+	                                        				<ui:fragment rendered="#{paginationBean.getNextPageNumber('RenewableContractList') gt 0}">
+		                                        				<li class="paginate_button" >
+		                                        					<h:commandLink action="#{renewableContractListBean.loadContractListPart()}" actionListener="#{paginationBean.setPage('RenewableContractList',paginationBean.getNextPageNumber('RenewableContractList'))}">
+								                                		<f:ajax execute="@this" render="renewableContractListForm" />
+								                                		#{paginationBean.getNextPageNumber('RenewableContractList')}
+								                                	</h:commandLink>
+		                                        				</li>
+	                                        				</ui:fragment>
+	                                        				
+	                                        				
+	                                        				<ui:fragment rendered="#{paginationBean.getNextNextPageNumber('RenewableContractList') gt 0}">
+		                                        				<li class="paginate_button" >
+		                                        					<h:commandLink action="#{renewableContractListBean.loadContractListPart()}" actionListener="#{paginationBean.setPage('RenewableContractList',paginationBean.getNextNextPageNumber('RenewableContractList'))}">
+								                                		<f:ajax execute="@this" render="renewableContractListForm" />
+								                                		#{paginationBean.getNextNextPageNumber('RenewableContractList')}
+								                                	</h:commandLink>
+		                                        				</li>
+	                                        				</ui:fragment>
+	                                        				
+	                                        				
+	                                        				
+	                                        				<ui:fragment rendered="#{paginationBean.getPage('RenewableContractList') lt (paginationBean.getPageCount('RenewableContractList') -3)}">
+		                                        				<li class="paginate_button disabled" aria-controls="DataTables_Table_0" tabindex="0" id="DataTables_Table_0_ellipsis">
+		                                        					<a href="#">…</a>
+		                                        				</li>
+	                                        				</ui:fragment>
+	                                        				
+	                                        				<ui:fragment rendered="#{paginationBean.getPage('RenewableContractList') lt (paginationBean.getPageCount('RenewableContractList') - 2) and paginationBean.getPageCount('RenewableContractList') gt 4}">
+		                                        				<li class="paginate_button" >
+		                                        					<h:commandLink action="#{renewableContractListBean.loadContractListPart()}" actionListener="#{paginationBean.setPage('RenewableContractList',paginationBean.getPageCount('RenewableContractList'))}">
+								                                		<f:ajax execute="@this" render="renewableContractListForm" />
+								                                		#{paginationBean.getPageCount('RenewableContractList')}
+								                                	</h:commandLink>
+		                                        				</li>
+	                                        				</ui:fragment>
+	                                        				
+	                                        				
+	                                        				<li class="paginate_button next #{paginationBean.getPage('RenewableContractList') eq paginationBean.getPageCount('RenewableContractList') ? 'disabled' : ''}" >
+	                                        					<h:commandLink action="#{renewableContractListBean.loadContractListPart()}" actionListener="#{paginationBean.nextPage('RenewableContractList')}">
+							                                		<f:ajax execute="@this" render="renewableContractListForm" />
+							                                		weiter
+							                                	</h:commandLink>
+	                                        				</li>
+	                                        			</ul>
+	                                        		</div>
+	                                        	</div>
+	                                        </div>
+                        </div>
+                    </div>
+                </div>
+			</h:form>
+        </div>
+        
+		</ui:define>
+
+
+	</ui:composition>
+</h:body>
+</html>

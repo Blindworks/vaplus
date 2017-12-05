@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+	  xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+    xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+	<h:body>
+	
+	
+    	<ui:composition template="/WEB-INF/template/common/commonLayout.xhtml">
+    		<ui:param name="heading1" value="Produkt Konditonen" />
+    		
+    		<ui:define name="content">
+    		
+			<h:panelGroup
+				rendered="#{VOBean.productCommissionVOTypeList.size() == 0}">
+				
+				<div class="row">
+				<div class="col-lg-12">
+		            <div class="ibox float-e-margins">
+		                <div class="ibox-content">
+							<p>Keine SoKo VO-Gruppen vorhanden.</p>
+						</div>
+					</div>
+				</div>
+				</div>
+			</h:panelGroup>
+    		
+    		<h:panelGroup id="ProductCommissionVOTypeList">
+    		<ui:repeat var="voType" value="#{VOBean.productCommissionVOTypeList}" rendered="#{VOBean.productCommissionVOTypeList.size() > 0}">
+    		
+    		<div class="row">
+				<div class="col-lg-12">
+		            <div class="ibox float-e-margins">
+					<h:form id="productCommissionRelationForm">
+		                <div class="ibox-title">
+		                    <h5>#{voType.name}</h5>
+		                    <div class="ibox-tools">
+	            				<h:panelGroup  rendered="#{permissionBean.hasPermission('settings','edit')}">
+		                    
+								    <h:commandLink actionListener="#{VOBean.newProductCommissionVOTypeProductRelation(voType)}" class="btn btn-xs btn-primary " rendered="#{VOBean.isProductCommissionListEditable(voType)}">
+								    	<f:ajax render="productCommissionModalForm" onevent="showProductCommissionModal" />
+										<i class="fa fa-plus"></i>
+									</h:commandLink>
+								    
+								    <h:commandLink id="saveButton" class="btn btn-xs btn-primary " action="#{VOBean.saveProductCommissionVOType(voType)}"  rendered="#{VOBean.isProductCommissionListEditable(voType)}">
+									   <f:ajax execute="@form" render="productCommissionRelationForm" onevent="function(data) { if (data.status === 'success') { loadChosenElements(); } }"/>
+									   <i class="fa fa-save"></i>
+									</h:commandLink>
+								    <h:commandLink  class="btn btn-xs btn-primary "  action="#{VOBean.toggleProductCommissionListEditable(voType)}" rendered="#{VOBean.isProductCommissionListEditable(voType)}" immediate="true">
+									   <f:ajax render="productCommissionRelationForm"/>
+									   <i class="fa fa-times"></i>
+									</h:commandLink>
+								    <h:commandLink  class="btn btn-xs btn-primary " action="#{VOBean.toggleProductCommissionListEditable(voType)}"  rendered="#{not VOBean.isProductCommissionListEditable(voType)}">
+									   <f:ajax render="productCommissionRelationForm"  onevent="function(data) { if (data.status === 'success') { loadChosenElements(); } }"/>
+									   <i class="fa fa-pencil"></i>
+									</h:commandLink>
+								</h:panelGroup>
+		                    </div>
+		                </div>
+		                <div class="ibox-content">
+		                
+		                	<h:panelGroup rendered="#{voType.productCommissionList.size() == 0}">
+		                		<p>Keine Produkte für diese VO Gruppe verknüpft.</p>
+		                	</h:panelGroup>
+		                
+				    		
+	                        <h:dataTable value="#{voType.productCommissionList}" var="productCommission" rendered="#{voType.productCommissionList.size() gt 0}"
+				    			styleClass="table table-hover" >
+ 
+				    			<h:column>
+				    				<f:facet name="header">Produkt</f:facet>
+				    				
+				    				<h:panelGroup  rendered="#{not VOBean.isProductCommissionListEditable(voType)}" >
+			                        	<span ><h:outputText value="#{productCommission.product.name}" /></span>
+			                        </h:panelGroup>
+				    				
+				    				<h:panelGroup  rendered="#{VOBean.isProductCommissionListEditable(voType)}" >
+				    					<p class="form-control-static">#{productCommission.product.name}</p>
+			                        </h:panelGroup>
+				    			</h:column>
+				    			
+				    			<h:column>
+				    				<f:facet name="header">Optionen</f:facet>
+				    				
+				    				<h:panelGroup  rendered="#{not VOBean.isProductCommissionListEditable(voType)}" >
+			                        	<span >
+			                        	
+			                        	<ui:repeat var="option" value="#{productCommission.productOptionList}"  varStatus="status">
+			                        	<h:outputText value="#{option.name}" /><h:panelGroup rendered="#{not status.last}">, </h:panelGroup>
+			                        	</ui:repeat>
+			                        	
+			                        	</span>
+			                        </h:panelGroup>
+				    				
+				    				<h:panelGroup  rendered="#{VOBean.isProductCommissionListEditable(voType)}" >
+				    					<p class="form-control-static">
+				                        	<ui:repeat var="option" value="#{productCommission.productOptionList}"  varStatus="status">
+				                        	<h:outputText value="#{option.name}" /><h:panelGroup rendered="#{not status.last}">, </h:panelGroup>
+				                        	</ui:repeat>
+			                        	</p>
+			                        </h:panelGroup>
+				    			</h:column>
+				    			
+				    			<h:column>
+				    				<f:facet name="header">Punkte</f:facet>
+				    				<h:panelGroup  rendered="#{not VOBean.isProductCommissionListEditable(voType)}" >
+			                        	<span class="text-navy">
+			                        		<h:outputText value="#{productCommission.commission.points}" >
+												<f:convertNumber maxFractionDigits="4" minFractionDigits="0" />
+			                        		</h:outputText>
+			                        		 <i class="fa fa-star"></i>
+			                        	</span>
+			                        </h:panelGroup>
+			                    	<h:inputText value="#{productCommission.commission.points}" id="points" rendered="#{VOBean.isProductCommissionListEditable(voType)}"  
+			                    		validatorMessage="Punkte angeben." 
+			                    		class="form-control #{ component.valid ? '' : 'error'}">
+											<f:convertNumber maxFractionDigits="4" minFractionDigits="0" />
+			                    		<f:validateRequired/>
+			                    	</h:inputText>
+										<h:messages for="points"  />
+				    			</h:column>
+				    			
+				    			<h:column rendered="#{VOBean.isProductCommissionListEditable(voType)}" >
+				    				<f:facet name="header">Punkte Vorschlag</f:facet>
+				    				<span class="text-navy" style="opacity:0.6">
+		                        		<h:outputText value="#{commissionBean.calculatePoints(productCommission.commission.commission, voType)}" >
+											<f:convertNumber maxFractionDigits="4" minFractionDigits="0" />
+		                        		</h:outputText>
+		                        		 <i class="fa fa-star"></i>
+		                        	</span>
+				    			</h:column>
+				    			
+				    			<h:column>
+				    				<f:facet name="header">Provision</f:facet>
+				    				<h:panelGroup  rendered="#{not VOBean.isProductCommissionListEditable(voType)}" >
+			                        	<span><h:outputText value="#{productCommission.commission.commission}" >
+			                        	
+											<f:convertNumber maxFractionDigits="2" minFractionDigits="2" />
+			                        	</h:outputText> <i class="fa fa-euro"></i></span>
+			                        </h:panelGroup>
+			                    	<h:inputText value="#{productCommission.commission.commission}" id="commission" rendered="#{VOBean.isProductCommissionListEditable(voType)}"
+			                    		validatorMessage="Provision angeben." 
+			                    		class="form-control #{ component.valid ? '' : 'error'}">
+											<f:convertNumber maxFractionDigits="2" minFractionDigits="2" />
+			                    		<f:validateRequired/>
+			                    	</h:inputText>
+										<h:messages for="commission"  />
+				    			</h:column>
+				    			
+				    			<h:column>
+				    				<f:facet name="header">Subventions Budget</f:facet>
+				    				<h:panelGroup  rendered="#{not VOBean.isProductCommissionListEditable(voType)}" >
+			                        	<span><h:outputText value="#{productCommission.subsidyBudgetary}" >
+			                        	
+											<f:convertNumber maxFractionDigits="2" minFractionDigits="2" />
+			                        	</h:outputText> <i class="fa fa-euro"></i></span>
+			                        </h:panelGroup>
+			                    	<h:inputText value="#{productCommission.subsidyBudgetary}" id="subsidyBudgetary" rendered="#{VOBean.isProductCommissionListEditable(voType)}"
+			                    		validatorMessage="Subventions Budget angeben." 
+			                    		class="form-control #{ component.valid ? '' : 'error'}">
+											<f:convertNumber maxFractionDigits="2" minFractionDigits="2" />
+			                    		<f:validateRequired/>
+			                    	</h:inputText>
+										<h:messages for="subsidyBudgetary"  />
+				    			</h:column>
+				 
+				    			<h:column>
+				                	<h:commandLink action="#{VOBean.removeProductCommissionVOTypeProductRelation(voType,productCommission)}" class="btn btn-xs btn-danger " rendered="#{VOBean.isProductCommissionListEditable(voType)}">
+				                		<f:ajax render="ProductCommissionVOTypeList messages" />
+									   	<i class="fa fa-trash"></i>
+				                	</h:commandLink>
+				    			</h:column>
+				 
+				 
+				    		</h:dataTable>
+	                                
+	                                
+		                </div>
+		                <p:defaultCommand target="saveButton" />
+		                </h:form>
+		            </div>
+		        </div>
+	        </div>
+    		
+	        </ui:repeat>   
+	        </h:panelGroup>
+	        
+	        <div class="modal inmodal" id="productCommissionModal" tabindex="-1"
+				role="dialog" aria-hidden="true" style="display: none;"
+				data-keyboard="true" data-backdrop="static">
+				
+					<div class="modal-dialog">
+						<div class="modal-content animated fadeInUp">
+						<h:form class="form-horizontal" id="productCommissionModalForm" >
+							<h:panelGroup rendered="#{not empty VOBean.selectedProductCommissionVOTypeProductRelation}">
+							<div class="modal-header">
+								<button type="button" class="close" data-dismiss="modal">
+									<span aria-hidden="true">×</span><span class="sr-only">Close</span>
+								</button>
+								<i class="fa fa-codepen modal-icon"></i>
+								<h4 class="modal-title">Neue Produkt Kondition</h4>
+							</div>
+							
+							<div class="modal-body">
+							<div class="form-group">
+									<label class="col-sm-2 control-label">Produkt</label>
+									<div class="col-sm-10">
+										<h:selectOneMenu id="productSelect" a:data-placeholder="Produkt wählen ..."
+											value="#{VOBean.selectedProductCommissionVOTypeProductRelation.product}"
+											class="chosen-select-no-single-class form-control #{ component.valid ? '' : 'select-error'}"
+											converter="#{baseProductConverter}"
+											validatorMessage="Bitte Produkt wählen">
+											<f:selectItem itemValue="" itemLabel=""/>
+											<f:selectItems value="#{productBean.productList}" var="product"
+												itemValue="#{product}" itemLabel="#{product.name}" />
+								    		<f:ajax render="productCommissionModalForm messages" onevent="updatePluginsEvent"/>
+											<f:validateRequired />
+										</h:selectOneMenu>
+										<h:messages for="productSelect"  />
+									</div>
+								</div>
+								<h:panelGroup rendered="#{VOBean.selectedProductCommissionVOTypeProductRelation.product['class'].simpleName == 'CellPhoneTariffEntity' || VOBean.selectedProductCommissionVOTypeProductRelation.product['class'].simpleName == 'LandlineTariffEntity'}">
+								<div class="form-group">
+									<label class="col-sm-2 control-label">Optionen</label>
+									<div class="col-sm-10">
+										<h:selectManyMenu a:data-placeholder="Tarif Optionen wählen ..."
+											value="#{VOBean.selectedProductCommissionVOTypeProductRelation.productOptionList}"
+											class="chosen-select form-control"
+											converter="#{baseProductConverter}">
+											<f:selectItems value="#{VOBean.productOptionList}" var="option"
+												itemValue="#{option}" itemLabel="#{option.name}" />
+										</h:selectManyMenu>
+									</div>
+								</div>
+								</h:panelGroup>
+								</div>
+								<div class="modal-footer">
+                                    <button type="button" class="btn btn-white" data-dismiss="modal"><i class="fa fa-times"></i></button>
+									<h:commandLink action="#{VOBean.saveProductCommissionVOTypeProductRelation}" class="btn btn-primary">
+								    	<f:ajax execute="@form" render="ProductCommissionVOTypeList messages" onevent="closeProductCommissionModal" />
+										<i class="fa fa-save"></i>
+									</h:commandLink>
+                                </div>
+                                </h:panelGroup>
+							</h:form>
+						</div>
+					</div>
+			</div> 
+    		
+    				<h:outputScript>
+		
+					function showProductCommissionModal(){
+						updatePlugins();
+						setTimeout(function (){
+				    		$('#productCommissionModal').modal('show');
+				    	});
+					};
+		
+					function closeProductCommissionModal(){
+						updatePlugins();
+				    	$('#productCommissionModal').modal('hide');
+					};
+					</h:outputScript>
+            
+    		</ui:define>
+    		
+    		
+    	</ui:composition>
+    </h:body>
+</html>

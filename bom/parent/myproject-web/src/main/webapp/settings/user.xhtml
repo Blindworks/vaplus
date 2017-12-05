@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:body>
+
+
+	<ui:composition template="/WEB-INF/template/common/commonLayout.xhtml">
+	
+
+
+		<ui:param name="heading1" value="Neuer Mitarbeiter" />
+		
+		<ui:define name="content">
+		
+			<h:panelGroup id="userPage">
+			
+			<div class="row">
+				<div class="col-lg-9">
+		            <div class="ibox float-e-margins">
+					<h:form id="shopForm" class="form-horizontal">
+		                <div class="ibox-title">
+		                    <h5>Mitarbeiter Details</h5>
+		                    <div class="ibox-tools">
+		                    	<span class="btn btn-xs btn-default m-r-xs " data-toggle="modal" data-target="#userOvertimeInitModal">Überstunden init</span>
+		                    	
+		                    	<h:commandButton value="Login Fehlversuche zurücksetzen" action="#{userBean.clearFailedLogins}" class="btn btn-xs btn-default m-r-xs " /> 
+								<h:commandButton value="Passwort zurücksetzen" action="#{userBean.sendChangePwdLink}" class="btn btn-xs btn-default m-r-xs " />
+		                   		<h:commandButton value="Anmelde Email neu senden" action="#{userBean.sendWelcomeMessage}" class="btn btn-xs btn-default " />
+		                    </div>
+		                </div>
+		                <div class="ibox-content">
+		                
+		                
+		        <div class="form-group">
+					<label class="col-sm-2 control-label">Titel</label>
+					<div class="col-sm-4">
+						<h:selectOneMenu value="#{userBean.selectedUser.title}"
+									class="chosen-select-no-single form-control" >
+							<f:selectItem itemValue="Herr" itemLabel="Herr"/>
+							<f:selectItem itemValue="Frau" itemLabel="Frau"/>
+						</h:selectOneMenu>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label">Vorname</label>
+					<div class="col-sm-4">
+						<h:inputText value="#{userBean.selectedUser.firstname}"
+							class="form-control #{ component.valid ? '' : 'error'}" id="firstname" validatorMessage="Bitte Vorname angeben" >
+							<f:validateLength minimum="2" maximum="255" />
+						</h:inputText>
+						<h:messages for="firstname"  />
+					</div>
+					
+					<label class="col-sm-2 control-label">Nachname</label>
+					<div class="col-sm-4">
+						<h:inputText value="#{userBean.selectedUser.lastname}"
+							class="form-control #{ component.valid ? '' : 'error'}" id="lastname"  validatorMessage="Bitte Nachname angeben"  >
+							<f:validateLength minimum="2" maximum="255" />
+						</h:inputText>
+						<h:messages for="lastname"  />
+					</div>
+				</div>
+				
+				<div class="form-group">
+					<label class="col-sm-2 control-label">Strasse</label>
+                    <div class="col-md-6">
+						<h:inputText value="#{userBean.selectedUser.address.street}" class="form-control " />
+                    </div>
+					<label class="col-sm-2 control-label">Nr.</label>
+                    <div class="col-md-2"><h:inputText value="#{userBean.selectedUser.address.streetNumber}" class="form-control " /></div>
+				</div>
+				
+				<div class="form-group">
+					<label class="col-sm-2 control-label">Adresszeile</label>
+                    <div class="col-md-10">
+						<h:inputText value="#{userBean.selectedUser.address.addressline}" class="form-control " />
+                    </div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label">PLZ</label>
+                    <div class="col-md-2"><h:inputText value="#{userBean.selectedUser.address.zip}" class="form-control " /></div>
+					<label class="col-sm-2 control-label">Ort</label>
+                    <div class="col-md-6"><h:inputText value="#{userBean.selectedUser.address.city}" class="form-control " /></div>
+				</div>
+				
+				<div class="form-group">
+					<label class="col-sm-2 control-label">Geb. Datum</label>
+					<div class="col-sm-4 date}">
+							<h:inputText value="#{userBean.selectedUser.bday}" class="form-control" id="bday" a:data-mask="99.99.9999">
+								<f:convertDateTime pattern="dd.MM.yyyy" timeZone="CET" />
+							</h:inputText>
+					</div>
+					
+					<label class="col-md-2 control-label">Farbe:</label>
+					<div class="col-md-2">
+						<h:selectOneMenu  value="#{userBean.selectedUser.color}"
+									class="colorpicker-picker-longlist"
+									id="colorSelect">
+									<f:selectItems value="#{helperBean.cssColor}" var="color"
+										itemValue="#{color}" itemLabel="#{color}" />
+									<f:validateRequired />
+						</h:selectOneMenu>
+					</div>
+					
+				</div>
+			
+				
+				<div class="hr-line-dashed"></div>
+				
+				<div class="form-group">
+					<label class="col-sm-2 control-label">E-Mail</label>
+					<div class="col-sm-10">
+						<h:inputText value="#{userBean.selectedUser.email}"
+							class="form-control #{ component.valid ? '' : 'error'}" id="email"  validatorMessage="Bitte E-Mail angeben"  >
+							<f:validateLength minimum="5" maximum="255" />
+						</h:inputText>
+						<h:messages for="email"  />
+					</div>
+				</div>
+				
+				<div class="form-group">
+					<label class="col-sm-2 control-label">Tel</label>
+					<div class="col-sm-10">
+						<h:inputText value="#{userBean.selectedUser.tel}" class="form-control " id="tel"  >
+						</h:inputText>
+					</div>
+				</div>
+				
+				
+				<div class="hr-line-dashed"></div>
+				
+				<div class="form-group">
+					<label class="col-sm-2 control-label">Personalnummer</label>
+					<div class="col-sm-4">
+						<h:inputText value="#{userBean.selectedUser.stuffNumber}" class="form-control " id="stuffNumber"  >
+						</h:inputText>
+					</div>
+					<label class="col-sm-2 control-label">Angestellt seit</label>
+					<div class="col-sm-4">
+						<h:inputText id="entranceDate" value="#{userBean.selectedUser.entranceDate}"  a:data-mask="99.99.9999" class="form-control">
+							<f:convertDateTime pattern="dd.MM.yyyy" timeZone="CET" />
+						</h:inputText>
+					</div>
+				</div>
+				
+				
+				<div class="form-group">
+					
+					<label class="col-sm-2 control-label">Position</label>
+					<div class="col-sm-4">
+						<h:selectOneMenu a:data-placeholder="Position wählen ..."
+						id="jobTitle"
+						validatorMessage="Position wählen" class="chosen-select-no-single-class form-control #{ component.valid ? '' : 'error'}" converter="#{jobTitleConverter}" value="#{userBean.selectedUser.jobTitle}" >
+							<f:selectItem itemValue="" itemLabel=""/>
+							<f:selectItems value="#{userBean.jobTitleList}" var="jobTitle" itemValue="#{jobTitle}" itemLabel="#{jobTitle.name}" />
+							<f:validateRequired/>
+						</h:selectOneMenu>
+						<h:messages for="jobTitle"  />
+					</div>
+					
+					
+					<label class="col-sm-2 control-label">Bundesland</label>
+					<div class="col-sm-4">
+								<h:selectOneMenu a:data-placeholder="Bundesland wählen ..." class="chosen-select-no-single form-control" converter="#{stateConverter}" value="#{userBean.selectedUser.state}" >
+									<f:selectItems value="#{stateBean.stateList}" var="state" itemValue="#{state}" itemLabel="#{state.name}" />
+								</h:selectOneMenu>
+					</div>
+					
+				</div>
+				
+				<div class="form-group">
+					<label class="col-sm-2 control-label">Fixgehalt</label>
+					<div class="col-md-3">
+						<div class="input-group">
+							<h:inputText id="basicSalary" value="#{userBean.selectedUser.basicSalary}" class="form-control  #{ component.valid ? '' : 'error'}" 
+							validatorMessage="Bitte Fixgehalt angeben">
+								<f:validateRequired/>
+								<f:convertNumber maxFractionDigits="2" minFractionDigits="0" />
+							</h:inputText>
+							<span class="input-group-addon"><i class="fa fa-fw fa-euro"></i></span>
+							<h:messages for="basicSalary"  />
+						</div>
+					</div>
+						
+					<label class="col-sm-3 control-label">Bonus</label>
+					<div class="col-md-3">
+						<div class="input-group">
+							<h:inputText id="bonusSalary" value="#{userBean.selectedUser.bonusSalary}" class="form-control  #{ component.valid ? '' : 'error'}" 
+							validatorMessage="Bitte Bonus angeben">
+								<f:validateRequired/>
+								<f:convertNumber maxFractionDigits="2" minFractionDigits="0" />
+							</h:inputText>
+							<span class="input-group-addon"><i class="fa fa-fw fa-euro"></i></span>
+							<h:messages for="bonusSalary"  />
+						</div>
+					</div>	
+					
+							
+				</div>
+				
+				<div class="form-group">
+					<label class="col-sm-2 control-label">Punkte Ziel</label>
+					<div class="col-md-3">
+						<div class="input-group">
+							<h:inputText id="pointGoal" value="#{userBean.selectedUser.pointGoal}" class="form-control  #{ component.valid ? '' : 'error'}" 
+							validatorMessage="Bitte Punkte Ziel angeben">
+								<f:validateRequired/>
+								<f:convertNumber maxFractionDigits="4" minFractionDigits="0" />
+							</h:inputText>
+							<span class="input-group-addon  text-navy "><i class="fa fa-fw fa-star"></i></span>
+							<h:messages for="pointGoal"  />
+						</div>
+					</div>
+						
+					<label class="col-sm-3 control-label">Bonus Punkte-Minimum</label>
+					<div class="col-md-3">
+						<div class="input-group">
+							<h:inputText id="minimalBonusPointGoal" value="#{userBean.selectedUser.minimalBonusPointGoal}" class="form-control  #{ component.valid ? '' : 'error'}" 
+							validatorMessage="Bitte Punkte-Minimum angeben">
+								<f:validateRequired/>
+								<f:convertNumber maxFractionDigits="4" minFractionDigits="0" />
+							</h:inputText>
+							<span class="input-group-addon  text-navy "><i class="fa fa-fw fa-star"></i></span>
+							<h:messages for="minimalBonusPointGoal"  />
+						</div>
+					</div>	
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label">Arbeitstage / Woche</label>
+					<div class="col-sm-3">
+					
+						<h:selectOneMenu class="chosen-select-no-single form-control" converter="javax.faces.Integer" value="#{userBean.selectedUser.weeklyWorkingDays}" >
+							<f:selectItem itemLabel="5 Tage Woche" itemValue="5"/>
+							<f:selectItem itemLabel="6 Tage Woche" itemValue="6"/>
+						</h:selectOneMenu>
+					</div>
+					
+					<label class="col-sm-3 control-label">Beschäftigung</label>
+					<div class="col-sm-4">
+						<h:selectOneMenu a:data-placeholder="Beschäftigung wählen ..." class="chosen-select-no-single-class form-control #{component.valid ? '' : 'error'}" converter="#{employmentFormConverter}" value="#{userBean.selectedUser.formOfEmployment}" 
+						id="employmentForm"
+						validatorMessage="Beschäftigung wählen">
+							<f:selectItem itemValue="" itemLabel=""/>
+							<f:selectItems value="#{userBean.employmentFormList}" var="employmentForm" itemValue="#{employmentForm}" itemLabel="#{employmentForm.name}" />
+							<f:validateRequired/>
+						</h:selectOneMenu>
+						<h:messages for="employmentForm"  />
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label">Wochenarbeitszeit</label>
+					<div class="col-sm-3">
+						<h:inputText id="weeklyWorkingTime" value="#{userBean.selectedUser.weeklyWorkingTime}"
+							class="form-control">
+						</h:inputText>
+					</div>
+					<label class="col-sm-3 control-label">Urlaubstage</label>
+					<div class="col-sm-3">
+						<h:inputText id="vacationDays" value="#{userBean.selectedUser.vacationDays}"
+							class="form-control">
+						</h:inputText>
+					</div>
+				</div>
+								
+				<div class="form-group">
+					<label class="col-sm-2 control-label">Punkte pro € Provision</label>
+					<div class="col-sm-3">
+						<div class="input-group">
+							<h:inputText id="pointsPerCommission" value="#{userBean.selectedUser.pointsPerCommission}"
+								class="form-control">
+								<f:convertNumber maxFractionDigits="2" minFractionDigits="0" />
+							</h:inputText>
+							<span class="input-group-addon  text-navy "><i class="fa fa-fw fa-star"></i></span>
+						</div>
+					</div>
+				</div>
+								
+				
+								
+				<div class="form-group">
+									<label class="col-sm-2 control-label">Planung ab</label>
+									<div class="col-sm-3">
+										<h:selectOneMenu class="chosen-select-no-single form-control" converter="javax.faces.Integer" value="#{userBean.selectedUser.planingStartMonth}" >
+											<f:selectItem itemLabel="Januar" itemValue="0"/>
+											<f:selectItem itemLabel="Februar" itemValue="1"/>
+											<f:selectItem itemLabel="März" itemValue="2"/>
+											<f:selectItem itemLabel="April" itemValue="3"/>
+											<f:selectItem itemLabel="Mai" itemValue="4"/>
+											<f:selectItem itemLabel="Juni" itemValue="5"/>
+											<f:selectItem itemLabel="Juli" itemValue="6"/>
+											<f:selectItem itemLabel="August" itemValue="7"/>
+											<f:selectItem itemLabel="September" itemValue="8"/>
+											<f:selectItem itemLabel="Oktober" itemValue="9"/>
+											<f:selectItem itemLabel="November" itemValue="10"/>
+											<f:selectItem itemLabel="Dezember" itemValue="11"/>
+										</h:selectOneMenu>
+									</div>
+									<div class="col-sm-3">
+										<h:selectOneMenu class="chosen-select-no-single form-control" converter="javax.faces.Integer" value="#{userBean.selectedUser.planingStartYear}" >
+											<f:selectItems value="#{userBean.planingYearList}"  />
+										</h:selectOneMenu>
+									</div>
+								</div>
+		
+
+				<div class="hr-line-dashed"></div>
+				
+				
+				<div class="form-group">
+					
+					<label class="col-sm-2 control-label">Homeoffice</label>
+					<div class="col-sm-2">
+						<h:selectBooleanCheckbox class="i-checks" value="#{userBean.selectedUser.homeOffice}" />
+					</div>
+					
+					<label class="col-sm-4 control-label">Private KFZ-Nutzung</label>
+					<div class="col-sm-2">
+						<h:selectBooleanCheckbox class="i-checks" value="#{userBean.selectedUser.privateCarUsage}" />
+					</div>
+					
+					
+				</div>
+				
+				
+				
+				<div class="form-group">
+					<label class="col-sm-2 control-label">KFZ Preis</label>
+					<div class="col-md-3">
+						<div class="input-group">
+							<h:inputText id="carGrossCatalogPrice" value="#{userBean.selectedUser.carGrossCatalogPrice}" class="form-control" >
+								<f:convertNumber maxFractionDigits="2" minFractionDigits="0" />
+							</h:inputText>
+							<span class="input-group-addon"><i class="fa fa-fw fa-euro"></i></span>
+						</div>
+					</div>	
+					
+					
+					<label class="col-sm-3 control-label">km zur Arbeitstätte</label>
+					<div class="col-sm-3">
+						<h:inputText id="distanceToWorkplace" value="#{userBean.selectedUser.distanceToWorkplace}"
+							class="form-control">
+						</h:inputText>
+					</div>
+					
+							
+				</div>
+				
+				<div class="hr-line-dashed"></div>
+				
+				<div class="form-group">
+					<label class="col-sm-2 control-label">Filial Rechte</label>
+					<div class="col-sm-10">
+						<h:selectManyCheckbox id="allowedShops" binding="#{allowedShops}" required="#{not empty allowedShops.submittedValue}"
+						 validatorMessage="Bitte mind. eine Filiale wählen" 
+						 value="#{userBean.selectedUser.allowedShops}" converter="#{shopConverter}" layout="pageDirection"  styleClass="i-checks #{component.valid ? '' : 'error'}">
+							<f:selectItems value="#{shopBean.shopList}" var="shop" itemValue="#{shop}" itemLabel="#{shop.name}" />
+							<f:validateRequired/>
+						</h:selectManyCheckbox>
+						<h:messages for="allowedShops"  />
+					
+					</div>
+				</div>
+				
+				<div class="hr-line-dashed"></div>
+				
+				
+			
+				<div class="form-group">
+					<label class="col-sm-2 control-label">Gruppe</label>
+					<div class="col-sm-10">
+						<h:selectOneMenu id="userGroup" a:data-placeholder="Mitarbeiter Gruppe wählen ..."
+									value="#{userBean.selectedUser.userGroup}"
+									validatorMessage="Mitarbeiter Gruppe wählen"
+									class="chosen-select-no-single-class form-control #{ component.valid ? '' : 'error'}" converter="#{userGroupConverter}">
+									<f:selectItem itemValue="" itemLabel=""/>
+									<f:selectItems value="#{userGroupBean.userGroupList}" var="userGroup"
+										itemValue="#{userGroup}" itemLabel="#{userGroup.name}" />
+									<f:validateRequired/>
+						</h:selectOneMenu>
+						<h:messages for="userGroup"  />
+					</div>
+				</div>
+				
+				
+
+				
+					
+				
+				<div class="form-group">
+					
+				
+					<label class="col-sm-2 control-label">Supervisor</label>
+					<div class="col-sm-10">
+						<h:panelGroup rendered="#{userBean.selectedUser != userBean.activeUser}">
+							<h:selectBooleanCheckbox class="i-checks" value="#{userBean.selectedUser.supervisor}" />
+						</h:panelGroup>
+						<h:panelGroup rendered="#{userBean.selectedUser == userBean.activeUser}">
+							<p class="form-control-static">
+								<h:panelGroup rendered="#{userBean.selectedUser.supervisor}"><i class="fa fa-check-square-o"></i></h:panelGroup>
+								<h:panelGroup rendered="#{not userBean.selectedUser.supervisor}"><i class="fa fa-square-o"></i></h:panelGroup>
+		                        <small class="pull-right">eigene Supervisor Rechte nicht änderbar!</small>
+	                        </p>
+						</h:panelGroup>
+					</div>
+				</div>
+				
+				<div class="hr-line-dashed"></div>
+				
+				<div class="form-group">
+					
+				
+					<label class="col-sm-2 control-label">Aktiv</label>
+					<div class="col-sm-10">
+						<h:selectBooleanCheckbox class="i-checks" value="#{userBean.selectedUser.enabled}" />
+					</div>
+				</div>
+				
+				<div class="form-group">
+					
+				
+					<label class="col-sm-2 control-label">Login Fehlversuche</label>
+					<div class="col-sm-10">
+						<p class="form-control-static">
+							#{userBean.selectedUser.failedLogins}
+	                    </p>
+					</div>
+				</div>
+				
+				
+
+				<div class="hr-line-dashed"></div>
+				<p:defaultCommand target="saveUserButton" />
+				<div class="form-group">
+					<div class="col-sm-4 col-sm-offset-2">
+						<h:commandButton id="saveUserButton" value="speichern" action="#{userBean.saveUser}" actionListener="#{userBean.prepareUser}"
+							class="btn btn-primary " />
+					</div>
+					
+					<div class="col-sm-4 col-sm-offset-2">
+						<h:commandButton id="deleteUserButton" value="löschen" action="#{userBean.deleteUser}" immediate="true"  rendered="#{userBean.selectedUser.id gt 0}"
+							class="btn btn-danger " />
+					</div>
+					
+				</div>
+		                
+		                </div>
+	                </h:form>
+                </div>
+            </div>
+		
+				<div class="col-lg-3">
+		            <div class="ibox float-e-margins">
+						<h:form class="form-horizontal" id="imageForm" enctype="multipart/form-data">
+		                <div class="ibox-title">
+		                    <h5>Mitarbeiter Bild</h5>
+		                </div>
+			                <div class="ibox-content text-center">
+			                
+								<img alt="" class="img-circle circle-border" src="#{userBean.selectedUser.userImage.URI}" style="width: 150px;height: 150px;" />
+														
+								  <h:inputFile id="imageUpload" value="#{userBean.newUserImage}">
+								  		<f:ajax event="change" render="userPage" />
+								  </h:inputFile>
+							</div>
+						</h:form>
+					</div>
+				</div>
+
+			</div>
+			
+		<h:outputScript>
+			
+			$(document).ready(function () {
+				$('#imageForm\\:imageUpload').before('<a type="button" class="btn btn-xs btn-primary" id="imageUploadButton" ><i class="fa fa-plus"></i> Bild</a>');
+				$('#imageForm\\:imageUpload').hide();
+				$('body').on('click', '#imageUploadButton', function() { 
+				    $('#imageForm\\:imageUpload').trigger('click');    
+				});
+				
+				$('select.colorpicker-picker-longlist').simplecolorpicker({picker: true});
+				
+			});
+		</h:outputScript>
+
+			</h:panelGroup>
+
+
+
+
+	<div class="modal inmodal" id="userOvertimeInitModal">
+	
+	    <div class="modal-dialog">
+	        <div class="modal-content animated fadeIn">
+	        	<h:form id="userOvertimeModalForm"  class="form-horizontal">
+	        	
+	        	
+	        	
+	            <div class="modal-header">
+	            	<h:panelGroup id="userOvertimeModalHead">
+		                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+		                <i class="fa fa-clock-o modal-icon"></i>
+		                <h4 class="modal-title">Überstunden übernehmen</h4>
+	                </h:panelGroup>
+	            </div>
+	            <div class="modal-body">
+	            	<div class="form-group">
+	            		<h:panelGroup rendered="#{userBean.selectedUser.planingStartYear gt 0}">
+							<label class="col-sm-6 control-label">Überstunden von 
+							<h:outputText value="#{userBean.firstUserStats.date}" >
+								<f:convertDateTime type="date" pattern="MM yyyy" timeZone="CET"/>
+							</h:outputText>
+							</label>
+							<div class="col-sm-6">
+								<h:inputText id="overtimeHours" value="#{userBean.firstUserStats.overtimeHours}"
+									class="form-control">
+									<f:ajax execute="@this" event="change" />
+								</h:inputText>
+							</div>
+						</h:panelGroup>
+	            		<h:panelGroup rendered="#{userBean.selectedUser.planingStartYear == 0}">
+	            			<p>Bitte zuerst Planungs Start-Monat des Mitarbeiters angeben.</p>
+	            		</h:panelGroup>
+					</div>
+	            </div>
+	            	
+	            </h:form>
+	        </div>
+	    </div>
+	</div>
+	
+		</ui:define>
+	
+
+	</ui:composition>
+</h:body>
+</html>

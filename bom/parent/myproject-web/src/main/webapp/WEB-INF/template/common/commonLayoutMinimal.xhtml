@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+
+<h:head>
+	<ui:include src="/WEB-INF/template/common/includes/headMinimal.xhtml" />
+	<ui:include src="/WEB-INF/template/common/includes/headMinimalCss.xhtml" />
+
+</h:head>
+
+<h:body class="#{bodyClass}">
+	<ui:insert name="wrapper">
+		<div id="wrapper">
+
+
+			<!-- Page Wrapper -->
+			<div id="page-wrapper" class="gray-bg">
+
+
+				
+				<!-- Content -->
+				<div class="wrapper wrapper-content page-content-wrapper animated fadeInRight">
+					<h:messages />
+					<ui:insert name="content">
+						<ui:include src="/WEB-INF/template/common/commonContent.xhtml" />
+					</ui:insert>
+				</div>
+
+			</div>
+
+
+		</div>
+	</ui:insert>
+
+</h:body>
+</html>

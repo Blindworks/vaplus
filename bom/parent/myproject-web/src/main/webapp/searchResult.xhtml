@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+	  xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+	<h:body>
+    	<ui:composition template="/WEB-INF/template/common/commonLayout.xhtml">
+ 			<ui:param name="heading1" value="Suchergebnisse" />
+ 			
+    		<ui:define name="content">
+    		
+    		<div class="row">
+    			<div class="col-lg-12">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-content">
+                           	<h:form>
+	                            <h2>
+	                                #{searchBean.resultList.size()} Ergebniss#{searchBean.resultList.size() > 1 ? 'e' : ''} für <span class="text-navy">#{searchBean.query}</span> gefunden:
+	                            </h2>
+	
+	                            <div class="search-form">
+						                <div class="input-group">
+						                	<p:inputText value="#{searchBean.query}" placeholder="Suche ..." class="form-control input-lg"/>
+	                                        <div class="input-group-btn">
+						                		<h:commandButton action="#{searchBean.search}" value="Search" class="btn btn-lg btn-primary" />
+						                	</div>
+						                </div>
+						                
+	                            </div>
+	                            <div class="info">
+	                            	<small>Tipps: <br/>
+	                            	Personensuche: "Vorname, Nachname" od. Strasse, Ort, Rufnummer, Kundennummer<br/>
+	                            	Vertragssuche: Rufnummer, Kundennummer</small>
+	                            	<br/>
+	                            </div>
+	                            <br/>
+	                            
+	                            <h:panelGroup rendered="#{searchBean.resultSubList.size() eq 0}">
+		                            <div id="searchResults" class="list-group">
+		                            	Keine Elemente gefunden.
+		                            </div>
+	                            </h:panelGroup>
+	                           	<h:panelGroup rendered="#{searchBean.resultSubList.size() gt 0}">
+									<div id="searchResults" class="list-group">
+										<ui:repeat value="#{searchBean.resultSubList}" var="result">
+										
+	                            <div class="hr-line-dashed"></div>
+	                            
+								        	
+								        	<h:panelGroup rendered="#{result['class'].simpleName == 'CustomerEntity'}">
+			                                	<h:commandLink action="/customer/profile" class="list-group-item search-result" >
+													<f:setPropertyActionListener value="#{result}" target="#{customerBean.selectedCustomer}" />
+					                                <h3>
+															#{result.name}
+					                                </h3>
+				                            		<div class="row">
+				                            			<div class="col-sm-3">
+							                                <p>
+							                                	Kunde ##{result.id}
+							                                </p>
+				                            			</div>
+				                            			<div class="col-sm-3">
+				                            				<p>
+							                                	<h:outputText value="#{result.address.street}"/> <h:outputText value="#{result.address.streetNumber}" /><br />
+							                                	<h:outputText value="#{result.address.country}-#{result.address.zip} #{result.address.city}" />
+				                            				</p>
+				                            			</div>
+				                            			<div class="col-sm-3">
+				                            				<p>
+				                            					Kundennummern: 
+				                            				</p>
+				                            				<p>
+				                            					<ui:repeat var="externalCustomer" value="#{result.externalCustomerList}">
+				                            						#{externalCustomer.customerId}<br/>
+				                            					</ui:repeat>
+				                            				</p>
+				                            			</div>
+				                            		</div>
+			                                	</h:commandLink>
+			                            	</h:panelGroup>
+			                            	<h:panelGroup rendered="#{result['class'].simpleName == 'UserEntity'}">
+					                                <h3>
+															#{result.name}
+					                                </h3>
+				                            		<div class="row">
+				                            			<div class="col-sm-4">
+							                                <p>
+							                                	Mitarbeiter
+							                                </p>
+				                            			</div>
+				                            			<div class="col-sm-4">
+				                            				<p>
+							                                	<h:outputText value="#{result.address.street}"/> <h:outputText value="#{result.address.streetNumber}" /><br />
+							                                	<h:outputText value="#{result.address.country}-#{result.address.zip} #{result.address.city}" />
+				                            				</p>
+				                            			</div>
+				                            			<div class="col-sm-4">
+				                            				<p>
+				                            					
+				                            				</p>
+				                            			</div>
+				                            		</div>
+			                            	</h:panelGroup>
+			                            	<h:panelGroup rendered="#{result['class'].simpleName == 'TariffEntity' or result['class'].simpleName == 'CellPhoneTariffEntity'  or result['class'].simpleName == 'LandlineTariffEntity}' }">
+				                                <h3>
+														#{result.name}
+				                                </h3>
+			                            		<div class="row">
+			                            			<div class="col-sm-4">
+						                                <p>
+						                                	Tarif
+						                                </p>
+			                            			</div>
+			                            			<div class="col-sm-4">
+			                            				<p>
+			                            				#{result.productCategory.name}
+			                            				</p>
+			                            			</div>
+			                            			<div class="col-sm-4">
+			                            				<p>
+			                            				<h:outputText value="#{result.commission.grossPrice}" >
+															<f:convertNumber maxFractionDigits="2" minFractionDigits="2" />
+														</h:outputText>
+														€
+			                            				</p>
+			                            			</div>
+			                            		</div>
+			                            	</h:panelGroup>
+			                            	<h:panelGroup rendered="#{result['class'].simpleName == 'ProductEntity'}">
+				                                <h3>
+														#{result.name}
+				                                </h3>
+			                            		<div class="row">
+			                            			<div class="col-sm-4">
+						                                <p>
+						                                	Retail Produkt
+						                                </p>
+			                            			</div>
+			                            			<div class="col-sm-4">
+			                            				<p>
+			                            				</p>
+			                            			</div>
+			                            			<div class="col-sm-4">
+			                            				<p>
+			                            				</p>
+			                            			</div>
+			                            		</div>
+			                            	</h:panelGroup>
+			                            	<h:panelGroup rendered="#{result['class'].simpleName == 'PhoneContractEntity'}">
+			                                	<h:commandLink actionListener="#{contractBean.viewContract(result)}" action="/customer/contract" class="list-group-item search-result" >
+					                                <h3>
+			 											#{result.name}
+					                                </h3>
+				                            		<div class="row">
+				                            			<div class="col-sm-3">
+							                                <p>
+							                                	Vertrag  ##{result.id}
+							                                </p>
+				                            			</div>
+				                            			<div class="col-sm-3">
+				                            				<p>
+				                            					<h:outputText value="#{result.customer.name}"/><br />
+							                                	<h:outputText value="#{result.customer.address.street}"/> <h:outputText value="#{result.customer.address.streetNumber}" /><br />
+							                                	<h:outputText value="#{result.customer.address.country}-#{result.customer.address.zip} #{result.customer.address.city}" />
+				                            				</p>
+				                            			</div>
+				                            			<div class="col-sm-3">
+				                            				<p>Rufnummer: #{result.callingNumber}</p>
+			 												<p>KundenNr: #{result.externalCustomer.customerId}</p>
+				                            			</div>
+				                            			<div class="col-sm-3">
+				                            				<p>Laufzeit: <h:outputText value="#{result.effectiveDate}" >
+				              											<f:convertDateTime pattern="dd.MM.yyyy"  timeZone="CET"/>
+				 													</h:outputText> - <h:outputText value="#{result.expiryDate}" >
+				              											<f:convertDateTime pattern="dd.MM.yyyy" timeZone="CET" />
+				 													</h:outputText>
+				 											</p>
+				 											<p>Mitarbeiter: #{result.user.name}
+				 											</p>
+				 											<p>Shop: #{result.shop.name}
+				 											</p>
+				                            			</div>
+				                            		</div>
+			                                	</h:commandLink>
+			                            	</h:panelGroup>
+								        	
+								    	</ui:repeat>
+			                        </div>
+	                            </h:panelGroup>
+	                            
+	                            <div class="hr-line-dashed"></div>
+	                            <!-- 
+	                            <div class="text-center">
+	                                <div class="btn-group">
+		                        		<ui:repeat value="#{searchBean.resultPages}" var="page">
+		                        			<h:commandLink action="#" class="btn btn-white" >
+		                        				<f:setPropertyActionListener value="#{page.viewId}" target="#{searchBean.firstPagedResult}" />
+							             		<ui:fragment rendered="#{page.iconSet}">
+							             			<i class="fa fa-#{page.icon}"></i>
+							             		</ui:fragment>
+							             			#{page.title}
+							             	</h:commandLink>
+		                        		</ui:repeat>
+	                                </div>
+	                            </div>
+	                             -->
+                            
+					        </h:form>
+                        </div>
+                    </div>
+                </div>
+            </div>   
+                <h:outputScript>
+                
+					$( document ).ready(function() {
+						if($('#searchResults a').length){
+	   						setTimeout(function (){
+								$('#searchResults a').first().focus();
+							}, 300);
+						}
+					});
+		
+					$(window).keydown(function(e){
+					
+						if(! $('#searchResults a').length){
+					    	return true;
+						}
+					
+						var results =  $('#searchResults a');
+					
+						var focusLink = $(results).filter(':focus');
+						
+					
+					    if(e.which === 40 || e.which === 9){
+					    	
+					    	if(focusLink.nextAll('a').length){
+								focusLink.nextAll('a').first().focus();
+							}
+							else{
+								results.first().focus();
+							}
+					    	
+					    	return false;
+					    }else if(e.which === 38){
+					    	
+					    	if(focusLink.prevAll('a').length){
+								focusLink.prevAll('a').first().focus();
+							}
+							else{
+								results.last().focus();
+							}
+					    	
+					    	return false;
+					    }
+					    
+					    return true;
+					});
+					
+					
+		</h:outputScript>
+    			
+    		</ui:define>
+    		
+    		
+    	</ui:composition>
+    </h:body>
+</html>

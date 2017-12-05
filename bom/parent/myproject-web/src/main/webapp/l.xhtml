@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core">
+
+<h:body>
+
+	<ui:composition template="/WEB-INF/template/common/commonLayoutMinimal.xhtml">
+		<ui:param name="bodyClass" value="gray-bg" />
+
+		<ui:define name="wrapper">
+
+
+			<ui:decorate template="/WEB-INF/template/common/commonMiddleBox.xhtml">
+				<ui:define name="content">
+					<h:form>
+						<ui:include
+							src="/WEB-INF/include/secureLink/user/changePassword.xhtml" />
+
+						<h:panelGroup rendered="#{secureLinkBean.secureLink}">
+							<h:inputHidden value="#{secureLinkBean.secureCodeHash}" />
+							<h:commandButton value="speichern"
+								action="#{secureLinkBean.callOperation}"
+								class="btn btn-lg btn-primary btn-block">
+								<f:param name="c2"
+									value="#{secureLinkBean.secureCode}#{secureLinkBean.secureCode2}" />
+							</h:commandButton>
+						</h:panelGroup>
+						<h:panelGroup rendered="#{not secureLinkBean.secureLink}">
+							<p>Fehlerhafter oder Abgelaufener Link.</p>
+						</h:panelGroup>
+					</h:form>
+				</ui:define>
+			</ui:decorate>
+
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

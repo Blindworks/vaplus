@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+	  xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+	<h:body>
+	
+    	<ui:composition template="/WEB-INF/template/common/commonLayout.xhtml">
+    		<ui:param name="heading1" value="Listen" />
+    		
+    		<ui:define name="content">
+    		<h:form id="listForm">
+    		
+    		<div class="row">
+				<div class="col-lg-12">
+			            <div class="ibox float-e-margins">
+			                <div class="ibox-title">
+			                    <h5>Mehrwertsteuer Sätze</h5>
+			                    <div class="ibox-tools">
+		            				<h:panelGroup  rendered="#{permissionBean.hasPermission('settings','edit')}">
+										<h:commandLink action="taxRate" class="btn btn-xs btn-primary " rendered="#{listBean.listEditable}">
+											<f:setPropertyActionListener value="" target="#{taxRateBean.selectedTaxRate}" />
+											<i class="fa fa-plus"></i>
+									    </h:commandLink>
+									    
+									    <h:commandLink  class="btn btn-xs btn-primary "  immediate="true" action="#{listBean.toggleListEditable()}" rendered="#{listBean.listEditable}">
+										   <f:ajax render="listForm"/>
+										   <i class="fa fa-times"></i>
+										</h:commandLink>
+									    <h:commandLink  class="btn btn-xs btn-primary " action="#{listBean.toggleListEditable()}"  rendered="#{not listBean.listEditable}">
+										   <f:ajax render="listForm"/>
+										   <i class="fa fa-pencil"></i>
+										</h:commandLink>
+									</h:panelGroup>
+			                    </div>
+			                </div>
+			                <div class="ibox-content">
+			                
+								<h:panelGroup
+									rendered="#{taxRateBean.taxRateList.size() == 0}">
+									<p>Keine Mehrwertsteuer Sätze vorhanden.</p>
+								</h:panelGroup>
+					    		
+					    		<h:dataTable value="#{taxRateBean.taxRateList}" var="item" class="table table-hover" rendered="#{taxRateBean.taxRateList.size() > 0}">
+	                                        
+									<h:column>
+										<f:facet name="header">MwSt.</f:facet>
+										<h:outputText value="#{item.tax}" />
+									</h:column>
+									
+									<h:column>
+										<h:outputText rendered="#{item.defaultTaxRate}" value="Standard" />
+									</h:column>
+									
+									<h:column>
+										<h:commandLink action="taxRate" class="btn btn-xs btn-primary  pull-right" rendered="#{listBean.listEditable}">
+											<f:setPropertyActionListener value="#{item}" target="#{taxRateBean.selectedTaxRate}" />
+											<i class="fa fa-pencil"></i>
+									    </h:commandLink>
+									</h:column>
+								</h:dataTable>
+					    		
+					    		
+			                </div>
+			            </div>
+		        </div>
+	            
+	            
+	        </div>
+    		
+    		
+    		<div class="row">
+				<div class="col-lg-12">
+			            <div class="ibox float-e-margins">
+			                <div class="ibox-title">
+			                    <h5>Termin Arten</h5>
+			                    <div class="ibox-tools">
+		            				<h:panelGroup  rendered="#{permissionBean.hasPermission('settings','edit')}">
+										<h:commandLink action="eventType" class="btn btn-xs btn-primary " rendered="#{listBean.listEditable}">
+											<f:setPropertyActionListener value="" target="#{eventTypeBean.selectedEventType}" />
+											<i class="fa fa-plus"></i>
+									    </h:commandLink>
+									    
+									    <h:commandLink  class="btn btn-xs btn-primary "  immediate="true" action="#{listBean.toggleListEditable()}" rendered="#{listBean.listEditable}">
+										   <f:ajax render="listForm"/>
+										   <i class="fa fa-times"></i>
+										</h:commandLink>
+									    <h:commandLink  class="btn btn-xs btn-primary " action="#{listBean.toggleListEditable()}"  rendered="#{not listBean.listEditable}">
+										   <f:ajax render="listForm"/>
+										   <i class="fa fa-pencil"></i>
+										</h:commandLink>
+									</h:panelGroup>
+			                    </div>
+			                </div>
+			                <div class="ibox-content">
+			                
+								<h:panelGroup
+									rendered="#{eventTypeBean.eventTypeList.size() == 0}">
+									<p>Keine Termin Arten vorhanden.</p>
+								</h:panelGroup>
+					    		
+					    		<h:dataTable value="#{eventTypeBean.eventTypeList}" var="eventType" class="table table-hover" rendered="#{eventTypeBean.eventTypeList.size() > 0}">
+	                                        
+									<h:column>
+										<f:facet name="header">Kürzel</f:facet>
+										<h:outputText value="#{eventType.shortName}" />
+									</h:column>
+									
+									<h:column>
+										<f:facet name="header">Name</f:facet>
+										<h:outputText value="#{eventType.title}" />
+									</h:column>
+									
+									<h:column>
+										<f:facet name="header">Mehrbenutzer</f:facet>
+										<h:panelGroup rendered="#{eventType.multiUserEvent}"><i class="fa fa-check-square-o"></i></h:panelGroup>
+										<h:panelGroup rendered="#{not eventType.multiUserEvent}"><i class="fa fa-square-o"></i></h:panelGroup>
+									</h:column>
+									
+									<h:column>
+										<f:facet name="header">Ganztags</f:facet>
+										<h:panelGroup rendered="#{eventType.allDay}"><i class="fa fa-check-square-o"></i></h:panelGroup>
+										<h:panelGroup rendered="#{not eventType.allDay}"><i class="fa fa-square-o"></i></h:panelGroup>
+									</h:column>
+									
+									<h:column>
+										<f:facet name="header">Startzeit</f:facet>
+										<h:outputText value="#{eventType.preferedEventStartTime}" />
+									</h:column>
+									
+									<h:column>
+										<f:facet name="header">Endzeit</f:facet>
+										<h:outputText value="#{eventType.preferedEventEndTime}" />
+									</h:column>
+									
+									<h:column>
+										<f:facet name="header">Terminabstand</f:facet>
+										<h:outputText value="#{eventType.marginTime}" /> Min.
+									</h:column>
+									
+									<h:column>
+										<f:facet name="header">Außerhaus</f:facet>
+										<h:panelGroup rendered="#{eventType.externalEvent}"><i class="fa fa-check-square-o"></i></h:panelGroup>
+										<h:panelGroup rendered="#{not eventType.externalEvent}"><i class="fa fa-square-o"></i></h:panelGroup>
+									</h:column>
+									
+									<h:column>
+										<f:facet name="header">Arbeitszeit</f:facet>
+										<h:panelGroup rendered="#{eventType.workingTime}"><i class="fa fa-check-square-o"></i></h:panelGroup>
+										<h:panelGroup rendered="#{not eventType.workingTime}"><i class="fa fa-square-o"></i></h:panelGroup>
+									</h:column>
+									
+									
+									<h:column>
+										<h:commandLink action="eventType" class="btn btn-xs btn-primary  pull-right" rendered="#{listBean.listEditable}">
+											<f:setPropertyActionListener value="#{eventType}" target="#{eventTypeBean.selectedEventType}" />
+											<i class="fa fa-pencil"></i>
+									    </h:commandLink>
+									</h:column>
+								</h:dataTable>
+					    		
+					    		
+			                </div>
+			            </div>
+		        </div>
+	            
+	            
+	        </div>
+	        
+	        
+	        
+    		<div class="row">
+				<div class="col-lg-12">
+			            <div class="ibox float-e-margins">
+			                <div class="ibox-title">
+			                    <h5>Mitarbeiter Positionen</h5>
+			                    <div class="ibox-tools">
+		            				<h:panelGroup  rendered="#{permissionBean.hasPermission('settings','edit')}">
+										<h:commandLink action="jobTitle" class="btn btn-xs btn-primary " rendered="#{listBean.listEditable}">
+											<f:setPropertyActionListener value="" target="#{userBean.selectedJobTitle}" />
+											<i class="fa fa-plus"></i>
+									    </h:commandLink>
+									    
+									    <h:commandLink  class="btn btn-xs btn-primary "  immediate="true" action="#{listBean.toggleListEditable()}" rendered="#{listBean.listEditable}">
+										   <f:ajax render="listForm"/>
+										   <i class="fa fa-times"></i>
+										</h:commandLink>
+									    <h:commandLink  class="btn btn-xs btn-primary " action="#{listBean.toggleListEditable()}"  rendered="#{not listBean.listEditable}">
+										   <f:ajax render="listForm"/>
+										   <i class="fa fa-pencil"></i>
+										</h:commandLink>
+									</h:panelGroup>
+			                    </div>
+			                </div>
+			                <div class="ibox-content">
+			                
+								<h:panelGroup
+									rendered="#{userBean.jobTitleList.size() == 0}">
+									<p>Keine Mitarbeiter Positionen vorhanden.</p>
+								</h:panelGroup>
+					    		
+					    		<h:dataTable value="#{userBean.jobTitleList}" var="item" class="table table-hover" rendered="#{userBean.jobTitleList.size() > 0}">
+	                                        
+									<h:column>
+										<f:facet name="header">Name</f:facet>
+										<h:outputText value="#{item.name}" />
+									</h:column>
+									
+									<h:column>
+										<h:commandLink action="jobTitle" class="btn btn-xs btn-primary pull-right" rendered="#{listBean.listEditable}">
+											<f:setPropertyActionListener value="#{item}" target="#{userBean.selectedJobTitle}" />
+											<i class="fa fa-pencil"></i>
+									    </h:commandLink>
+									</h:column>
+								</h:dataTable>
+					    		
+					    		
+			                </div>
+			            </div>
+		        </div>
+	            
+	            
+	        </div>
+    		
+	        
+	        <div class="row">
+				<div class="col-lg-12">
+			            <div class="ibox float-e-margins">
+			                <div class="ibox-title">
+			                    <h5>Beschäftigungs Arten</h5>
+			                    <div class="ibox-tools">
+		            				<h:panelGroup  rendered="#{permissionBean.hasPermission('settings','edit')}">
+										<h:commandLink action="employmentForm" class="btn btn-xs btn-primary " rendered="#{listBean.listEditable}">
+											<f:setPropertyActionListener value="" target="#{userBean.selectedEmploymentForm}" />
+											<i class="fa fa-plus"></i>
+									    </h:commandLink>
+									    
+									    <h:commandLink  class="btn btn-xs btn-primary "  immediate="true" action="#{listBean.toggleListEditable()}" rendered="#{listBean.listEditable}">
+										   <f:ajax render="listForm"/>
+										   <i class="fa fa-times"></i>
+										</h:commandLink>
+									    <h:commandLink  class="btn btn-xs btn-primary " action="#{listBean.toggleListEditable()}"  rendered="#{not listBean.listEditable}">
+										   <f:ajax render="listForm"/>
+										   <i class="fa fa-pencil"></i>
+										</h:commandLink>
+									</h:panelGroup>
+			                    </div>
+			                </div>
+			                <div class="ibox-content">
+			                
+								<h:panelGroup
+									rendered="#{userBean.employmentFormList.size() == 0}">
+									<p>Keine Beschäftigungs Arten vorhanden.</p>
+								</h:panelGroup>
+					    		
+					    		<h:dataTable value="#{userBean.employmentFormList}" var="item" class="table table-hover" rendered="#{userBean.employmentFormList.size() > 0}">
+	                                        
+									<h:column>
+										<f:facet name="header">Name</f:facet>
+										<h:outputText value="#{item.name}" />
+									</h:column>
+									
+									<h:column>
+										<h:commandLink action="employmentForm" class="btn btn-xs btn-primary pull-right" rendered="#{listBean.listEditable}">
+											<f:setPropertyActionListener value="#{item}" target="#{userBean.selectedEmploymentForm}" />
+											<i class="fa fa-pencil"></i>
+									    </h:commandLink>
+									</h:column>
+								</h:dataTable>
+					    		
+					    		
+			                </div>
+			                
+			                
+			            </div>
+		        </div>
+	            
+	            
+	        </div>
+	        
+	        
+	        <div class="row">
+				<div class="col-lg-12">
+			            <div class="ibox float-e-margins">
+			                <div class="ibox-title">
+			                    <h5>Vertrags Stati</h5>
+			                    <div class="ibox-tools">
+		            				<h:panelGroup  rendered="#{permissionBean.hasPermission('settings','edit')}">
+										<h:commandLink action="contractStatus" class="btn btn-xs btn-primary " rendered="#{listBean.listEditable}">
+											<f:setPropertyActionListener value="" target="#{contractBean.selectedContractStatus}" />
+											<i class="fa fa-plus"></i>
+									    </h:commandLink>
+									    
+									    <h:commandLink  class="btn btn-xs btn-primary "  immediate="true" action="#{listBean.toggleListEditable()}" rendered="#{listBean.listEditable}">
+										   <f:ajax render="listForm"/>
+										   <i class="fa fa-times"></i>
+										</h:commandLink>
+									    <h:commandLink  class="btn btn-xs btn-primary " action="#{listBean.toggleListEditable()}"  rendered="#{not listBean.listEditable}">
+										   <f:ajax render="listForm"/>
+										   <i class="fa fa-pencil"></i>
+										</h:commandLink>
+									</h:panelGroup>
+			                    </div>
+			                </div>
+			                <div class="ibox-content">
+			                
+								<h:panelGroup
+									rendered="#{contractBean.contractStatusList.size() == 0}">
+									<p>Keine Vertrags Stati vorhanden.</p>
+								</h:panelGroup>
+					    		
+					    		<h:dataTable value="#{contractBean.contractStatusList}" var="item" class="table table-hover" rendered="#{contractBean.contractStatusList.size() > 0}">
+	                                        
+									<h:column>
+										<f:facet name="header">Name</f:facet>
+										<h:outputText value="#{item.name}" />
+									</h:column>
+									
+									<h:column>
+										<f:facet name="header">+24</f:facet>
+										<h:panelGroup rendered="#{item.showInExtensionOfTheTermList}"><i class="fa fa-check-square-o"></i></h:panelGroup>
+										<h:panelGroup rendered="#{not item.showInExtensionOfTheTermList}"><i class="fa fa-square-o"></i></h:panelGroup>
+									</h:column>
+									
+									<h:column>
+										<h:commandLink action="contractStatus" class="btn btn-xs btn-primary pull-right" rendered="#{listBean.listEditable}">
+											<f:setPropertyActionListener value="#{item}" target="#{contractBean.selectedContractStatus}" />
+											<i class="fa fa-pencil"></i>
+									    </h:commandLink>
+									</h:column>
+								</h:dataTable>
+					    		
+					    		
+			                </div>
+			                
+			                
+			            </div>
+		        </div>
+	            
+	            
+	        </div>
+	        
+    		</h:form>
+            
+    		</ui:define>
+    		
+    		
+    	</ui:composition>
+    </h:body>
+</html>

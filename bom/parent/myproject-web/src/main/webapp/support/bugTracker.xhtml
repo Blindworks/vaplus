@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"	
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:body>
+
+	<f:metadata>
+		<f:event listener="#{FEPluginBean.includePeity}" type="preRenderComponent"></f:event>
+	</f:metadata>
+	<ui:composition template="/WEB-INF/template/common/commonLayout.xhtml">
+
+		<ui:param name="heading1" value="Bug Tracker" />
+		
+		<ui:define name="content">
+		
+		<div class="row">
+			
+                <div class="col-lg-12">
+                    <div class="ibox">
+                        <div class="ibox-title">
+                            <h5>Fehlerliste</h5>
+                            <div class="ibox-tools">
+                            	<h:form>
+                            		<h:commandLink value="Neuen Bug melden" action="#{bugBean.newBug}" class="btn btn-primary btn-xs" />
+                                </h:form>
+                            </div>
+                        </div>
+                        <div class="ibox-content">
+
+                            <div class="m-b-lg">
+
+                                <div class="input-group">
+                                    <input type="text" placeholder="Durchsuche Fehlerliste ..." class=" form-control" />
+                                    <span class="input-group-btn">
+                                        <button type="button" class="btn btn-white"> Suchen</button>
+                                    </span>
+                                </div>
+                                <div class="m-t-md">
+
+                                    <div class="pull-right">
+                                        <button type="button" class="btn btn-sm btn-white"> <i class="fa fa-comments"></i> </button>
+                                        <button type="button" class="btn btn-sm btn-white"> <i class="fa fa-user"></i> </button>
+                                        <button type="button" class="btn btn-sm btn-white"> <i class="fa fa-list"></i> </button>
+                                        <button type="button" class="btn btn-sm btn-white"> <i class="fa fa-pencil"></i> </button>
+                                        <button type="button" class="btn btn-sm btn-white"> <i class="fa fa-print"></i> </button>
+                                        <button type="button" class="btn btn-sm btn-white"> <i class="fa fa-cogs"></i> </button>
+                                    </div>
+
+                                    <strong>#{bugBean.bugList.size()} Fehler gefunden.</strong>
+
+
+
+                                </div>
+
+                            </div>
+
+                            <div class="table-responsive">
+                            <table class="table table-hover issue-tracker">
+                                <tbody>
+                                
+                                	<ui:repeat value="#{bugBean.bugList}" var="bug">
+	                                	<tr>
+		                                    <td>
+		                                    	<h:panelGroup rendered="#{bug.status == 0}">
+		                                        	<span class="label label-primary">Neu</span>
+		                                    	</h:panelGroup>
+		                                    	<h:panelGroup rendered="#{bug.status == 1}">
+		                                        	<span class="label label-warning">Unvollständig</span>
+		                                    	</h:panelGroup>
+		                                    	<h:panelGroup rendered="#{bug.status == 2}">
+		                                        	<span class="label label-warning">Falsch Meldung</span>
+		                                    	</h:panelGroup>
+		                                    	<h:panelGroup rendered="#{bug.status == 3}">
+		                                        	<span class="label label-danger">Bug</span>
+		                                    	</h:panelGroup>
+		                                    	<h:panelGroup rendered="#{bug.status == 4}">
+		                                        	<span class="label label-danger">In Bearbeitung</span>
+		                                    	</h:panelGroup>
+		                                    	<h:panelGroup rendered="#{bug.status == 5}">
+		                                        	<span class="label label-success">Behoben</span>
+		                                    	</h:panelGroup>
+		                                    </td>
+		                                    <td>
+		                                       ##{bug.id}
+		                                    </td>
+		                                    <td class="issue-info">
+		                                        <a data-toggle="collapse" href="#bug#{bug.id}">
+		                                            #{bug.title}
+		                                        </a>
+		                                        <p id="bug#{bug.id}" class="panel-collapse collapse ">
+                      								<small style="white-space: pre-wrap"><h:outputText value="#{bug.description}"/></small>
+			                                    </p>
+		                                    </td>
+		                                    <td>
+		                                        #{bug.owner}
+		                                    </td>
+		                                    <td>
+		                                    	<h:outputText value="#{bug.creationDate}" >
+													<f:convertDateTime pattern="dd.MM.yyyy HH:mm"  timeZone="CET"/>
+												</h:outputText>
+		                                    </td>
+		                                    <td>
+		                                    	<h:panelGroup rendered="#{bug.datesSinceCreation lt 4}">
+		                                    		<span class="pie" style="display: none;">#{bug.datesSinceCreation}/14</span>
+	                                    		</h:panelGroup>
+		                                    	<h:panelGroup rendered="#{bug.datesSinceCreation gt 3 and bug.datesSinceCreation lt 12}">
+		                                    		<span class="pie_warning" style="display: none;">#{bug.datesSinceCreation}/14</span>
+	                                    		</h:panelGroup>
+		                                    	<h:panelGroup rendered="#{bug.datesSinceCreation gt 11}">
+		                                    		<span class="pie_danger" style="display: none;">#{bug.datesSinceCreation}/14</span>
+	                                    		</h:panelGroup>
+		                                         #{bug.datesSinceCreation}T
+		                                    </td>
+		                                    <td class="text-right">
+		                                    	<ui:repeat value="#{bug.tagList}" var="tag">
+		                                       		<span class="btn btn-white btn-xs">#{tag}</span>
+		                                    	</ui:repeat>
+		                                    </td>
+		                                </tr>
+                                	</ui:repeat>
+                     
+                                
+                                </tbody>
+                            </table>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+		
+
+		</ui:define>
+
+
+	</ui:composition>
+</h:body>
+</html>

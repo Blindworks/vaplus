@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"	
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<ui:composition>
+	
+		<!-- Chosen -->
+		<h:outputStylesheet library="plugins/chosen" name="chosen.css" rendered="#{FEPluginBean.chosen}" />
+		<h:outputScript library="plugins/chosen" name="chosen.jquery.min.js" rendered="#{FEPluginBean.chosen}" />
+		<h:outputScript library="plugins/chosen" name="chosen.js" rendered="#{FEPluginBean.chosen}" />
+		
+		<!-- Morris -->
+		<h:outputStylesheet library="plugins/morris" name="morris.css" rendered="#{FEPluginBean.morris}" />
+	
+		<!-- Flot -->
+		<h:outputScript library="plugins/flot" name="jquery.flot.min.js" rendered="#{FEPluginBean.flot}" />
+		<h:outputScript library="plugins/flot" name="jquery.flot.resize.min.js" rendered="#{FEPluginBean.flot}" />
+		<h:outputScript library="plugins/flot" name="jquery.flot.spline.js" rendered="#{FEPluginBean.flot}" />
+		<h:outputScript library="plugins/flot" name="jquery.flot.categories.min.js" rendered="#{FEPluginBean.flot}" />
+		<h:outputScript library="plugins/flot" name="jquery.flot.tooltip.min.js" rendered="#{FEPluginBean.flot}" />
+	
+		<!-- Datepicker -->
+		<h:outputStylesheet library="plugins/datepicker" name="datepicker3.css" rendered="#{FEPluginBean.datepicker}" />
+		<h:outputScript library="plugins/datepicker" name="datepicker-bootstrap.min.js" rendered="#{FEPluginBean.datepicker}" />
+		<h:outputScript library="plugins/datepicker" name="datepicker.js" rendered="#{FEPluginBean.datepicker}" />
+	
+		<!-- DataTables -->
+		<h:outputStylesheet library="plugins/dataTables" name="dataTables.bootstrap.css" rendered="#{FEPluginBean.dataTables}" />
+		<h:outputScript library="plugins/dataTables" name="jquery.dataTables.min.js" rendered="#{FEPluginBean.dataTables}" />
+		<h:outputScript library="plugins/dataTables" name="dataTables.bootstrap.js" rendered="#{FEPluginBean.dataTables}" />
+		<h:outputScript library="plugins/dataTables" name="dataTables.js" rendered="#{FEPluginBean.dataTables}" />
+	
+		<!-- Dropzone -->
+		<h:outputStylesheet library="plugins/dropzone" name="dropzone.css" rendered="#{FEPluginBean.dropzone}" />
+	
+		<!-- FullCalendar -->
+		<h:outputStylesheet library="plugins/fullcalendar" name="fullcalendar.css" rendered="#{FEPluginBean.fullCalendar}" />
+		<h:outputScript library="plugins/fullcalendar" name="moment.min.js" rendered="#{FEPluginBean.fullCalendar}" />
+		<h:outputScript library="plugins/fullcalendar" name="fullcalendar.min.js" rendered="#{FEPluginBean.fullCalendar}" />
+		<h:outputScript library="plugins/fullcalendar" name="de.js" rendered="#{FEPluginBean.fullCalendar}" />
+	
+		<!-- Raphael -->
+		<h:outputScript library="plugins/raphael" name="raphael.min.js" rendered="#{FEPluginBean.raphael}" />
+	
+		<!-- Metis Menu -->
+		<h:outputScript library="plugins/metisMenu" name="jquery.metis.Menu.js" rendered="#{FEPluginBean.metisMenu}" />
+		<h:outputScript library="plugins/metisMenu" name="metisMenu.js" rendered="#{FEPluginBean.metisMenu}" />
+	
+		<!-- SlimScroll -->
+		<h:outputScript library="plugins/slimScroll" name="jquery.slimscroll.min.js" rendered="#{FEPluginBean.slimScroll}" />
+		<h:outputScript library="plugins/slimScroll" name="slimScroll.js" rendered="#{FEPluginBean.slimScroll}" />
+	
+		<!-- Jasny -->
+		<h:outputScript library="plugins/jasny" name="jasny-bootstrap.min.js" rendered="#{FEPluginBean.jasny}" />
+	
+		<!-- iCheck -->
+		<h:outputScript library="plugins/icheck" name="icheck.min.js" rendered="#{FEPluginBean.iCheck}" />
+		<h:outputScript library="plugins/icheck" name="icheck.js" rendered="#{FEPluginBean.iCheck}" />
+	
+		<!-- Peity Charts -->
+		<h:outputScript library="plugins/peity" name="jquery.peity.min.js" rendered="#{FEPluginBean.peity}" />
+		<h:outputScript library="plugins/peity" name="peity.js" rendered="#{FEPluginBean.peity}" />
+	
+		<!-- ChartJs -->
+		<h:outputScript library="plugins/chartJs" name="chart.min.js" rendered="#{FEPluginBean.chartJs}" />
+	
+		<!-- jQuery Validation -->
+		<h:outputScript library="plugins/validation" name="jquery.validate.min.js" rendered="#{FEPluginBean.validation}" />
+		<h:outputScript library="plugins/validation" name="additional-methods.min.js" rendered="#{FEPluginBean.validation}" />
+		<h:outputScript library="plugins/validation" name="localization/messages_de.min.js" rendered="#{FEPluginBean.validation}" />
+		<h:outputScript library="plugins/validation" name="localization/methods_de.min.js" rendered="#{FEPluginBean.validation}" />
+	
+	
+		<!-- Simple ColorPicker -->
+		<h:outputStylesheet library="plugins/colorpicker" name="jquery.simplecolorpicker.css" rendered="#{FEPluginBean.colorpicker}" />
+		<h:outputScript library="plugins/colorpicker" name="jquery.simplecolorpicker.js" rendered="#{FEPluginBean.colorpicker}" />
+		
+	</ui:composition>
+</html>

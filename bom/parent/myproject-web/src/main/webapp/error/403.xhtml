@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core">
+
+<h:body>
+
+	<ui:composition template="/WEB-INF/template/common/commonLayout.xhtml">
+	
+		<ui:param name="heading1" value="Zugriff verweigert" />
+
+		<ui:define name="content">
+
+			<div class="middle-box text-center animated fadeInDown">
+				<h1>403</h1>
+				<h3 class="font-bold text-danger">Zugriff verweigert</h3>
+				
+				<div class="error-desc">
+					 Sie müssen die erforderliche Berechtiungen von Ihrer Firmenleitung erhalten, um diese Seite anzeigen zu könnnen.
+				</div>
+			</div>
+
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

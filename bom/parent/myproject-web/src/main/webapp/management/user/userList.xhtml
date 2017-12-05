@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+	  xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+	<h:body>
+	
+		<f:metadata>
+			<f:event listener="#{FEPluginBean.includeICheck}" type="preRenderComponent"></f:event>
+			<f:event listener="#{FEPluginBean.includeChosen}" type="preRenderComponent"></f:event>
+			<f:event listener="#{FEPluginBean.includeDatepicker}" type="preRenderComponent"></f:event>
+			<f:event listener="#{FEPluginBean.includeColorpicker}" type="preRenderComponent"></f:event>
+		</f:metadata>
+	
+    	<ui:composition template="/WEB-INF/template/common/commonLayout.xhtml">
+    		<ui:param name="heading1" value="Mitarbeiter" />
+    		
+    		<ui:define name="content">
+    		
+    		
+    		<div class="row">
+				<div class="col-lg-12">
+					<h:form id="userListForm">
+			            <div class="ibox float-e-margins">
+			                <div class="ibox-title">
+			                    <h5>Mitarbeiter</h5>
+			                </div>
+			                <div class="ibox-content">
+			                
+			                <div class="project-list">
+	
+	                                <table class="table table-hover">
+	                                    <tbody>
+	                                    <ui:repeat value="#{userBean.userList}" var="u">
+	                                    <tr>
+	                                        <td class="project-status">
+	                                        	<img alt="" class="img-circle" src="#{u.userImage.URI}" style="width:50px;height:50px;" />
+	                                        </td>
+	                                        <td class="project-status">
+	                                        	<span class="color-icon color-#{u.color}"> </span>
+	                                        </td>
+	                                        <td class="project-title">
+	                                            #{u.name}
+	                                        </td>
+	                                        <td class="project-completion">
+	                                                <small>Resturlaub #{helperBean.prevYear()}: 
+	                                                <h:outputText value="#{userBean.calculateRemainingVacation(u,helperBean.prevYear())}" >
+	                                                	<f:convertNumber maxFractionDigits="1" minFractionDigits="0" />
+	                                                </h:outputText>
+	                                                </small>
+	                                        </td>
+	                                        <td class="project-completion">
+	                                                <small>Resturlaub #{helperBean.thisYear()}: 
+	                                                <h:outputText value="#{userBean.calculateRemainingVacation(u,helperBean.thisYear())}" >
+	                                                	<f:convertNumber maxFractionDigits="1" minFractionDigits="0" />
+	                                                </h:outputText>
+	                                                </small>
+	                                        </td>
+	                                        <td class="project-completion">
+	                                                <small>Resturlaub #{helperBean.nextYear()}: 
+	                                                <h:outputText value="#{userBean.calculateRemainingVacation(u,helperBean.nextYear())}" >
+	                                                	<f:convertNumber maxFractionDigits="1" minFractionDigits="0" />
+	                                                </h:outputText>
+	                                                </small>
+	                                        </td>
+	                                        <td class="project-completion">
+	                                                <small>Überstunden: #{helperBean.minToString( userBean.getOvertime(u))}h</small>
+	                                        </td>
+	                                        <ui:fragment rendered="#{permissionBean.hasPermission('file','read')}">
+	                                        <td class="project-completion">
+	                                                <h:commandLink action="fileList" class="btn btn-xs btn-primary " >
+														<f:setPropertyActionListener value="#{u}" target="#{fileBean.selectedFileOwner}" />
+							                	 		<i class="fa fa-files-o" data-toggle="tooltip" data-placement="right" data-original-title="Dateien"></i>
+							                	 	</h:commandLink>
+	                                        </td>
+	                                        </ui:fragment>
+	                                        
+	                                    </tr>
+	                                    
+			             				</ui:repeat>
+	                                    </tbody>
+	                                </table>
+	                                
+	                                
+	                                
+	                            </div>
+			                
+			                </div>
+		                </div>
+	                </h:form>
+                </div>
+            </div>
+    		
+            
+    		</ui:define>
+    		
+    		
+    	</ui:composition>
+    </h:body>
+</html>

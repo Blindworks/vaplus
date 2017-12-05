@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:body>
+
+
+	<ui:composition template="/WEB-INF/template/common/commonLayout.xhtml">
+		<ui:param name="heading1" value="Provisions Abgleich" />
+		<ui:param name="bodyClass" value="right-sidebar-closed" />
+		
+		
+		<ui:define name="headingContent">
+			<h:form class="form-horizontal hidden-print" id="headerToolbar">
+				<div class="form-group">
+					<div class="col-sm-2">
+						<h:selectOneMenu pt:data-placeholder="Anbieter wählen ..." value="#{accountingBean.selectedVendor}"
+										class="chosen-select-no-single-class form-control #{ component.valid ? '' : 'error'}"
+										id="vendor"
+										validatorMessage="Bitte Anbieter wählen."
+										converter="#{vendorConverter}">
+										<f:selectItem itemValue="" itemLabel="" />
+										<f:selectItems value="#{productBean.vendorList}"
+											var="vendor" itemLabel="#{vendor.name}"
+											itemValue="#{vendor}" />
+										<f:ajax action="change" render="commissionAccountingAdjustentElements adjustmentModalWrapper" onevent="ajaxLoadWrapper" />
+										<f:validateRequired />
+						</h:selectOneMenu>
+					</div>
+					<div class="col-sm-2">
+					<h:selectOneMenu 
+								value="#{accountingBean.selectedMonth}"
+								class="chosen-select-no-single form-control" >
+								<f:selectItems value="#{helperBean.monthList}" var="month" itemLabel="#{helperBean.getMonthName(month)}" />
+						<f:ajax render="commissionAccountingAdjustentElements adjustmentModalWrapper" event="change" onevent="ajaxLoadWrapper"  />
+					</h:selectOneMenu>
+					</div>
+					<div class="col-sm-2">
+					<h:selectOneMenu
+								value="#{accountingBean.selectedYear}"
+								class="chosen-select-no-single form-control" >
+								<f:selectItems value="#{accountingBean.yearList}"  />
+						<f:ajax render="commissionAccountingAdjustentElements adjustmentModalWrapper" event="change" onevent="ajaxLoadWrapper"  />
+					</h:selectOneMenu>
+					</div>
+					<div class="col-sm-2">
+						<h:commandButton value="neuberechnen" action="#{accountingBean.updateAccountingAssignment}" class="form-control" />
+					</div>
+				</div>
+			</h:form>
+   		</ui:define>
+		
+		<ui:define name="content">	
+		
+			<h:panelGroup id="adjustmentModalWrapper">
+			<div class="modal inmodal" id="adjustmentModal" tabindex="-1"
+				role="dialog" aria-hidden="true" style="display: none;"
+				data-keyboard="true" data-backdrop="static">
+					<div class="modal-dialog">
+						<div class="modal-content">
+								<h:panelGroup rendered="#{not empty accountingBean.unknownUserAlias}">
+						
+							<h:form class="form-horizontal" id="userAliasModalForm">
+									<div class="modal-header">
+										<button type="button" class="close" data-dismiss="modal">
+											<span aria-hidden="true">×</span><span class="sr-only">Close</span>
+										</button>
+										<i class="fa fa-user modal-icon"></i>
+										<h4 class="modal-title">Mitarbeiter zuweisen</h4>
+									</div>
+									<div class="modal-body">
+										<div class="form-group">
+											<label class="col-sm-4 control-label">#{accountingBean.unknownUserAlias.alias}</label>
+											<div class="col-sm-4">
+												<h:selectOneMenu 
+															value="#{accountingBean.unknownUserAlias.user}"
+															pt:data-placeholder="Mitarbeiter wählen ..."
+															class="chosen-select-full-width form-control" converter="#{userConverter}" >
+															<f:selectItem itemValue="" itemLabel="" />
+															<f:selectItems value="#{userBean.getUserList(true)}" var="user"
+																itemValue="#{user}" itemLabel="#{user.name}" />
+												</h:selectOneMenu>
+											</div>
+											<div class="col-sm-4">
+												<h:commandButton class="btn btn-primary"  action="#{accountingBean.saveUnknownUserAlias}" value="zuweisen" >
+													<f:ajax execute="@form" render="userAliasModalForm" onevent="submitAdjustmentModalModal"/>
+												</h:commandButton>
+											</div>
+										</div>
+										
+										
+									</div>
+							
+							</h:form>
+								</h:panelGroup>
+							
+								<h:panelGroup rendered="#{empty accountingBean.unknownUserAlias and not empty accountingBean.unknownCommissionTypeAssociation}">
+							<h:form class="form-horizontal" id="commissionTypeAssociationModalForm">
+									<div class="modal-header">
+										<button type="button" class="close" data-dismiss="modal">
+											<span aria-hidden="true">×</span><span class="sr-only">Close</span>
+										</button>
+										<i class="fa fa-arrows-h modal-icon"></i>
+										<h4 class="modal-title">#{accountingBean.unknownCommissionTypeAssociation.commissionText}</h4>
+										<h3 class="modal-title">#{accountingBean.unknownCommissionTypeAssociation.commissionSubText}</h3>
+										<br/>
+										<p class="font-bold">Provision zuweisen</p>
+									</div>
+									<div class="modal-body">
+										<div class="form-group">
+											<label class="col-sm-4 control-label">Anbieter</label>
+											<div class="col-sm-8">
+												<h:selectOneMenu pt:data-placeholder="Anbieter wählen ..."
+															id="vendor"
+															validatorMessage="Bitte Anbieter wählen"
+															value="#{accountingBean.unknownCommissionTypeAssociation.vendor}"
+															class="chosen-select-full-width form-control #{ component.valid ? '' : 'select-error'}" converter="#{vendorConverter}">
+															<f:selectItem itemValue="" itemLabel=""/>
+															<f:selectItems value="#{productBean.vendorList}" var="vendor"
+																itemValue="#{vendor}" itemLabel="#{vendor.name}" />
+															<f:validateRequired />
+												</h:selectOneMenu>
+												<h:messages for="vendor"  />
+											</div>
+										</div>
+										<div class="form-group">
+											<label class="col-sm-4 control-label">Tarif</label>
+											<div class="col-sm-8">
+												<h:selectOneMenu id="tariffSelect" pt:data-placeholder="Tarif wählen ..."
+													value="#{accountingBean.unknownCommissionTypeAssociation.product}"
+													class="chosen-select-full-width form-control"
+													converter="#{baseProductConverter}">
+													<f:selectItem itemValue="" itemLabel=""/>
+													<f:selectItems value="#{productBean.tariffList}" var="tariff"
+														itemValue="#{tariff}" itemLabel="#{tariff.name}" />
+												</h:selectOneMenu>
+												<h:messages for="tariffSelect"  />
+											</div>
+										</div>
+										<div class="form-group">
+											<label class="col-sm-4 control-label">Product Optionen</label>
+											<div class="col-sm-8">
+												<h:selectManyMenu id="productOptionList" pt:data-placeholder="Tarif Optionen wählen ..."
+													value="#{accountingBean.unknownCommissionTypeAssociation.productOptionList}"
+													class="chosen-select-full-width form-control"
+													converter="#{baseProductConverter}">
+													<f:selectItem itemValue="" itemLabel=""/>
+													<f:selectItems value="#{productBean.productOptionList}" var="option"
+														itemValue="#{option}" itemLabel="#{option.name}" />
+												</h:selectManyMenu>
+												<h:messages for="productOptionList"  />
+											</div>
+										</div>
+										<div class="form-group">
+											<label class="col-sm-4 control-label">Vertrags VL</label>
+											<div class="col-sm-8">
+												<h:selectBooleanCheckbox class="i-checks" value="#{accountingBean.unknownCommissionTypeAssociation.extensionOfTheTerm}" />
+											</div>
+										</div>
+										<div class="form-group">
+												<h:commandButton class="btn btn-primary"  action="#{accountingBean.saveUnknownCommissionTypeAssociation}" value="zuweisen" >
+													<f:ajax execute="@form" render="commissionTypeAssociationModalForm" onevent="submitAdjustmentModalModal"/>
+												</h:commandButton>
+										</div>
+										
+									</div>
+							
+							</h:form>
+								</h:panelGroup>
+							
+							
+						</div>
+					</div>
+			</div>
+		</h:panelGroup>
+		
+		<div class="modal inmodal" id="adjustmentEditModal" tabindex="-1"
+				role="dialog" aria-hidden="true" style="display: none;"
+				data-keyboard="true" data-backdrop="static">
+					<div class="modal-dialog">
+						<div class="modal-content">
+						
+							<h:form class="form-horizontal" id="commissionTypeAssociationModalEditForm">
+									<div class="modal-header">
+										<button type="button" class="close" data-dismiss="modal">
+											<span aria-hidden="true">×</span><span class="sr-only">Close</span>
+										</button>
+										<i class="fa fa-arrows-h modal-icon"></i>
+										<h4 class="modal-title">Provision zuweisen</h4>
+										<br/>
+										<p class="font-bold">#{accountingBean.selectedCommissionTypeAssociation.commissionText}</p>
+									</div>
+									<div class="modal-body">
+										<div class="form-group">
+											<label class="col-sm-4 control-label">Anbieter</label>
+											<div class="col-sm-8">
+												<h:selectOneMenu pt:data-placeholder="Anbieter wählen ..."
+															id="vendor"
+															validatorMessage="Bitte Anbieter wählen"
+															value="#{accountingBean.selectedCommissionTypeAssociation.vendor}"
+															class="chosen-select form-control #{ component.valid ? '' : 'select-error'}" converter="#{vendorConverter}">
+															<f:selectItem itemValue="" itemLabel=""/>
+															<f:selectItems value="#{productBean.vendorList}" var="vendor"
+																itemValue="#{vendor}" itemLabel="#{vendor.name}" />
+															<f:validateRequired />
+												</h:selectOneMenu>
+												<h:messages for="vendor"  />
+											</div>
+										</div>
+										<div class="form-group">
+											<label class="col-sm-4 control-label">Tarif</label>
+											<div class="col-sm-8">
+												<h:selectOneMenu id="tariffSelect" pt:data-placeholder="Tarif wählen ..."
+													value="#{accountingBean.selectedCommissionTypeAssociation.product}"
+													class="chosen-select-no-single-class form-control"
+													converter="#{baseProductConverter}">
+													<f:selectItem itemValue="" itemLabel="Keine Auswahl"/>
+													<f:selectItems value="#{productBean.tariffList}" var="tariff"
+														itemValue="#{tariff}" itemLabel="#{tariff.name}" />
+												</h:selectOneMenu>
+												<h:messages for="tariffSelect"  />
+											</div>
+										</div>
+										<div class="form-group">
+											<label class="col-sm-4 control-label">Product Optionen</label>
+											<div class="col-sm-8">
+												<h:selectManyMenu id="productOptionList" pt:data-placeholder="Tarif Optionen wählen ..."
+													value="#{accountingBean.selectedCommissionTypeAssociation.productOptionList}"
+													class="chosen-select form-control"
+													converter="#{baseProductConverter}">
+													<f:selectItems value="#{productBean.productOptionList}" var="option"
+														itemValue="#{option}" itemLabel="#{option.name}" />
+												</h:selectManyMenu>
+												<h:messages for="productOptionList"  />
+											</div>
+										</div>
+										<div class="form-group">
+											<label class="col-sm-4 control-label">Vertrags VL</label>
+											<div class="col-sm-8">
+												<h:selectBooleanCheckbox class="i-checks" value="#{accountingBean.selectedCommissionTypeAssociation.extensionOfTheTerm}" />
+											</div>
+										</div>
+										<div class="form-group">
+												<h:commandButton class="btn btn-primary"  action="#{accountingBean.saveSelectedCommissionTypeAssociation}" value="zuweisen" >
+													<f:ajax execute="@form" render="commissionAccountingAdjustentElements :messages" onevent="saveSelectedCommissionTypeAssociation" />
+												</h:commandButton>
+										</div>
+										
+									</div>
+							
+							</h:form>
+							
+							
+						</div>
+					</div>
+			</div>
+		<script>
+
+
+		$(document).ready(function () {
+			checkAdjustmentModalVisibility();
+		});
+
+		function checkAdjustmentModalVisibility(){
+
+			console.log("checkAdjustmentModalVisibility ");
+			
+			if($('#adjustmentModal .modal-body').length)
+					$('#adjustmentModal').modal('show');
+			else
+				$('#adjustmentModal').modal('hide');
+		}
+
+		function submitAdjustmentModalModal(data){
+			
+			if(data.status == "success"){
+				updatePlugins();
+				checkAdjustmentModalVisibility();
+			}
+		}
+
+
+		function ajaxLoadWrapper(data){+
+
+			console.log("ajaxLoadWrapper "+data.status);
+			
+			ajaxLoad(data,checkAdjustmentModalVisibility);
+		}
+		
+		</script>
+		
+		
+		
+
+            <div class="row">
+			<h:panelGroup id="commissionAccountingAdjustentElements">
+			
+				<div class="col-lg-12">
+                    <div class="ibox">
+                        <div class="ibox-title">
+                            <h5>Vorraussetzungen</h5>
+                            
+							<div class="ibox-tools">
+								<a class="collapse-link">
+	                                <i class="fa fa-chevron-down"></i>
+	                            </a>
+			                </div>
+                        </div>
+                        <div class="ibox-content">
+                        	<p>unknownUserAliasList: #{accountingBean.unknownUserAliasList.size()}</p>
+                        	<p>unknownCommissionTypeAssociationList: #{accountingBean.unknownCommissionTypeAssociationList.size()}</p>
+                        </div>
+                    </div>
+                </div>
+			
+			
+			
+				<div class="col-lg-12">
+                    <div class="ibox">
+                        <div class="ibox-title">
+                            <h5>Übersicht für #{accountingBean.selectedVendor} im #{helperBean.getMonthName(accountingBean.selectedMonth)} #{accountingBean.selectedYear}</h5>
+                            
+							<div class="ibox-tools">
+								<a class="collapse-link">
+	                                <i class="fa fa-chevron-down"></i>
+	                            </a>
+			                </div>
+                        </div>
+                        <div class="ibox-content">
+                        
+                        	<div class="row">
+                        		<div class="col-lg-4">
+                        			<p>Summe</p>
+                        		</div>
+                        		<div class="col-lg-8">
+                        			<h:outputText value="#{accountingBean.currentAccountingAssignmentSum}" >
+										<f:convertNumber maxFractionDigits="2" minFractionDigits="2" />
+									</h:outputText>
+                        		</div>
+                        	</div>
+                        
+                        	<div class="row">
+                        		<div class="col-lg-4">
+                        			<p>Summe posiviv</p>
+                        		</div>
+                        		<div class="col-lg-8">
+                        			<h:outputText value="#{accountingBean.currentAccountingAssignmentPositiveSum}" >
+										<f:convertNumber maxFractionDigits="2" minFractionDigits="2" />
+									</h:outputText>
+                        		</div>
+                        	</div>
+                        
+                        	<div class="row">
+                        		<div class="col-lg-4">
+                        			<p>Summe negativ</p>
+                        		</div>
+                        		<div class="col-lg-8">
+                        			<h:outputText value="#{accountingBean.currentAccountingAssignmentNegativeSum}" >
+										<f:convertNumber maxFractionDigits="2" minFractionDigits="2" />
+									</h:outputText>
+                        		</div>
+                        	</div>
+                        
+                        	<div class="row">
+                        		<div class="col-lg-4">
+                        			<p>VOs</p>
+									<ui:repeat var="vo" value="#{VOBean.getVOList(accountingBean.selectedVendor)}">
+										<p>#{vo}:</p>
+									</ui:repeat>
+                        		</div>
+                        		<div class="col-lg-2">
+                        			<p>Basis AirTime</p>
+									<ui:repeat var="vo" value="#{VOBean.getVOList(accountingBean.selectedVendor)}">
+										<p><h:outputText value="#{vo.getVOCommission(accountingBean.selectedYear, accountingBean.selectedMonth).baseAirtime}" >
+														<f:convertNumber maxFractionDigits="2" minFractionDigits="2" />
+											</h:outputText> €</p>
+									</ui:repeat>
+                        		</div>
+                        		<div class="col-lg-2">
+                        			<p>Bonus AirTime</p>
+									<ui:repeat var="vo" value="#{VOBean.getVOList(accountingBean.selectedVendor)}">
+										<p><h:outputText value="#{vo.getVOCommission(accountingBean.selectedYear, accountingBean.selectedMonth).bonusAirtime}" >
+														<f:convertNumber maxFractionDigits="2" minFractionDigits="2" />
+											</h:outputText> €</p>
+									</ui:repeat>
+                        		</div>
+                        		<div class="col-lg-2">
+                        			<p>Sonderprovision</p>
+									<ui:repeat var="vo" value="#{VOBean.getVOList(accountingBean.selectedVendor)}">
+										<p><h:outputText value="#{vo.getVOCommission(accountingBean.selectedYear, accountingBean.selectedMonth).servicePackages}" >
+														<f:convertNumber maxFractionDigits="2" minFractionDigits="2" />
+											</h:outputText> €</p>
+									</ui:repeat>
+                        		</div>
+                        		<div class="col-lg-2">
+                        			<p>Reparaturen</p>
+									<ui:repeat var="vo" value="#{VOBean.getVOList(accountingBean.selectedVendor)}">
+										<p><h:outputText value="#{vo.getVOCommission(accountingBean.selectedYear, accountingBean.selectedMonth).repairs}" >
+														<f:convertNumber maxFractionDigits="2" minFractionDigits="2" />
+											</h:outputText> €</p>
+									</ui:repeat>
+                        		</div>
+                        	</div>
+                        </div>
+                    </div>
+                </div>
+			
+                <div class="col-lg-12">
+                    <div class="ibox collapsed">
+                        <div class="ibox-title">
+                            <h5>
+	                            Provisionen von #{accountingBean.selectedVendor} im #{helperBean.getMonthName(accountingBean.selectedMonth)} #{accountingBean.selectedYear} 
+	                            <span class="#{accountingBean.currentAccountingAssignmentSum lt 0 ? 'text-red' : ''} #{accountingBean.currentAccountingAssignmentSum gt 0 ? 'text-green' : ''}">
+		                                	<h:panelGroup rendered="#{accountingBean.currentAccountingAssignmentSum gt 0}">+</h:panelGroup>
+		                                    <h:outputText value="#{accountingBean.currentAccountingAssignmentSum}" >
+														<f:convertNumber maxFractionDigits="2" minFractionDigits="2" />
+											</h:outputText>
+											<i class="fa fa-euro"></i>
+	                            </span>
+                            </h5>
+                            
+							<div class="ibox-tools">
+								<a class="collapse-link">
+	                                <i class="fa fa-chevron-down"></i>
+	                            </a>
+			                </div>
+                        </div>
+                        
+                        
+			    		<h:panelGroup rendered="#{accountingBean.currentAccountingAssignmentList.size() == 0}">
+			    			<div class="ibox-content">
+			                	<p>Keine Verträge zur Ansicht vorhanden.</p>
+			                </div>
+			            </h:panelGroup>
+                        
+                        <h:panelGroup rendered="#{accountingBean.currentAccountingAssignmentList.size() > 0}">
+                        <div class="ibox-content no-padding">
+				    		
+				    		<ui:repeat var="item" value="#{accountingBean.currentAccountingAssignmentList}" varStatus="status">
+				    			<h:form id="accountingItemForm">
+					    		<div class="accounting-item #{status.even ? 'even' : 'odd'}">
+		                            <div class="row">
+		                                <div class="col-md-1">
+		                                    <a data-toggle="collapse" data-target="#accounting-item-#{item.id}" class="collapsed toggle" aria-expanded="false">
+		                                    	<i class="fa fa-chevron-down"></i>
+		                                    </a>
+		                                    <ui:fragment rendered="#{item.cancelation}">
+		                                    	<span class="label label-danger pull-right"  data-toggle="tooltip" data-placement="right" data-original-title="Storno">S</span>
+		                                    </ui:fragment>
+		                                </div>
+		                                <h:panelGroup id="aItem-head">
+			                                <div class="col-md-1">
+			                                #{item.id} 
+			                                    <h:outputText value="#{item.date}" >
+													<f:convertDateTime type="date" pattern="dd.MM.yyyy" timeZone="CET"/>
+												</h:outputText>
+			                                </div>
+			                                <div class="col-md-1">
+			                                    <h:outputText value="#{item.vo}" />
+			                                </div>
+			                                <div class="col-md-2">
+			                                    <h:outputText value="#{item.customerName}" />
+			                                </div>
+			                                <div class="col-md-1">
+			                                    <h:outputText value="#{item.customerId}" />
+			                                </div>
+			                                <div class="col-md-1">
+			                                    <h:outputText value="#{item.callingNumber}" />
+			                                </div>
+			                                <div class="col-md-1">
+			                                    <h:outputText value="#{item.userName}" />
+			                                </div>
+			                                
+			                                <div class="col-md-2 text-right #{item.sum lt 0 ? 'text-red' : ''} #{item.sum gt 0 ? 'text-green' : ''}">
+			                                	<h:panelGroup rendered="#{item.sum gt 0}">+</h:panelGroup>
+			                                    <h:outputText value="#{item.sum}" >
+															<f:convertNumber maxFractionDigits="2" minFractionDigits="2" />
+												</h:outputText>
+												<i class="fa fa-euro"></i>
+			                                </div>
+			                                <div class="col-md-2 text-right">
+			                                    <span><h:panelGroup rendered="#{item.correct}"><i class="fa fa-fw fa-check text-green"></i></h:panelGroup>
+													<h:panelGroup rendered="#{not item.correct}"><i class="fa fa-fw fa-times text-red"></i></h:panelGroup></span>
+			                                </div>
+		                                </h:panelGroup>
+		                            </div>
+		                            <div class="row">
+		                                <div class="col-lg-12">
+		                                    <div id="accounting-item-#{item.id}" class="panel-collapse collapse" >
+		                                    	<h:panelGroup id="aItem-body">
+		                                        <div class="accounting-item-details">
+		                                            <div class="row">
+			                                            <div class="col-md-10">
+			                                            <table class="table">
+								                            <thead>
+								                            	<tr>
+								                            		<th width="1%"></th>
+									                                <th colspan="2" width="48%" class="text-right">
+									                                	<h:outputText value="Vertrag #{item.contractId}" rendered="#{item.contractId gt 0}" />
+									                                </th>
+									                                <th width="2%"></th>
+									                                <th colspan="2" width="48%">
+									                                	<h:outputText value="Provisionen" rendered="#{item.accountingItemList.size() gt 0}" />
+									                                </th>
+								                            		<th width="1%"></th>
+									                            </tr>
+								                            </thead>
+								                            <tbody>
+			                                            
+			                                            
+				                                            <ui:repeat var="elementLine" value="#{item.elementLines}">
+				                                            	<tr>
+				                                            	
+				                                            		<h:panelGroup rendered="#{not empty elementLine.leftLines}">
+					                                            		<td>
+					                                            		</td>
+					                                            		<td>
+					                                            			<ui:repeat var="line" value="#{elementLine.leftLines}">
+					                                            				<p><h:outputText value="#{line}" /></p>
+					                                            			</ui:repeat>
+					                                            		</td>
+																		<td  class="text-right">
+										                                	<h:outputText rendered="#{not empty elementLine.leftWorth and elementLine.leftWorth gt 0}" value="+" />
+										                                    <h:outputText value="#{elementLine.leftWorth}" rendered="#{not empty elementLine.leftWorth}" >
+																						<f:convertNumber maxFractionDigits="2" minFractionDigits="2" />
+																			</h:outputText>
+																			<h:panelGroup rendered="#{not empty elementLine.leftWorth}"  >
+																				<i class="fa fa-euro"></i>
+																			</h:panelGroup>
+																		</td>
+																	</h:panelGroup>
+				                                            		<h:panelGroup rendered="#{empty elementLine.leftLines}">
+					                                            		<td colspan="3" class="text-right">
+					                                            			<i class="fa fa-question"></i>
+					                                            		</td>
+				                                            		</h:panelGroup>
+																	
+				                                            		<td>
+				                                            			<i class="fa fa-arrows-h"></i>
+				                                            		</td>
+				                                            		
+				                                            		<h:panelGroup rendered="#{elementLine.commissionAccountingList.size() gt 0}">
+				                                            			<td class="text-left">
+				                                            				<ui:repeat var="ca" value="#{elementLine.commissionAccountingList}">
+				                                            					<p>
+												                                	<h:outputText rendered="#{ca.commissionWorth gt 0}" value="+" />
+												                                    <h:outputText value="#{ca.commissionWorth}" >
+																								<f:convertNumber maxFractionDigits="2" minFractionDigits="2" />
+																					</h:outputText>
+																					<i class="fa fa-euro"></i>
+																				</p>
+					                                            			</ui:repeat>
+																		</td>
+					                                            		<td class="text-left">
+					                                            			<ui:repeat var="ca" value="#{elementLine.commissionAccountingList}">
+							                                            		<p>
+							                                            		<h:outputText value="#{ca.title}" />
+							                                            		</p>
+					                                            			</ui:repeat>
+					                                            		</td>
+					                                            		<td>
+					                                            			<ui:repeat var="ca" value="#{elementLine.commissionAccountingList}">
+					                                            				<p>
+							                                            			<h:commandLink action="#{accountingBean.setSelectedCommissionTypeAssociationByCommissionAccountingItem(ca)}" >
+							                                            				<i class="fa fa-wrench"></i>
+							                                            				<f:ajax execute="@this" render="commissionTypeAssociationModalEditForm" onevent="editCommissionTypeAssociation" />
+							                                            			</h:commandLink>
+							                                            		</p>
+					                                            			</ui:repeat>
+					                                            		</td>
+																	</h:panelGroup>
+																	
+				                                            		<h:panelGroup rendered="#{elementLine.commissionAccountingList.size() == 0}">
+					                                            		<td colspan="3" class="text-left">
+					                                            			<i class="fa fa-question"></i>
+					                                            		</td>
+				                                            		</h:panelGroup>
+				                                            		
+				                                            	</tr>
+				                                            	
+				                                            </ui:repeat>
+			                                            
+				                                            
+								                            </tbody>
+								                        </table>
+						                                <div class="row">
+						                                	<div class="col-md-2 text-right">
+						                                		Ergebnisse
+						                                	</div>
+						                                	<div class="col-md-10 text-red">
+						                                		<h:outputText value="#{item.htmlInfo}" escape="false" />
+						                                	</div>
+						                                </div>
+						                                </div>
+						                                <div class="col-md-2 text-right">
+						                                    <span>VO: 
+						                                    	<h:panelGroup rendered="#{item.correctVO}"><i class="fa fa-fw fa-check text-green"></i></h:panelGroup>
+																<h:panelGroup rendered="#{not item.correctVO}"><i class="fa fa-fw fa-times text-red"></i></h:panelGroup></span><br/>
+						                                    <span>Provision: 
+						                                    	<h:panelGroup rendered="#{item.correctCommission}"><i class="fa fa-fw fa-check text-green"></i></h:panelGroup>
+																<h:panelGroup rendered="#{not item.correctCommission}"><i class="fa fa-fw fa-times text-red"></i></h:panelGroup></span><br/>
+						                                    <span>Produkte: 
+						                                    	<h:panelGroup rendered="#{item.correctElements}"><i class="fa fa-fw fa-check text-green"></i></h:panelGroup>
+																<h:panelGroup rendered="#{not item.correctElements}"><i class="fa fa-fw fa-times text-red"></i></h:panelGroup></span><br/>
+						                                    <span>Datum: 
+						                                    	<h:panelGroup rendered="#{item.correctDate}"><i class="fa fa-fw fa-check text-green"></i></h:panelGroup>
+																<h:panelGroup rendered="#{not item.correctDate}"><i class="fa fa-fw fa-times text-red"></i></h:panelGroup></span><br/>
+						                                    <span>Kundenname: 
+						                                    	<h:panelGroup rendered="#{item.correctCustomer}"><i class="fa fa-fw fa-check text-green"></i></h:panelGroup>
+																<h:panelGroup rendered="#{not item.correctCustomer}"><i class="fa fa-fw fa-times text-red"></i></h:panelGroup></span><br/>
+						                                    <span>Mitarbeiter: 
+						                                    	<h:panelGroup rendered="#{item.correctUser}"><i class="fa fa-fw fa-check text-green"></i></h:panelGroup>
+																<h:panelGroup rendered="#{not item.correctUser}"><i class="fa fa-fw fa-times text-red"></i></h:panelGroup></span>
+						                                </div>
+		                                            </div>
+		                                        </div>
+		                                        </h:panelGroup>
+		                                    </div>
+		                                
+		                                </div>
+		                            </div>
+		                        </div>
+								</h:form>
+				    		</ui:repeat>
+
+                        	
+                        </div>
+
+						</h:panelGroup>
+                    </div>
+                </div>
+                
+                
+
+
+            </h:panelGroup>
+        </div>
+            
+            
+        </ui:define>
+    </ui:composition>
+</h:body>
+</html>

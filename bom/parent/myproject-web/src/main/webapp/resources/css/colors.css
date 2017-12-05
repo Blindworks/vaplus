@@ -1,0 +1,712 @@
+/* old colors */
+
+.color.turquoise, .icon.turquoise, .color-turquoise				{ background: #1ABC9C; border-color: #1ABC9C;}
+.color.emerland, .icon.emerland, .color-emerland				{ background: #2ECC71; border-color: #2ECC71;}
+.color.peter-river, .icon.peter-river, .color-peter-river		{ background: #3498DB; border-color: #3498DB;}
+.color.amethyst, .icon.amethyst, .color-amethyst				{ background: #9B59B6; border-color: #9B59B6;}
+.color.wet-asphalt, .icon.wet-asphalt, .color-wet-asphalt		{ background: #34495E; border-color: #34495E;}
+
+.color.green-sea, .icon.green-sea, .color-green-sea				{ background: #16A085; border-color: #16A085;}
+.color.nephritis, .icon.nephritis, .color-nephritis				{ background: #27AE60; border-color: #27AE60;}
+.color.belize-hole, .icon.belize-hole, .color-belize-hole		{ background: #2980B9; border-color: #2980B9;}
+.color.wisteria, .icon.wisteria, .color-wisteria				{ background: #8E44AD; border-color: #8E44AD;}
+.color.midnight-blue, .icon.midnight-blue, .color-midnight-blue	{ background: #2C3E50; border-color: #2C3E50;}
+
+.color.sun-flower, .icon.sun-flower, .color-sun-flower			{ background: #F1C40F; border-color: #F1C40F;}
+.color.carrot, .icon.carrot, .color-carrot						{ background: #E67E22; border-color: #E67E22;}
+.color.alizarin, .icon.alizarin, .color-alizarin				{ background: #E74C3C; border-color: #E74C3C;}
+.color.clouds, .icon.clouds, .color-clouds						{ background: #ECF0F1; border-color: #ECF0F1; color: #34495E;}
+.color.concrete, .icon.concrete, .color-concrete				{ background: #95A5A6; border-color: #95A5A6;}
+
+.color.orange, .icon.orange, .color-orange						{ background: #F39C12; border-color: #F39C12;}
+.color.pumpkin, .icon.pumpkin, .color-pumpkin					{ background: #D35400; border-color: #D35400;}
+.color.pomegranate, .icon.pomegranate, .color-pomegranate		{ background: #C0392B; border-color: #C0392B;}
+.color.silver, .icon.silver, .color-silver						{ background: #BDC3C7; border-color: #BDC3C7; color: #34495E;}
+.color.asbestos, .icon.asbestos, .color-asbestos				{ background: #7F8C8D; border-color: #7F8C8D;}
+
+/* new colors */
+.color.chestnutrose, .icon.chestnutrose, .color-chestnutrose{ background: #D24D57; border-color: #D24D57;}
+
+.color.pomegranate, .icon.pomegranate, .color-pomegranate{ background: #F22613; border-color: #F22613;}
+
+.color.thunderbird, .icon.thunderbird, .color-thunderbird{ background: #D91E18; border-color: #D91E18;}
+
+.color.oldbrick, .icon.oldbrick, .color-oldbrick{ background: #96281B; border-color: #96281B;}
+
+.color.flamingo, .icon.flamingo, .color-flamingo{ background: #EF4836; border-color: #EF4836;}
+
+.color.valencia, .icon.valencia, .color-valencia{ background: #D64541; border-color: #D64541;}
+
+.color.tallpoppy, .icon.tallpoppy, .color-tallpoppy{ background: #C0392B; border-color: #C0392B;}
+
+.color.monza, .icon.monza, .color-monza{ background: #CF000F; border-color: #CF000F;}
+
+.color.cinnabar, .icon.cinnabar, .color-cinnabar{ background: #E74C3C; border-color: #E74C3C;}
+
+.color.razzmatazz, .icon.razzmatazz, .color-razzmatazz{ background: #DB0A5B; border-color: #DB0A5B;}
+
+.color.sunsetorange, .icon.sunsetorange, .color-sunsetorange{ background: #F64747; border-color: #F64747;}
+
+.color.waxflower, .icon.waxflower, .color-waxflower{ background: #F1A9A0; border-color: #F1A9A0;}
+
+.color.cabaret, .icon.cabaret, .color-cabaret{ background: #D2527F; border-color: #D2527F;}
+
+.color.newyorkpink, .icon.newyorkpink, .color-newyorkpink{ background: #E08283; border-color: #E08283;}
+
+.color.radicalred, .icon.radicalred, .color-radicalred{ background: #F62459; border-color: #F62459;}
+
+.color.sunglo, .icon.sunglo, .color-sunglo{ background: #E26A6A; border-color: #E26A6A;}
+
+.color.snuff, .icon.snuff, .color-snuff{ background: #DCC6E0; border-color: #DCC6E0;}
+
+.color.rebeccapurple, .icon.rebeccapurple, .color-rebeccapurple{ background: #663399; border-color: #663399;}
+
+.color.honeyflower, .icon.honeyflower, .color-honeyflower{ background: #674172; border-color: #674172;}
+
+.color.wistful, .icon.wistful, .color-wistful{ background: #AEA8D3; border-color: #AEA8D3;}
+
+.color.plum, .icon.plum, .color-plum{ background: #913D88; border-color: #913D88;}
+
+.color.seance, .icon.seance, .color-seance{ background: #9A12B3; border-color: #9A12B3;}
+
+.color.mediumpurple, .icon.mediumpurple, .color-mediumpurple{ background: #BF55EC; border-color: #BF55EC;}
+
+.color.lightwisteria, .icon.lightwisteria, .color-lightwisteria{ background: #BE90D4; border-color: #BE90D4;}
+
+.color.studio, .icon.studio, .color-studio{ background: #8E44AD; border-color: #8E44AD;}
+
+.color.wisteria, .icon.wisteria, .color-wisteria{ background: #9B59B6; border-color: #9B59B6;}
+
+.color.sanmarino, .icon.sanmarino, .color-sanmarino{ background: #446CB3; border-color: #446CB3;}
+
+.color.aliceblue, .icon.aliceblue, .color-aliceblue{ background: #E4F1FE; border-color: #E4F1FE;}
+
+.color.royalblue, .icon.royalblue, .color-royalblue{ background: #4183D7; border-color: #4183D7;}
+
+.color.pictonblue, .icon.pictonblue, .color-pictonblue{ background: #59ABE3; border-color: #59ABE3;}
+
+.color.spray, .icon.spray, .color-spray{ background: #81CFE0; border-color: #81CFE0;}
+
+.color.shakespeare, .icon.shakespeare, .color-shakespeare{ background: #52B3D9; border-color: #52B3D9;}
+
+.color.hummingbird, .icon.hummingbird, .color-hummingbird{ background: #C5EFF7; border-color: #C5EFF7;}
+
+.color.pictonblue, .icon.pictonblue, .color-pictonblue{ background: #22A7F0; border-color: #22A7F0;}
+
+.color.curiousblue, .icon.curiousblue, .color-curiousblue{ background: #3498DB; border-color: #3498DB;}
+
+.color.madison, .icon.madison, .color-madison{ background: #2C3E50; border-color: #2C3E50;}
+
+.color.dodgerblue, .icon.dodgerblue, .color-dodgerblue{ background: #19B5FE; border-color: #19B5FE;}
+
+.color.ming, .icon.ming, .color-ming{ background: #336E7B; border-color: #336E7B;}
+
+.color.ebonyclay, .icon.ebonyclay, .color-ebonyclay{ background: #22313F; border-color: #22313F;}
+
+.color.malibu, .icon.malibu, .color-malibu{ background: #6BB9F0; border-color: #6BB9F0;}
+
+.color.summersky, .icon.summersky, .color-summersky{ background: #1E8BC3; border-color: #1E8BC3;}
+
+.color.chambray, .icon.chambray, .color-chambray{ background: #3A539B; border-color: #3A539B;}
+
+.color.pickledbluewood, .icon.pickledbluewood, .color-pickledbluewood{ background: #34495E; border-color: #34495E;}
+
+.color.hoki, .icon.hoki, .color-hoki{ background: #67809F; border-color: #67809F;}
+
+.color.jellybean, .icon.jellybean, .color-jellybean{ background: #2574A9; border-color: #2574A9;}
+
+.color.jacksonspurple, .icon.jacksonspurple, .color-jacksonspurple{ background: #1F3A93; border-color: #1F3A93;}
+
+.color.jordyblue, .icon.jordyblue, .color-jordyblue{ background: #89C4F4; border-color: #89C4F4;}
+
+.color.steelblue, .icon.steelblue, .color-steelblue{ background: #4B77BE; border-color: #4B77BE;}
+
+.color.fountainblue, .icon.fountainblue, .color-fountainblue{ background: #5C97BF; border-color: #5C97BF;}
+
+.color.mediumturquoise, .icon.mediumturquoise, .color-mediumturquoise{ background: #4ECDC4; border-color: #4ECDC4;}
+
+.color.aquaisland, .icon.aquaisland, .color-aquaisland{ background: #A2DED0; border-color: #A2DED0;}
+
+.color.gossip, .icon.gossip, .color-gossip{ background: #87D37C; border-color: #87D37C;}
+
+.color.darkseagreen, .icon.darkseagreen, .color-darkseagreen{ background: #90C695; border-color: #90C695;}
+
+.color.eucalyptus, .icon.eucalyptus, .color-eucalyptus{ background: #26A65B; border-color: #26A65B;}
+
+.color.caribbeangreen, .icon.caribbeangreen, .color-caribbeangreen{ background: #03C9A9; border-color: #03C9A9;}
+
+.color.silvertree, .icon.silvertree, .color-silvertree{ background: #68C3A3; border-color: #68C3A3;}
+
+.color.downy, .icon.downy, .color-downy{ background: #65C6BB; border-color: #65C6BB;}
+
+.color.mountainmeadow, .icon.mountainmeadow, .color-mountainmeadow{ background: #1BBC9B; border-color: #1BBC9B;}
+
+.color.lightseagreen, .icon.lightseagreen, .color-lightseagreen{ background: #1BA39C; border-color: #1BA39C;}
+
+.color.mediumaquamarine, .icon.mediumaquamarine, .color-mediumaquamarine{ background: #66CC99; border-color: #66CC99;}
+
+.color.turquoise, .icon.turquoise, .color-turquoise{ background: #36D7B7; border-color: #36D7B7;}
+
+.color.madang, .icon.madang, .color-madang{ background: #C8F7C5; border-color: #C8F7C5;}
+
+.color.riptide, .icon.riptide, .color-riptide{ background: #86E2D5; border-color: #86E2D5;}
+
+.color.shamrock, .icon.shamrock, .color-shamrock{ background: #2ECC71; border-color: #2ECC71;}
+
+.color.niagara, .icon.niagara, .color-niagara{ background: #16a085; border-color: #16a085;}
+
+.color.emerald, .icon.emerald, .color-emerald{ background: #3FC380; border-color: #3FC380;}
+
+.color.greenhaze, .icon.greenhaze, .color-greenhaze{ background: #019875; border-color: #019875;}
+
+.color.freespeechaquamarine, .icon.freespeechaquamarine, .color-freespeechaquamarine{ background: #03A678; border-color: #03A678;}
+
+.color.oceangreen, .icon.oceangreen, .color-oceangreen{ background: #4DAF7C; border-color: #4DAF7C;}
+
+.color.niagara1, .icon.niagara1, .color-niagara1{ background: #2ABB9B; border-color: #2ABB9B;}
+
+.color.jade, .icon.jade, .color-jade{ background: #00B16A; border-color: #00B16A;}
+
+.color.salem, .icon.salem, .color-salem{ background: #1E824C; border-color: #1E824C;}
+
+.color.observatory, .icon.observatory, .color-observatory{ background: #049372; border-color: #049372;}
+
+.color.junglegreen, .icon.junglegreen, .color-junglegreen{ background: #26C281; border-color: #26C281;}
+
+.color.creamcan, .icon.creamcan, .color-creamcan{ background: #F5D76E; border-color: #F5D76E;}
+
+.color.ripelemon, .icon.ripelemon, .color-ripelemon{ background: #F7CA18; border-color: #F7CA18;}
+
+.color.saffron, .icon.saffron, .color-saffron{ background: #F4D03F; border-color: #F4D03F;}
+
+.color.capehoney, .icon.capehoney, .color-capehoney{ background: #FDE3A7; border-color: #FDE3A7;}
+
+.color.california, .icon.california, .color-california{ background: #F89406; border-color: #F89406;}
+
+.color.firebush, .icon.firebush, .color-firebush{ background: #EB9532; border-color: #EB9532;}
+
+.color.tahitigold, .icon.tahitigold, .color-tahitigold{ background: #E87E04; border-color: #E87E04;}
+
+.color.casablanca, .icon.casablanca, .color-casablanca{ background: #F4B350; border-color: #F4B350;}
+
+.color.crusta, .icon.crusta, .color-crusta{ background: #F2784B; border-color: #F2784B;}
+
+.color.seabuckthorn, .icon.seabuckthorn, .color-seabuckthorn{ background: #EB974E; border-color: #EB974E;}
+
+.color.lightningyellow, .icon.lightningyellow, .color-lightningyellow{ background: #F5AB35; border-color: #F5AB35;}
+
+.color.burntorange, .icon.burntorange, .color-burntorange{ background: #D35400; border-color: #D35400;}
+
+.color.buttercup, .icon.buttercup, .color-buttercup{ background: #F39C12; border-color: #F39C12;}
+
+.color.ecstasy, .icon.ecstasy, .color-ecstasy{ background: #F9690E; border-color: #F9690E;}
+
+.color.sandstorm, .icon.sandstorm, .color-sandstorm{ background: #F9BF3B; border-color: #F9BF3B;}
+
+.color.jaffa, .icon.jaffa, .color-jaffa{ background: #F27935; border-color: #F27935;}
+
+.color.zest, .icon.zest, .color-zest{ background: #E67E22; border-color: #E67E22;}
+
+.color.whitesmoke, .icon.whitesmoke, .color-whitesmoke{ background: #ececec; border-color: #ececec;}
+
+.color.lynch, .icon.lynch, .color-lynch{ background: #6C7A89; border-color: #6C7A89;}
+
+.color.pumice, .icon.pumice, .color-pumice{ background: #D2D7D3; border-color: #D2D7D3;}
+
+.color.gallery, .icon.gallery, .color-gallery{ background: #EEEEEE; border-color: #EEEEEE;}
+
+.color.silversand, .icon.silversand, .color-silversand{ background: #BDC3C7; border-color: #BDC3C7;}
+
+.color.porcelain, .icon.porcelain, .color-porcelain{ background: #ECF0F1; border-color: #ECF0F1;}
+
+.color.cascade, .icon.cascade, .color-cascade{ background: #95A5A6; border-color: #95A5A6;}
+
+.color.iron, .icon.iron, .color-iron{ background: #DADFE1; border-color: #DADFE1;}
+
+.color.edward, .icon.edward, .color-edward{ background: #ABB7B7; border-color: #ABB7B7;}
+
+.color.cararra, .icon.cararra, .color-cararra{ background: #F2F1EF; border-color: #F2F1EF;}
+
+.color.silver, .icon.silver, .color-silver{ background: #BFBFBF; border-color: #BFBFBF;}
+
+
+/* TEXT COLOR */
+
+.color.chestnutrose, .icon.chestnutrose, .color-chestnutrose,
+.color.pomegranate, .icon.pomegranate, .color-pomegranate,
+.color.thunderbird, .icon.thunderbird, .color-thunderbird,
+.color.oldbrick, .icon.oldbrick, .color-oldbrick,
+.color.flamingo, .icon.flamingo, .color-flamingo,
+.color.valencia, .icon.valencia, .color-valencia,
+.color.tallpoppy, .icon.tallpoppy, .color-tallpoppy,
+.color.monza, .icon.monza, .color-monza,
+.color.cinnabar, .icon.cinnabar, .color-cinnabar,
+.color.razzmatazz, .icon.razzmatazz, .color-razzmatazz,
+.color.sunsetorange, .icon.sunsetorange, .color-sunsetorange,
+.color.waxflower, .icon.waxflower, .color-waxflower,
+.color.cabaret, .icon.cabaret, .color-cabaret,
+.color.newyorkpink, .icon.newyorkpink, .color-newyorkpink,
+.color.radicalred, .icon.radicalred, .color-radicalred,
+.color.sunglo, .icon.sunglo, .color-sunglo,
+.color.snuff, .icon.snuff, .color-snuff,
+.color.rebeccapurple, .icon.rebeccapurple, .color-rebeccapurple,
+.color.honeyflower, .icon.honeyflower, .color-honeyflower,
+.color.wistful, .icon.wistful, .color-wistful,
+.color.plum, .icon.plum, .color-plum,
+.color.seance, .icon.seance, .color-seance,
+.color.mediumpurple, .icon.mediumpurple, .color-mediumpurple,
+.color.lightwisteria, .icon.lightwisteria, .color-lightwisteria,
+.color.studio, .icon.studio, .color-studio,
+.color.wisteria, .icon.wisteria, .color-wisteria,
+.color.sanmarino, .icon.sanmarino, .color-sanmarino,
+.color.aliceblue, .icon.aliceblue, .color-aliceblue,
+.color.royalblue, .icon.royalblue, .color-royalblue,
+.color.pictonblue, .icon.pictonblue, .color-pictonblue,
+.color.spray, .icon.spray, .color-spray,
+.color.shakespeare, .icon.shakespeare, .color-shakespeare,
+.color.hummingbird, .icon.hummingbird, .color-hummingbird,
+.color.pictonblue, .icon.pictonblue, .color-pictonblue,
+.color.curiousblue, .icon.curiousblue, .color-curiousblue,
+.color.madison, .icon.madison, .color-madison,
+.color.dodgerblue, .icon.dodgerblue, .color-dodgerblue,
+.color.ming, .icon.ming, .color-ming,
+.color.ebonyclay, .icon.ebonyclay, .color-ebonyclay,
+.color.malibu, .icon.malibu, .color-malibu,
+.color.summersky, .icon.summersky, .color-summersky,
+.color.chambray, .icon.chambray, .color-chambray,
+.color.pickledbluewood, .icon.pickledbluewood, .color-pickledbluewood,
+.color.hoki, .icon.hoki, .color-hoki,
+.color.jellybean, .icon.jellybean, .color-jellybean,
+.color.jacksonspurple, .icon.jacksonspurple, .color-jacksonspurple,
+.color.jordyblue, .icon.jordyblue, .color-jordyblue,
+.color.steelblue, .icon.steelblue, .color-steelblue,
+.color.fountainblue, .icon.fountainblue, .color-fountainblue,
+.color.mediumturquoise, .icon.mediumturquoise, .color-mediumturquoise,
+.color.aquaisland, .icon.aquaisland, .color-aquaisland,
+.color.gossip, .icon.gossip, .color-gossip,
+.color.darkseagreen, .icon.darkseagreen, .color-darkseagreen,
+.color.eucalyptus, .icon.eucalyptus, .color-eucalyptus,
+.color.caribbeangreen, .icon.caribbeangreen, .color-caribbeangreen,
+.color.silvertree, .icon.silvertree, .color-silvertree,
+.color.downy, .icon.downy, .color-downy,
+.color.mountainmeadow, .icon.mountainmeadow, .color-mountainmeadow,
+.color.lightseagreen, .icon.lightseagreen, .color-lightseagreen,
+.color.mediumaquamarine, .icon.mediumaquamarine, .color-mediumaquamarine,
+.color.turquoise, .icon.turquoise, .color-turquoise,
+.color.madang, .icon.madang, .color-madang,
+.color.riptide, .icon.riptide, .color-riptide,
+.color.shamrock, .icon.shamrock, .color-shamrock,
+.color.niagara, .icon.niagara, .color-niagara,
+.color.emerald, .icon.emerald, .color-emerald,
+.color.greenhaze, .icon.greenhaze, .color-greenhaze,
+.color.freespeechaquamarine, .icon.freespeechaquamarine, .color-freespeechaquamarine,
+.color.oceangreen, .icon.oceangreen, .color-oceangreen,
+.color.niagara1, .icon.niagara1, .color-niagara1,
+.color.jade, .icon.jade, .color-jade,
+.color.salem, .icon.salem, .color-salem,
+.color.observatory, .icon.observatory, .color-observatory,
+.color.junglegreen, .icon.junglegreen, .color-junglegreen,
+.color.creamcan, .icon.creamcan, .color-creamcan,
+.color.ripelemon, .icon.ripelemon, .color-ripelemon,
+.color.saffron, .icon.saffron, .color-saffron,
+.color.capehoney, .icon.capehoney, .color-capehoney,
+.color.california, .icon.california, .color-california,
+.color.firebush, .icon.firebush, .color-firebush,
+.color.tahitigold, .icon.tahitigold, .color-tahitigold,
+.color.casablanca, .icon.casablanca, .color-casablanca,
+.color.crusta, .icon.crusta, .color-crusta,
+.color.seabuckthorn, .icon.seabuckthorn, .color-seabuckthorn,
+.color.lightningyellow, .icon.lightningyellow, .color-lightningyellow,
+.color.burntorange, .icon.burntorange, .color-burntorange,
+.color.buttercup, .icon.buttercup, .color-buttercup,
+.color.ecstasy, .icon.ecstasy, .color-ecstasy,
+.color.sandstorm, .icon.sandstorm, .color-sandstorm,
+.color.jaffa, .icon.jaffa, .color-jaffa,
+.color.zest, .icon.zest, .color-zest,
+.color.whitesmoke, .icon.whitesmoke, .color-whitesmoke,
+.color.lynch, .icon.lynch, .color-lynch,
+.color.pumice, .icon.pumice, .color-pumice,
+.color.gallery, .icon.gallery, .color-gallery,
+.color.silversand, .icon.silversand, .color-silversand,
+.color.porcelain, .icon.porcelain, .color-porcelain,
+.color.cascade, .icon.cascade, .color-cascade,
+.color.iron, .icon.iron, .color-iron,
+.color.edward, .icon.edward, .color-edward,
+.color.cararra, .icon.cararra, .color-cararra,
+.color.silver, .icon.silver, .color-silver
+{ color: #ECF0F1; }
+
+.color.silver, .icon.silver, .color-silver,
+.color.iron, .icon.iron, .color-iron,
+.color.silversand, .icon.silversand, .color-silversand,
+.color.pumice, .icon.pumice, .color-pumice,
+.color.whitesmoke, .icon.whitesmoke, .color-whitesmoke,
+.color.capehoney, .icon.capehoney, .color-capehoney,
+.color.saffron, .icon.saffron, .color-saffron,
+.color.creamcan, .icon.creamcan, .color-creamcan,
+.color.madang, .icon.madang, .color-madang,
+.color.riptide, .icon.riptide, .color-riptide,
+.color.aquaisland, .icon.aquaisland, .color-aquaisland,
+.color.jordyblue, .icon.jordyblue, .color-jordyblue,
+.color.hummingbird, .icon.hummingbird, .color-hummingbird,
+.color.spray, .icon.spray, .color-spray,
+.color.aliceblue, .icon.aliceblue, .color-aliceblue,
+.color.snuff, .icon.snuff, .color-snuff
+{ color: #5e5e5e; }
+
+
+.color-chestnutrose:hover,
+.color-pomegranate:hover,
+.color-thunderbird:hover,
+.color-oldbrick:hover,
+.color-flamingo:hover,
+.color-valencia:hover,
+.color-tallpoppy:hover,
+.color-monza:hover,
+.color-cinnabar:hover,
+.color-razzmatazz:hover,
+.color-sunsetorange:hover,
+.color-waxflower:hover,
+.color-cabaret:hover,
+.color-newyorkpink:hover,
+.color-radicalred:hover,
+.color-sunglo:hover,
+.color-snuff:hover,
+.color-rebeccapurple:hover,
+.color-honeyflower:hover,
+.color-wistful:hover,
+.color-plum:hover,
+.color-seance:hover,
+.color-mediumpurple:hover,
+.color-lightwisteria:hover,
+.color-studio:hover,
+.color-wisteria:hover,
+.color-sanmarino:hover,
+.color-aliceblue:hover,
+.color-royalblue:hover,
+.color-pictonblue:hover,
+.color-spray:hover,
+.color-shakespeare:hover,
+.color-hummingbird:hover,
+.color-pictonblue:hover,
+.color-curiousblue:hover,
+.color-madison:hover,
+.color-dodgerblue:hover,
+.color-ming:hover,
+.color-ebonyclay:hover,
+.color-malibu:hover,
+.color-summersky:hover,
+.color-chambray:hover,
+.color-pickledbluewood:hover,
+.color-hoki:hover,
+.color-jellybean:hover,
+.color-jacksonspurple:hover,
+.color-jordyblue:hover,
+.color-steelblue:hover,
+.color-fountainblue:hover,
+.color-mediumturquoise:hover,
+.color-aquaisland:hover,
+.color-gossip:hover,
+.color-darkseagreen:hover,
+.color-eucalyptus:hover,
+.color-caribbeangreen:hover,
+.color-silvertree:hover,
+.color-downy:hover,
+.color-mountainmeadow:hover,
+.color-lightseagreen:hover,
+.color-mediumaquamarine:hover,
+.color-turquoise:hover,
+.color-madang:hover,
+.color-riptide:hover,
+.color-shamrock:hover,
+.color-niagara:hover,
+.color-emerald:hover,
+.color-greenhaze:hover,
+.color-freespeechaquamarine:hover,
+.color-oceangreen:hover,
+.color-niagara1:hover,
+.color-jade:hover,
+.color-salem:hover,
+.color-observatory:hover,
+.color-junglegreen:hover,
+.color-creamcan:hover,
+.color-ripelemon:hover,
+.color-saffron:hover,
+.color-capehoney:hover,
+.color-california:hover,
+.color-firebush:hover,
+.color-tahitigold:hover,
+.color-casablanca:hover,
+.color-crusta:hover,
+.color-seabuckthorn:hover,
+.color-lightningyellow:hover,
+.color-burntorange:hover,
+.color-buttercup:hover,
+.color-ecstasy:hover,
+.color-sandstorm:hover,
+.color-jaffa:hover,
+.color-zest:hover,
+.color-whitesmoke:hover,
+.color-lynch:hover,
+.color-pumice:hover,
+.color-gallery:hover,
+.color-silversand:hover,
+.color-porcelain:hover,
+.color-cascade:hover,
+.color-iron:hover,
+.color-edward:hover,
+.color-cararra:hover,
+.color-silver:hover
+{ color: #ECF0F1; }
+
+.color-silver:hover,
+.color-iron:hover,
+.color-silversand:hover,
+.color-pumice:hover,
+.color-whitesmoke:hover,
+.color-capehoney:hover,
+.color-saffron:hover,
+.color-creamcan:hover,
+.color-madang:hover,
+.color-riptide:hover,
+.color-aquaisland:hover,
+.color-jordyblue:hover,
+.color-hummingbird:hover,
+.color-spray:hover,
+.color-aliceblue:hover,
+.color-snuff:hover
+{ color: #5e5e5e; }
+
+/* Contrast Color Borders */
+
+.contrast-color-border.color.chestnutrose, .contrast-color-border.icon.chestnutrose, .contrast-color-border.color-chestnutrose,
+.contrast-color-border.color.pomegranate, .contrast-color-border.icon.pomegranate, .contrast-color-border.color-pomegranate,
+.contrast-color-border.color.thunderbird, .contrast-color-border.icon.thunderbird, .contrast-color-border.color-thunderbird,
+.contrast-color-border.color.oldbrick, .contrast-color-border.icon.oldbrick, .contrast-color-border.color-oldbrick,
+.contrast-color-border.color.flamingo, .contrast-color-border.icon.flamingo, .contrast-color-border.color-flamingo,
+.contrast-color-border.color.valencia, .contrast-color-border.icon.valencia, .contrast-color-border.color-valencia,
+.contrast-color-border.color.tallpoppy, .contrast-color-border.icon.tallpoppy, .contrast-color-border.color-tallpoppy,
+.contrast-color-border.color.monza, .contrast-color-border.icon.monza, .contrast-color-border.color-monza,
+.contrast-color-border.color.cinnabar, .contrast-color-border.icon.cinnabar, .contrast-color-border.color-cinnabar,
+.contrast-color-border.color.razzmatazz, .contrast-color-border.icon.razzmatazz, .contrast-color-border.color-razzmatazz,
+.contrast-color-border.color.sunsetorange, .contrast-color-border.icon.sunsetorange, .contrast-color-border.color-sunsetorange,
+.contrast-color-border.color.waxflower, .contrast-color-border.icon.waxflower, .contrast-color-border.color-waxflower,
+.contrast-color-border.color.cabaret, .contrast-color-border.icon.cabaret, .contrast-color-border.color-cabaret,
+.contrast-color-border.color.newyorkpink, .contrast-color-border.icon.newyorkpink, .contrast-color-border.color-newyorkpink,
+.contrast-color-border.color.radicalred, .contrast-color-border.icon.radicalred, .contrast-color-border.color-radicalred,
+.contrast-color-border.color.sunglo, .contrast-color-border.icon.sunglo, .contrast-color-border.color-sunglo,
+.contrast-color-border.color.snuff, .contrast-color-border.icon.snuff, .contrast-color-border.color-snuff,
+.contrast-color-border.color.rebeccapurple, .contrast-color-border.icon.rebeccapurple, .contrast-color-border.color-rebeccapurple,
+.contrast-color-border.color.honeyflower, .contrast-color-border.icon.honeyflower, .contrast-color-border.color-honeyflower,
+.contrast-color-border.color.wistful, .contrast-color-border.icon.wistful, .contrast-color-border.color-wistful,
+.contrast-color-border.color.plum, .contrast-color-border.icon.plum, .contrast-color-border.color-plum,
+.contrast-color-border.color.seance, .contrast-color-border.icon.seance, .contrast-color-border.color-seance,
+.contrast-color-border.color.mediumpurple, .contrast-color-border.icon.mediumpurple, .contrast-color-border.color-mediumpurple,
+.contrast-color-border.color.lightwisteria, .contrast-color-border.icon.lightwisteria, .contrast-color-border.color-lightwisteria,
+.contrast-color-border.color.studio, .contrast-color-border.icon.studio, .contrast-color-border.color-studio,
+.contrast-color-border.color.wisteria, .contrast-color-border.icon.wisteria, .contrast-color-border.color-wisteria,
+.contrast-color-border.color.sanmarino, .contrast-color-border.icon.sanmarino, .contrast-color-border.color-sanmarino,
+.contrast-color-border.color.aliceblue, .contrast-color-border.icon.aliceblue, .contrast-color-border.color-aliceblue,
+.contrast-color-border.color.royalblue, .contrast-color-border.icon.royalblue, .contrast-color-border.color-royalblue,
+.contrast-color-border.color.pictonblue, .contrast-color-border.icon.pictonblue, .contrast-color-border.color-pictonblue,
+.contrast-color-border.color.spray, .contrast-color-border.icon.spray, .contrast-color-border.color-spray,
+.contrast-color-border.color.shakespeare, .contrast-color-border.icon.shakespeare, .contrast-color-border.color-shakespeare,
+.contrast-color-border.color.hummingbird, .contrast-color-border.icon.hummingbird, .contrast-color-border.color-hummingbird,
+.contrast-color-border.color.pictonblue, .contrast-color-border.icon.pictonblue, .contrast-color-border.color-pictonblue,
+.contrast-color-border.color.curiousblue, .contrast-color-border.icon.curiousblue, .contrast-color-border.color-curiousblue,
+.contrast-color-border.color.madison, .contrast-color-border.icon.madison, .contrast-color-border.color-madison,
+.contrast-color-border.color.dodgerblue, .contrast-color-border.icon.dodgerblue, .contrast-color-border.color-dodgerblue,
+.contrast-color-border.color.ming, .contrast-color-border.icon.ming, .contrast-color-border.color-ming,
+.contrast-color-border.color.ebonyclay, .contrast-color-border.icon.ebonyclay, .contrast-color-border.color-ebonyclay,
+.contrast-color-border.color.malibu, .contrast-color-border.icon.malibu, .contrast-color-border.color-malibu,
+.contrast-color-border.color.summersky, .contrast-color-border.icon.summersky, .contrast-color-border.color-summersky,
+.contrast-color-border.color.chambray, .contrast-color-border.icon.chambray, .contrast-color-border.color-chambray,
+.contrast-color-border.color.pickledbluewood, .contrast-color-border.icon.pickledbluewood, .contrast-color-border.color-pickledbluewood,
+.contrast-color-border.color.hoki, .contrast-color-border.icon.hoki, .contrast-color-border.color-hoki,
+.contrast-color-border.color.jellybean, .contrast-color-border.icon.jellybean, .contrast-color-border.color-jellybean,
+.contrast-color-border.color.jacksonspurple, .contrast-color-border.icon.jacksonspurple, .contrast-color-border.color-jacksonspurple,
+.contrast-color-border.color.jordyblue, .contrast-color-border.icon.jordyblue, .contrast-color-border.color-jordyblue,
+.contrast-color-border.color.steelblue, .contrast-color-border.icon.steelblue, .contrast-color-border.color-steelblue,
+.contrast-color-border.color.fountainblue, .contrast-color-border.icon.fountainblue, .contrast-color-border.color-fountainblue,
+.contrast-color-border.color.mediumturquoise, .contrast-color-border.icon.mediumturquoise, .contrast-color-border.color-mediumturquoise,
+.contrast-color-border.color.aquaisland, .contrast-color-border.icon.aquaisland, .contrast-color-border.color-aquaisland,
+.contrast-color-border.color.gossip, .contrast-color-border.icon.gossip, .contrast-color-border.color-gossip,
+.contrast-color-border.color.darkseagreen, .contrast-color-border.icon.darkseagreen, .contrast-color-border.color-darkseagreen,
+.contrast-color-border.color.eucalyptus, .contrast-color-border.icon.eucalyptus, .contrast-color-border.color-eucalyptus,
+.contrast-color-border.color.caribbeangreen, .contrast-color-border.icon.caribbeangreen, .contrast-color-border.color-caribbeangreen,
+.contrast-color-border.color.silvertree, .contrast-color-border.icon.silvertree, .contrast-color-border.color-silvertree,
+.contrast-color-border.color.downy, .contrast-color-border.icon.downy, .contrast-color-border.color-downy,
+.contrast-color-border.color.mountainmeadow, .contrast-color-border.icon.mountainmeadow, .contrast-color-border.color-mountainmeadow,
+.contrast-color-border.color.lightseagreen, .contrast-color-border.icon.lightseagreen, .contrast-color-border.color-lightseagreen,
+.contrast-color-border.color.mediumaquamarine, .contrast-color-border.icon.mediumaquamarine, .contrast-color-border.color-mediumaquamarine,
+.contrast-color-border.color.turquoise, .contrast-color-border.icon.turquoise, .contrast-color-border.color-turquoise,
+.contrast-color-border.color.madang, .contrast-color-border.icon.madang, .contrast-color-border.color-madang,
+.contrast-color-border.color.riptide, .contrast-color-border.icon.riptide, .contrast-color-border.color-riptide,
+.contrast-color-border.color.shamrock, .contrast-color-border.icon.shamrock, .contrast-color-border.color-shamrock,
+.contrast-color-border.color.niagara, .contrast-color-border.icon.niagara, .contrast-color-border.color-niagara,
+.contrast-color-border.color.emerald, .contrast-color-border.icon.emerald, .contrast-color-border.color-emerald,
+.contrast-color-border.color.greenhaze, .contrast-color-border.icon.greenhaze, .contrast-color-border.color-greenhaze,
+.contrast-color-border.color.freespeechaquamarine, .contrast-color-border.icon.freespeechaquamarine, .contrast-color-border.color-freespeechaquamarine,
+.contrast-color-border.color.oceangreen, .contrast-color-border.icon.oceangreen, .contrast-color-border.color-oceangreen,
+.contrast-color-border.color.niagara1, .contrast-color-border.icon.niagara1, .contrast-color-border.color-niagara1,
+.contrast-color-border.color.jade, .contrast-color-border.icon.jade, .contrast-color-border.color-jade,
+.contrast-color-border.color.salem, .contrast-color-border.icon.salem, .contrast-color-border.color-salem,
+.contrast-color-border.color.observatory, .contrast-color-border.icon.observatory, .contrast-color-border.color-observatory,
+.contrast-color-border.color.junglegreen, .contrast-color-border.icon.junglegreen, .contrast-color-border.color-junglegreen,
+.contrast-color-border.color.creamcan, .contrast-color-border.icon.creamcan, .contrast-color-border.color-creamcan,
+.contrast-color-border.color.ripelemon, .contrast-color-border.icon.ripelemon, .contrast-color-border.color-ripelemon,
+.contrast-color-border.color.saffron, .contrast-color-border.icon.saffron, .contrast-color-border.color-saffron,
+.contrast-color-border.color.capehoney, .contrast-color-border.icon.capehoney, .contrast-color-border.color-capehoney,
+.contrast-color-border.color.california, .contrast-color-border.icon.california, .contrast-color-border.color-california,
+.contrast-color-border.color.firebush, .contrast-color-border.icon.firebush, .contrast-color-border.color-firebush,
+.contrast-color-border.color.tahitigold, .contrast-color-border.icon.tahitigold, .contrast-color-border.color-tahitigold,
+.contrast-color-border.color.casablanca, .contrast-color-border.icon.casablanca, .contrast-color-border.color-casablanca,
+.contrast-color-border.color.crusta, .contrast-color-border.icon.crusta, .contrast-color-border.color-crusta,
+.contrast-color-border.color.seabuckthorn, .contrast-color-border.icon.seabuckthorn, .contrast-color-border.color-seabuckthorn,
+.contrast-color-border.color.lightningyellow, .contrast-color-border.icon.lightningyellow, .contrast-color-border.color-lightningyellow,
+.contrast-color-border.color.burntorange, .contrast-color-border.icon.burntorange, .contrast-color-border.color-burntorange,
+.contrast-color-border.color.buttercup, .contrast-color-border.icon.buttercup, .contrast-color-border.color-buttercup,
+.contrast-color-border.color.ecstasy, .contrast-color-border.icon.ecstasy, .contrast-color-border.color-ecstasy,
+.contrast-color-border.color.sandstorm, .contrast-color-border.icon.sandstorm, .contrast-color-border.color-sandstorm,
+.contrast-color-border.color.jaffa, .contrast-color-border.icon.jaffa, .contrast-color-border.color-jaffa,
+.contrast-color-border.color.zest, .contrast-color-border.icon.zest, .contrast-color-border.color-zest,
+.contrast-color-border.color.whitesmoke, .contrast-color-border.icon.whitesmoke, .contrast-color-border.color-whitesmoke,
+.contrast-color-border.color.lynch, .contrast-color-border.icon.lynch, .contrast-color-border.color-lynch,
+.contrast-color-border.color.pumice, .contrast-color-border.icon.pumice, .contrast-color-border.color-pumice,
+.contrast-color-border.color.gallery, .contrast-color-border.icon.gallery, .contrast-color-border.color-gallery,
+.contrast-color-border.color.silversand, .contrast-color-border.icon.silversand, .contrast-color-border.color-silversand,
+.contrast-color-border.color.porcelain, .contrast-color-border.icon.porcelain, .contrast-color-border.color-porcelain,
+.contrast-color-border.color.cascade, .contrast-color-border.icon.cascade, .contrast-color-border.color-cascade,
+.contrast-color-border.color.iron, .contrast-color-border.icon.iron, .contrast-color-border.color-iron,
+.contrast-color-border.color.edward, .contrast-color-border.icon.edward, .contrast-color-border.color-edward,
+.contrast-color-border.color.cararra, .contrast-color-border.icon.cararra, .contrast-color-border.color-cararra,
+.contrast-color-border.color.silver, .contrast-color-border.icon.silver, .contrast-color-border.color-silver
+{ border-color: #ECF0F1; }
+
+.contrast-color-border.color.silver, .contrast-color-border.icon.silver, .contrast-color-border.color-silver,
+.contrast-color-border.color.iron, .contrast-color-border.icon.iron, .contrast-color-border.color-iron,
+.contrast-color-border.color.silversand, .contrast-color-border.icon.silversand, .contrast-color-border.color-silversand,
+.contrast-color-border.color.pumice, .contrast-color-border.icon.pumice, .contrast-color-border.color-pumice,
+.contrast-color-border.color.whitesmoke, .contrast-color-border.icon.whitesmoke, .contrast-color-border.color-whitesmoke,
+.contrast-color-border.color.capehoney, .contrast-color-border.icon.capehoney, .contrast-color-border.color-capehoney,
+.contrast-color-border.color.saffron, .contrast-color-border.icon.saffron, .contrast-color-border.color-saffron,
+.contrast-color-border.color.creamcan, .contrast-color-border.icon.creamcan, .contrast-color-border.color-creamcan,
+.contrast-color-border.color.madang, .contrast-color-border.icon.madang, .contrast-color-border.color-madang,
+.contrast-color-border.color.riptide, .contrast-color-border.icon.riptide, .contrast-color-border.color-riptide,
+.contrast-color-border.color.aquaisland, .contrast-color-border.icon.aquaisland, .contrast-color-border.color-aquaisland,
+.contrast-color-border.color.jordyblue, .contrast-color-border.icon.jordyblue, .contrast-color-border.color-jordyblue,
+.contrast-color-border.color.hummingbird, .contrast-color-border.icon.hummingbird, .contrast-color-border.color-hummingbird,
+.contrast-color-border.color.spray, .contrast-color-border.icon.spray, .contrast-color-border.color-spray,
+.contrast-color-border.color.aliceblue, .contrast-color-border.icon.aliceblue, .contrast-color-border.color-aliceblue,
+.contrast-color-border.color.snuff, .contrast-color-border.icon.snuff, .contrast-color-border.color-snuff
+{ border-color: #5e5e5e; }
+
+
+.text-default		{color: #333}
+
+.text-peter-river		{color: #3498db}
+.text-concrete		{color: #95a5a6}
+.text-red		{color: #CF000F}
+
+.text-chestnutrose{ color: #D24D57;}
+.text-pomegranate{ color: #F22613;}
+.text-thunderbird{ color: #D91E18;}
+.text-oldbrick{ color: #96281B;}
+.text-flamingo{ color: #EF4836;}
+.text-valencia{ color: #D64541;}
+.text-tallpoppy{ color: #C0392B;}
+.text-monza{ color: #CF000F;}
+.text-cinnabar{ color: #E74C3C;}
+.text-razzmatazz{ color: #DB0A5B;}
+.text-sunsetorange{ color: #F64747;}
+.text-waxflower{ color: #F1A9A0;}
+.text-cabaret{ color: #D2527F;}
+.text-newyorkpink{ color: #E08283;}
+.text-radicalred{ color: #F62459;}
+.text-sunglo{ color: #E26A6A;}
+.text-snuff{ color: #DCC6E0;}
+.text-rebeccapurple{ color: #663399;}
+.text-honeyflower{ color: #674172;}
+.text-wistful{ color: #AEA8D3;}
+.text-plum{ color: #913D88;}
+.text-seance{ color: #9A12B3;}
+.text-mediumpurple{ color: #BF55EC;}
+.text-lightwisteria{ color: #BE90D4;}
+.text-studio{ color: #8E44AD;}
+.text-wisteria{ color: #9B59B6;}
+.text-sanmarino{ color: #446CB3;}
+.text-aliceblue{ color: #E4F1FE;}
+.text-royalblue{ color: #4183D7;}
+.text-pictonblue{ color: #59ABE3;}
+.text-spray{ color: #81CFE0;}
+.text-shakespeare{ color: #52B3D9;}
+.text-hummingbird{ color: #C5EFF7;}
+.text-pictonblue{ color: #22A7F0;}
+.text-curiousblue{ color: #3498DB;}
+.text-madison{ color: #2C3E50;}
+.text-dodgerblue{ color: #19B5FE;}
+.text-ming{ color: #336E7B;}
+.text-ebonyclay{ color: #22313F;}
+.text-malibu{ color: #6BB9F0;}
+.text-summersky{ color: #1E8BC3;}
+.text-chambray{ color: #3A539B;}
+.text-pickledbluewood{ color: #34495E;}
+.text-hoki{ color: #67809F;}
+.text-jellybean{ color: #2574A9;}
+.text-jacksonspurple{ color: #1F3A93;}
+.text-jordyblue{ color: #89C4F4;}
+.text-steelblue{ color: #4B77BE;}
+.text-fountainblue{ color: #5C97BF;}
+.text-mediumturquoise{ color: #4ECDC4;}
+.text-aquaisland{ color: #A2DED0;}
+.text-gossip{ color: #87D37C;}
+.text-darkseagreen{ color: #90C695;}
+.text-eucalyptus{ color: #26A65B;}
+.text-caribbeangreen{ color: #03C9A9;}
+.text-silvertree{ color: #68C3A3;}
+.text-downy{ color: #65C6BB;}
+.text-mountainmeadow{ color: #1BBC9B;}
+.text-lightseagreen{ color: #1BA39C;}
+.text-mediumaquamarine{ color: #66CC99;}
+.text-turquoise{ color: #36D7B7;}
+.text-madang{ color: #C8F7C5;}
+.text-riptide{ color: #86E2D5;}
+.text-shamrock{ color: #2ECC71;}
+.text-niagara{ color: #16a085;}
+.text-emerald{ color: #3FC380;}
+.text-greenhaze{ color: #019875;}
+.text-freespeechaquamarine{ color: #03A678;}
+.text-oceangreen{ color: #4DAF7C;}
+.text-niagara1{ color: #2ABB9B;}
+.text-jade{ color: #00B16A;}
+.text-salem{ color: #1E824C;}
+.text-observatory{ color: #049372;}
+.text-junglegreen{ color: #26C281;}
+.text-creamcan{ color: #F5D76E;}
+.text-ripelemon{ color: #F7CA18;}
+.text-saffron{ color: #F4D03F;}
+.text-capehoney{ color: #FDE3A7;}
+.text-california{ color: #F89406;}
+.text-firebush{ color: #EB9532;}
+.text-tahitigold{ color: #E87E04;}
+.text-casablanca{ color: #F4B350;}
+.text-crusta{ color: #F2784B;}
+.text-seabuckthorn{ color: #EB974E;}
+.text-lightningyellow{ color: #F5AB35;}
+.text-burntorange{ color: #D35400;}
+.text-buttercup{ color: #F39C12;}
+.text-ecstasy{ color: #F9690E;}
+.text-sandstorm{ color: #F9BF3B;}
+.text-jaffa{ color: #F27935;}
+.text-zest{ color: #E67E22;}
+.text-whitesmoke{ color: #ececec;}
+.text-lynch{ color: #6C7A89;}
+.text-pumice{ color: #D2D7D3;}
+.text-gallery{ color: #EEEEEE;}
+.text-silversand{ color: #BDC3C7;}
+.text-porcelain{ color: #ECF0F1;}
+.text-cascade{ color: #95A5A6;}
+.text-iron{ color: #DADFE1;}
+.text-edward{ color: #ABB7B7;}
+.text-cararra{ color: #F2F1EF;}
+.text-silver{ color: #BFBFBF;}

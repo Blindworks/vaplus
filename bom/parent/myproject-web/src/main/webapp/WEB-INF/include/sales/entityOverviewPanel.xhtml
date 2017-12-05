@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" 
+    xmlns:f="http://java.sun.com/jsf/core">
+    
+	<ui:composition>
+
+			<div class="ibox elementOverviewBox">
+			<ui:fragment rendered="#{not showTitleInCell}">
+                        <div class="ibox-title">
+                        
+                            
+                            
+                            <h5>#{empty title ? element.name : title}</h5>
+                        </div>
+            </ui:fragment>
+                        <div class="ibox-content">
+            
+                        	
+                        	<div class="row">
+                        		<div class="col-sm-4">
+                        		
+                        		<ui:fragment rendered="#{showTitleInCell}">
+		                            <h2>#{empty title ? element.name : title}</h2>
+					            </ui:fragment>
+                        		
+                        			<ul class="list-group clear-list">
+                        			
+                        					<li class="list-group-item fist-item ">
+				                        		<div style="width:10px;height:10px;display:inline-block;background-color:#95a5a6" ></div>
+				                        		
+				                        		<span class="pull-right">
+					                        		<b>
+						                        		<h:outputText value="#{element.currentCommissionCache.pointGoal}" >
+																<f:convertNumber maxFractionDigits="4" minFractionDigits="0" />
+					                                	</h:outputText>
+					                                    <i class="fa fa-star"></i>
+				                                    </b>
+			                                    </span>
+			                                    
+				                        		Punkteziel
+				                        		
+				                        		
+				                            </li>
+				                            <li class="list-group-item ">
+				                        		<div style="width:10px;height:10px;display:inline-block;background-color:#2980b9" ></div>
+				                        		
+				                        		<span class="pull-right">
+					                        		<b>
+						                        		<h:outputText value="#{element.currentCommissionCache.commission.points}" >
+																<f:convertNumber maxFractionDigits="4" minFractionDigits="0" />
+					                                	</h:outputText>
+					                                    <i class="fa fa-star"></i>
+				                                    </b>
+			                                    </span>
+			                                    
+				                                erreichte Punkte
+				                            </li>
+                        			
+                        			
+			                        	<ui:repeat value="#{productBean.overviewProductCategoryList}" var="productCategory" varStatus="status">
+				                        	<li class="list-group-item #{status.first ? 'fist-item_' : ''} ">
+				                        		<div style="width:10px;height:10px;display:inline-block" class="color #{productCategory.color}"></div>
+				                                <span class="pull-right">
+				                                	<b>
+				                                	    <h:outputText value="#{element.getProductCategorySalesCache(productCategory, helperBean.currentYear(), helperBean.currentMonth()).pieces}" >
+																<f:convertNumber maxFractionDigits="4" minFractionDigits="0" />
+					                                	</h:outputText>
+				                                	</b>
+				                                </span>
+				                                #{productCategory.name}
+				                            </li>
+			                        	</ui:repeat>
+			                        </ul>
+			                        <h:panelGroup rendered="#{element.pointGoal gt 0}">
+		                            <div>
+		                                <span>Zielerreichung:</span>
+		                                
+		                                <div class="stat-percent text-peter-river"><h:outputText value="#{element.liveCommissionCache.goalAttainment}" >
+												<f:convertNumber maxFractionDigits="0" minFractionDigits="0" />
+										</h:outputText>% <span class="text-concrete"><h:outputText value="#{element.currentCommissionCache.goalAttainment}" >
+												<f:convertNumber maxFractionDigits="0" minFractionDigits="0" />
+										</h:outputText>%</span></div>
+										<div class="progress progress-mini" style="position: relative;">
+											<div style="width: #{element.currentCommissionCache.goalAttainment}%; " class="progress-bar progress-bar-plain"></div>
+											<div style="width: #{element.liveCommissionCache.goalAttainment}%; position: absolute; top: 0; left: 0;" class="progress-bar "></div>
+										</div>
+		                            </div>
+		                            </h:panelGroup>
+		                            <div class="row  m-t-sm">
+		                            
+		                            	<ui:repeat var="productStatistic" value="#{productStatisticBean.overviewProductStatisticList}">
+		                            		<div class="col-sm-2">
+			                                    <div class="font-bold">#{productStatistic.name}</div>
+			                                    #{productStatistic.getCurrentProductStatisticCache(element).pieces}
+		                                	</div>
+		                            	</ui:repeat>
+		                            	
+		                                
+		                            </div>
+                            	</div>
+                            	<div class="col-sm-8">
+                            		
+	                        		<div class="flot-chart">
+	                            		<div class="flot-chart-content" id="elementOverviewPanelLineChart_#{element['class'].simpleName}_#{element.id}" style="padding: 0px; position: relative; height: 260px;">
+	                            		</div>
+	                            	</div>
+                            	</div>
+                            	
+                            </div>
+
+                        </div>
+                        
+                        
+                	</div>
+                	
+                	
+                
+                 	
+                
+                
+                 	<h:outputScript>
+	
+
+    $(document).ready(function() {
+    
+		// Punkte Ziel
+        var data1 = [
+        	<ui:repeat var="commission" value="#{element.getCurrentRangeCommissionCacheList()}" >
+            		 [ "#{helperBean.getMonthShortName(commission.month)}", <h:outputText value="#{commission.pointGoal}" ><f:convertNumber maxFractionDigits="2" minFractionDigits="0" /></h:outputText>], 
+            </ui:repeat>
+        ];
+        
+        // erreichte Punkte
+        var data2 = [
+					<ui:repeat var="commission" value="#{element.getCurrentRangeCommissionCacheList()}" >
+            		 	[ "<h:outputText value="#{helperBean.getMonthShortName(commission.month)}" ></h:outputText>", <h:outputText value="#{commission.commission.points}" ><f:convertNumber maxFractionDigits="2" minFractionDigits="0" /></h:outputText>], 
+            		</ui:repeat>
+        ];
+        
+        
+        <ui:fragment rendered="#{crosscanBean.isCrosscanDataSet(element)}">
+		// Crosscan Data
+        var crosscanData = [
+        
+        	<ui:repeat var="month" value="#{helperBean.getCurrentMonthRange()}" >
+            		 [ "#{helperBean.getMonthShortName(month)}", #{crosscanBean.getCrosscanDataCurrentMonthRange(element)[month]}], 
+            </ui:repeat>
+        ];
+        </ui:fragment>
+        
+        <ui:repeat value="#{productBean.overviewProductCategoryList}" var="productCategory" >
+    
+		// Punkte Ziel
+        var productCategoryData#{productCategory.id} = [
+        	<ui:repeat var="salesCache" value="#{element.getCurrentRangeProductCategorySalesCacheList(productCategory)}" >
+            		 [ "#{helperBean.getMonthShortName(salesCache.month)}", <h:outputText value="#{salesCache.pieces}" ><f:convertNumber maxFractionDigits="2" minFractionDigits="0" /></h:outputText>], 
+            </ui:repeat>
+        ];
+        
+        </ui:repeat>
+        
+        $.plot($("#elementOverviewPanelLineChart_#{element['class'].simpleName}_#{element.id}"), [
+             {data: data1, fill: true, color: "#95a5a6", lines: {show: false}, splines: {show: true, tension: 0.2, lineWidth: 1,fill: 0.4}}, 
+             {data: data2, fill: true, color: "#2980b9", lines: {show: false}, splines: {show: true, tension: 0.2, lineWidth: 1,fill: 0.4}},
+             
+             <ui:repeat value="#{productBean.overviewProductCategoryList}" var="productCategory" >
+	    		{data: productCategoryData#{productCategory.id}, yaxis: 2 , color: "#{helperBean.getCssColorAsHex( productCategory.color) }",
+	    			lines: {show: true}, splines: {show: false, tension: 0.2, lineWidth: 1,fill: 0}
+	    		} ,
+	        </ui:repeat>
+	        
+	        <ui:fragment rendered="#{crosscanBean.isCrosscanDataSet(element)}">
+             {data: crosscanData, yaxis: 3, color: "#000080", lines: {show: true}, splines: {show: false}},
+        	</ui:fragment>
+        ],
+                {
+                    series: {
+                        lines: {
+                            show: false,
+                           // fill: true,
+                            lineWidth: 1
+                        },
+                        splines: {
+                            show: true,
+                            tension: 0.2,
+                            lineWidth: 1,
+                          //  fill: 0.4
+                        },
+                        points: {
+                            radius: 0,
+                            show: true
+                        },
+                        shadowSize: 2
+                    },
+                    grid: {
+                        hoverable: true,
+                        clickable: true,
+                        tickColor: "#d5d5d5",
+                        borderWidth: 1,
+                        color: '#d5d5d5'
+                    },
+                    
+                    xaxis:{
+						mode: "categories",
+                    },
+                    yaxes: [ 
+                    	{ min: 0, tickFormatter: flotPointFormatter }, 
+                    	{ alignTicksWithAxis: 1, position: "right", tickFormatter: flotPieceFormatter},
+                    	{ alignTicksWithAxis: 1, position: "right", tickFormatter: customerVisitFormatter},
+                    ],
+			        tooltip: true,
+			        tooltipOpts: {
+			            content: "%y"
+			        }
+                }
+        );
+        
+
+    });
+	
+	</h:outputScript>
+                		
+	</ui:composition>
+</html>

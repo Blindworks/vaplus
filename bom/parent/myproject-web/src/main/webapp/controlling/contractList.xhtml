@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"	
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+		xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:body>
+
+	<ui:composition template="/WEB-INF/template/common/commonLayout.xhtml">
+
+		<ui:param name="heading1" value="Sales" />
+		
+		<ui:define name="headingContent">
+			<h:form class="form-horizontal hidden-print" id="headerToolbar">
+				<div class="form-group">
+					<div class="col-sm-2">
+						<h:selectOneMenu 
+									value="#{salesOverviewBean.shop}"
+									class="chosen-select-no-single form-control" converter="#{shopConverter}" >
+									<f:selectItem itemValue="" itemLabel="Alle Filialen" />
+									<f:selectItems value="#{shopBean.shopList}" var="shop"
+										itemValue="#{shop}" itemLabel="#{shop.name}" />
+							<f:ajax render="summary salesContractForm salesOrderForm commissionActivityList" event="change" onevent="renderChartsEvent"/>
+						</h:selectOneMenu>
+					</div>
+					<h:panelGroup rendered="#{permissionBean.hasPermission('contract_list','read')}">
+					<div class="col-sm-2">
+						<h:selectOneMenu 
+									value="#{salesOverviewBean.user}"
+									class="chosen-select-no-single form-control" converter="#{userConverter}" >
+									<f:selectItem itemValue="" itemLabel="Alle Mitarbeiter" />
+									<f:selectItems value="#{userBean.userList}" var="user"
+										itemValue="#{user}" itemLabel="#{user.name}" />
+							<f:ajax render="summary salesContractForm salesOrderForm commissionActivityList" event="change" onevent="renderChartsEvent" />
+						</h:selectOneMenu>
+					</div>
+					</h:panelGroup>
+					<div class="col-sm-2">
+						<h:selectOneMenu 
+									value="#{salesOverviewBean.vo}"
+									class="chosen-select-no-single form-control" converter="#{vOConverter}" >
+									<f:selectItem itemValue="" itemLabel="Alle VOs" />
+									<f:selectItems value="#{VOBean.VOList}" var="vo"
+										itemValue="#{vo}" itemLabel="#{vo.name}" />
+							<f:ajax render="summary salesContractForm salesOrderForm commissionActivityList" event="change" onevent="renderChartsEvent" />
+						</h:selectOneMenu>
+					</div>
+					<div class="col-sm-2">
+					<h:selectOneMenu 
+								value="#{salesOverviewBean.month}"
+								class="chosen-select-no-single form-control" >
+								<f:selectItem itemValue="-1" itemLabel="Alle Monate" />
+								<f:selectItems value="#{helperBean.monthList}" var="month" itemLabel="#{helperBean.getMonthName(month)}" />
+						<f:ajax render="summary salesContractForm salesOrderForm commissionActivityList" event="change" onevent="renderChartsEvent" />
+					</h:selectOneMenu>
+					</div>
+					<div class="col-sm-2">
+					<h:selectOneMenu
+								value="#{salesOverviewBean.year}"
+								class="chosen-select-no-single form-control" >
+								<f:selectItems value="#{salesOverviewBean.yearList}"  />
+						<f:ajax render="summary salesContractForm salesOrderForm commissionActivityList" event="change" onevent="renderChartsEvent" />
+					</h:selectOneMenu>
+					</div>
+				</div>
+			</h:form>
+   		</ui:define>
+		
+		<ui:define name="content">
+		
+
+		<h:panelGroup id="summary" class="sales_summary">
+		<div class="row">
+			<div class="col-lg-6">
+			
+			<div class="ibox float-e-margins">
+	                            <div class="ibox-title">
+	                                <h5>Kategorie Summen</h5>
+	                            </div>
+	                            <div class="ibox-content">
+	                            	<div class="row">
+	                    				<div class="col-lg-12">
+	                    					<div class="flot-chart">
+			                            		<div class="flot-chart-content" id="salesDistribution" style="padding: 0px; position: relative;">
+			                            		</div>
+			                            	</div>
+	                    				</div>
+	                    				
+			                        		
+	                            	</div>
+	                            </div>
+	                        </div>
+	                        
+	                        
+	                        
+			
+				<div class="ibox">
+	       	                 <div class="ibox-title">
+	                            <h5>Einzel Summen</h5>
+	                            <div class="ibox-tools">
+	                            </div>
+	                        </div>
+	                        <div class="ibox-content">
+	                        
+	                        	<table class="table table-striped" >
+					                	<thead>
+					                		<tr>
+					                			<th>Produkt</th>
+					                			<th>NV</th>
+					                			<th>VVL</th>
+					                			<th>DC</th>
+					                			<th>VK</th>
+					                		</tr>
+					                	</thead>
+					                	<tbody>
+	                        
+	                        	<ui:repeat var="product" value="#{salesOverviewBean.productSummaryMapProducts}">
+	                        	
+	                        	
+			                		<tr>
+			                			<td><h:outputText value="#{product.name}" /></td>
+			                			<td>
+				                			<h:outputText value="#{salesOverviewBean.productSummaryMap_newContract.get(product)}"  rendered="#{salesOverviewBean.productSummaryMap_newContract.get(product) gt 0}">
+												<f:convertNumber maxFractionDigits="2" minFractionDigits="0" />
+			                                </h:outputText>
+			                			</td>
+			                			<td>
+				                			<h:outputText value="#{salesOverviewBean.productSummaryMap_extensionOfTerm.get(product)}"  rendered="#{salesOverviewBean.productSummaryMap_extensionOfTerm.get(product) gt 0}">
+												<f:convertNumber maxFractionDigits="2" minFractionDigits="0" />
+			                                </h:outputText>
+			                			</td>
+			                			<td>
+				                			<h:outputText value="#{salesOverviewBean.productSummaryMap_debitCreditChange.get(product)}"  rendered="#{salesOverviewBean.productSummaryMap_debitCreditChange.get(product) gt 0}">
+												<f:convertNumber maxFractionDigits="2" minFractionDigits="0" />
+			                                </h:outputText>
+			                			</td>
+			                			<td>
+				                			<h:outputText value="#{salesOverviewBean.productSummaryMap_sales.get(product)}" rendered="#{salesOverviewBean.productSummaryMap_sales.get(product) gt 0}">
+												<f:convertNumber maxFractionDigits="2" minFractionDigits="0" />
+			                                </h:outputText>
+			                			</td>
+			                		</tr>
+	                        	
+	                        	</ui:repeat>
+	                        	</tbody>
+	                        	</table>
+	    		
+	                        </div>
+	
+	                    </div>
+			
+			 	
+			
+			</div>
+			<div class="col-lg-6">
+			
+			
+				<ui:fragment rendered="#{salesOverviewBean.month gt -1}">
+				
+				<div class="ibox">
+	                        <div class="ibox-title">
+	                            <h5>Mitarbeiter Punkte Erreichung</h5>
+	                            <div class="ibox-tools">
+	                            </div>
+	                        </div>
+	                        <div class="ibox-content">
+					    		
+					    		<div class="table-responsive">
+					                <table class="table table-striped" >
+					                	<thead>
+					                		<tr>
+					                			<th></th>
+					                			<th>Punkte</th>
+					                			<th>Ziel</th>
+					                			<th>Erreichung</th>
+					                			    	
+					                			<ui:repeat var="productStatistic" value="#{productStatisticBean.overviewProductStatisticList}">
+					                				<th><h:outputText value="#{productStatistic.name}" /></th>
+				                            	</ui:repeat>
+					                			
+					                		</tr>
+					                	</thead>
+					                	<tbody>
+					                	
+					                		<ui:fragment rendered="#{not empty salesOverviewBean.user}">
+						                		<tr>
+						                			<td><h:outputText value="#{salesOverviewBean.user.name}" /></td>
+						                			<td class="text-peter-river">
+						                				<h:outputText value="#{salesOverviewBean.user.getCommissionCache(salesOverviewBean.year, salesOverviewBean.month).commission.points}" >
+															<f:convertNumber maxFractionDigits="2" minFractionDigits="0" />
+						                                </h:outputText> <i class="fa fa-star"></i>
+						                			</td>
+						                			<td class="text-peter-river">
+						                				<h:outputText value="#{salesOverviewBean.user.getCommissionCache(salesOverviewBean.year, salesOverviewBean.month).pointGoal}" >
+															<f:convertNumber maxFractionDigits="2" minFractionDigits="0" />
+						                                </h:outputText> <i class="fa fa-star"></i>
+						                			</td>
+						                			<td>
+						                				<h:outputText value="#{salesOverviewBean.user.getCommissionCache(salesOverviewBean.year, salesOverviewBean.month).goalAttainment}" >
+															<f:convertNumber maxFractionDigits="4" minFractionDigits="0" />
+						                                </h:outputText> %
+	                                				</td>
+	                                				
+	                                				<ui:repeat var="productStatistic" value="#{productStatisticBean.overviewProductStatisticList}">
+							                			<td>
+							                				<h:outputText value="#{productStatistic.getProductStatisticCache(salesOverviewBean.month, salesOverviewBean.year, salesOverviewBean.user).pieces}" rendered="#{productStatistic.getCurrentProductStatisticCache(salesOverviewBean.user).pieces gt 0}">
+																<f:convertNumber maxFractionDigits="4" minFractionDigits="0" />
+							                                </h:outputText>
+		                                				</td>
+				                            		</ui:repeat>
+	                                				
+						                		</tr>
+					                		</ui:fragment>
+					                		
+					                	
+					                		<ui:fragment rendered="#{empty salesOverviewBean.user}">
+
+												<ui:repeat var="user" value="#{userBean.userList}">
+					                		
+						                		<tr>
+						                			<td><h:outputText value="#{user.name}" /></td>
+						                			<td class="text-peter-river">
+						                				<h:outputText value="#{user.getCommissionCache(salesOverviewBean.year, salesOverviewBean.month).commission.points}" >
+															<f:convertNumber maxFractionDigits="2" minFractionDigits="0" />
+						                                </h:outputText> <i class="fa fa-star"></i>
+						                			</td>
+						                			<td class="text-peter-river">
+						                				<h:outputText value="#{user.getCommissionCache(salesOverviewBean.year, salesOverviewBean.month).pointGoal}" >
+															<f:convertNumber maxFractionDigits="2" minFractionDigits="0" />
+						                                </h:outputText> <i class="fa fa-star"></i>
+						                			</td>
+						                			<td>
+						                				<h:outputText value="#{user.getCommissionCache(salesOverviewBean.year, salesOverviewBean.month).goalAttainment}" >
+															<f:convertNumber maxFractionDigits="4" minFractionDigits="0" />
+						                                </h:outputText> %
+	                                				</td>
+	                                				
+	                                				
+	                                				<ui:repeat var="productStatistic" value="#{productStatisticBean.overviewProductStatisticList}">
+							                			<td>
+							                				<h:outputText value="#{productStatistic.getProductStatisticCache(salesOverviewBean.month, salesOverviewBean.year, user).pieces}" rendered="#{productStatistic.getCurrentProductStatisticCache(user).pieces gt 0}">
+																<f:convertNumber maxFractionDigits="4" minFractionDigits="0" />
+							                                </h:outputText>
+		                                				</td>
+				                            		</ui:repeat>
+				                            		
+						                		</tr>
+						                		
+						                		</ui:repeat>
+					                		</ui:fragment>
+					                	
+					                		
+					                		
+					                	</tbody>
+				                	</table>
+				                </div>
+					    		
+					    		
+					    		
+	                        	
+	                        </div>
+	
+	                    </div>
+				
+				
+				<div class="ibox">
+	                        <div class="ibox-title">
+	                            <h5>Filial Punkte Erreichung</h5>
+	                            <div class="ibox-tools">
+	                            </div>
+	                        </div>
+	                        <div class="ibox-content">
+					    		
+					    		<div class="table-responsive">
+					                <table class="table table-striped" >
+					                	<thead>
+					                		<tr>
+					                			<th></th>
+					                			<th>Punkte</th>
+					                			<th>Ziel</th>
+					                			<th>Erreichung</th>
+					                			    	
+					                			<ui:repeat var="productStatistic" value="#{productStatisticBean.overviewProductStatisticList}">
+					                				<th><h:outputText value="#{productStatistic.name}" /></th>
+				                            	</ui:repeat>
+					                		</tr>
+					                	</thead>
+					                	<tbody>
+					                	
+					                		<ui:fragment rendered="#{not empty salesOverviewBean.shop}">
+						                		<tr>
+						                			<td><h:outputText value="#{salesOverviewBean.shop.name}" /></td>
+						                			<td class="text-peter-river">
+						                				<h:outputText value="#{salesOverviewBean.shop.getCommissionCache(salesOverviewBean.year, salesOverviewBean.month).commission.points}" >
+															<f:convertNumber maxFractionDigits="2" minFractionDigits="0" />
+						                                </h:outputText> <i class="fa fa-star"></i>
+						                			</td>
+						                			<td class="text-peter-river">
+						                				<h:outputText value="#{salesOverviewBean.shop.getCommissionCache(salesOverviewBean.year, salesOverviewBean.month).pointGoal}" >
+															<f:convertNumber maxFractionDigits="2" minFractionDigits="0" />
+						                                </h:outputText> <i class="fa fa-star"></i>
+						                			</td>
+						                			<td>
+						                				<h:outputText value="#{salesOverviewBean.shop.getCommissionCache(salesOverviewBean.year, salesOverviewBean.month).goalAttainment}" >
+															<f:convertNumber maxFractionDigits="4" minFractionDigits="0" />
+						                                </h:outputText> %
+	                                				</td>
+	                                				
+	                                				<td>
+						                				<h:outputText value="#{productStatistic.getProductStatisticCache(salesOverviewBean.month, salesOverviewBean.year, salesOverviewBean.shop).pieces}" rendered="#{productStatistic.getCurrentProductStatisticCache(salesOverviewBean.shop).pieces gt 0}">
+															<f:convertNumber maxFractionDigits="4" minFractionDigits="0" />
+						                                </h:outputText>
+	                                				</td>
+	                                				
+						                		</tr>
+					                		</ui:fragment>
+					                		
+					                		
+					                	
+					                		<ui:fragment rendered="#{empty salesOverviewBean.shop}">
+
+												<ui:repeat var="shop" value="#{shopBean.shopList}">
+					                		
+						                		<tr>
+						                			<td><h:outputText value="#{shop.name}" /></td>
+						                			<td class="text-peter-river">
+						                				<h:outputText value="#{shop.getCommissionCache(salesOverviewBean.year, salesOverviewBean.month).commission.points}" >
+															<f:convertNumber maxFractionDigits="2" minFractionDigits="0" />
+						                                </h:outputText> <i class="fa fa-star"></i>
+						                			</td>
+						                			<td class="text-peter-river">
+						                				<h:outputText value="#{shop.getCommissionCache(salesOverviewBean.year, salesOverviewBean.month).pointGoal}" >
+															<f:convertNumber maxFractionDigits="2" minFractionDigits="0" />
+						                                </h:outputText> <i class="fa fa-star"></i>
+						                			</td>
+						                			<td>
+						                				<h:outputText value="#{shop.getCommissionCache(salesOverviewBean.year, salesOverviewBean.month).goalAttainment}" >
+															<f:convertNumber maxFractionDigits="4" minFractionDigits="0" />
+						                                </h:outputText> %
+	                                				</td>
+	                                				
+	                                				
+	                                				<ui:repeat var="productStatistic" value="#{productStatisticBean.overviewProductStatisticList}">
+							                			<td>
+							                				<h:outputText value="#{productStatistic.getProductStatisticCache(salesOverviewBean.month, salesOverviewBean.year, shop).pieces}" rendered="#{productStatistic.getCurrentProductStatisticCache(shop).pieces gt 0}">
+																<f:convertNumber maxFractionDigits="4" minFractionDigits="0" />
+							                                </h:outputText>
+		                                				</td>
+				                            		</ui:repeat>
+	                                				
+						                		</tr>
+						                		
+						                		</ui:repeat>
+					                		</ui:fragment>
+					                	
+					                		
+					                		
+					                	</tbody>
+				                	</table>
+				                </div>
+					    		
+					    		
+					    		
+	                        	
+	                        </div>
+	
+	                    </div>
+				
+				</ui:fragment>
+				
+			
+			</div>
+		</div>
+			
+		
+		
+          </h:panelGroup>    
+          
+          <script>
+
+                    var data = [
+                                
+                           		<ui:repeat var="key" value="#{salesOverviewBean.kategorySummaryMap.keySet().toArray()}" >
+                           		
+                           		{
+                                    label: "#{salesOverviewBean.kategorySummaryMap.get(key).name} (#{salesOverviewBean.kategorySummaryMap.get(key).count})",
+                                    data: #{salesOverviewBean.kategorySummaryMap.get(key).count},
+                                    color: "#{helperBean.getCssColorAsHex( salesOverviewBean.kategorySummaryMap.get(key).color )}"
+                                },
+                           		
+                           		</ui:repeat>
+                                        
+                            ];
+
+        </script>      
+		
+		<div class="row">
+			<h:form id="salesOverviewForm">
+                <div class="col-lg-12">
+                    
+                </div>
+                </h:form>
+            </div>
+            
+            <div class="row">
+            	<h:panelGroup id="commissionActivityList">
+                <div class="col-lg-12">
+                    <div class="ibox">
+                        <div class="ibox-title">
+                            <h5>Korrekturbuchungen im #{salesOverviewBean.month lt 0 ? 'Jahr' : helperBean.getMonthName(salesOverviewBean.month)  } #{salesOverviewBean.year}</h5>
+                            <div class="ibox-tools">
+                            </div>
+                        </div>
+                        <div class="ibox-content">
+                        
+				    		<h:panelGroup rendered="#{salesOverviewBean.commissionActivityList.size() == 0}">
+				                	<p>Keine Buchungen vorhanden.</p>
+				            </h:panelGroup>
+				    		
+				    		<h:panelGroup rendered="#{salesOverviewBean.commissionActivityList.size() > 0}">
+
+                            <div class="table-responsive">
+				                <h:dataTable value="#{salesOverviewBean.commissionActivityList}" var="item" class="table table-striped" >
+						
+									<h:column>
+										<h:panelGroup rendered="#{item.enabled}"><i class="fa fa-check-square-o"></i></h:panelGroup>
+										<h:panelGroup rendered="#{not item.enabled}"><i class="fa fa-square-o"></i></h:panelGroup>
+									</h:column>
+									<h:column>
+										<f:facet name="header">Kunde</f:facet>
+										<h:outputText value="#{item.customer.name}" />
+										
+										<ui:fragment rendered="#{item['class'].simpleName == 'BaseContractCancellationEntity'}">
+											<br/>
+											Ext. KdNr.: <h:outputText rendered="#{not empty item.contract.externalCustomer}" value="#{item.contract.externalCustomer.customerId}" />
+										</ui:fragment>
+										
+									</h:column>
+									<h:column>
+										<f:facet name="header">Info</f:facet>
+										
+										<ui:fragment rendered="#{item['class'].simpleName == 'BaseContractCancellationEntity'}">
+											Vertrag: #{item.contract.id}<br/>
+											Rufnummer: #{item.contract.callingNumber}<br/>
+											Tarif: #{item.contract.cachedTariff.productName}<br/>
+										</ui:fragment>
+										
+									</h:column>
+									<h:column>
+										<f:facet name="header">Filiale</f:facet>
+										<h:outputText value="#{item.shop.name}" />
+									</h:column>
+									<h:column>
+										<f:facet name="header">Mitarbeiter</f:facet>
+										<h:outputText value="#{item.user.name}" />
+									</h:column>
+									<h:column>
+										<f:facet name="header">Notiz</f:facet>
+										<h:outputText value="#{item.note}" />
+									</h:column>
+									<h:column>
+										<f:facet name="header">Datum</f:facet>
+										<h:outputText value="#{item.effectiveDate}" >
+									  		<f:convertDateTime type="date" pattern="dd.MM.yy" timeZone="CET"/>
+									  	</h:outputText>
+									</h:column>
+									<h:column>
+										<f:facet name="header">Punkte</f:facet>
+										<span class="text-red">
+											<h:outputText value="#{item.commission.points}" >
+												<f:convertNumber maxFractionDigits="2" minFractionDigits="2" />
+											</h:outputText>
+											<i class="fa fa-star"></i>
+										</span>
+									</h:column>
+									
+									
+									
+									
+								</h:dataTable>
+                            
+                            </div>
+                        
+                        	</h:panelGroup>
+                        	
+                        </div>
+
+                    </div>
+                </div>
+               </h:panelGroup>
+        </div>
+            
+		
+		<div class="row">
+			<h:form id="salesContractForm">
+                <div class="col-lg-12">
+                    <div class="ibox">
+                        <div class="ibox-title">
+                            <h5>Verträge  im #{salesOverviewBean.month lt 0 ? 'Jahr' : helperBean.getMonthName(salesOverviewBean.month)  } #{salesOverviewBean.year}</h5>
+                            <div class="ibox-tools">
+                            </div>
+                        </div>
+                        <div class="ibox-content">
+                        
+				    		<h:panelGroup rendered="#{salesOverviewBean.contractList.size() == 0}">
+				                	<p>Keine Verträge zur Ansicht vorhanden.</p>
+				            </h:panelGroup>
+				    		
+				    		<h:panelGroup rendered="#{salesOverviewBean.contractList.size() > 0}">
+
+                            <div class="table-responsive">
+				                <h:dataTable value="#{salesOverviewBean.contractList}" var="item" class="table table-striped" >
+						
+									<h:column>
+										<ui:fragment rendered="#{item.canceled}">
+											<i class="fa fa-times text-danger"></i>
+										</ui:fragment>
+										<ui:fragment rendered="#{not item.canceled}">
+											<h:panelGroup rendered="#{item.enabled}"><i class="fa fa-check-square-o"></i></h:panelGroup>
+											<h:panelGroup rendered="#{not item.enabled}"><i class="fa fa-square-o"></i></h:panelGroup>
+										</ui:fragment>
+									</h:column>
+									<h:column>
+										<f:facet name="header">Kunde</f:facet>
+										<h:commandLink action="/customer/profile">
+											<f:setPropertyActionListener value="#{item.customer}" target="#{customerBean.selectedCustomer}" />
+											
+											<h:outputText value="#{item.customer.name}" />
+											
+										</h:commandLink>
+									</h:column>
+									<h:column>
+										<f:facet name="header">Ext. KdNr.</f:facet>
+										<h:outputText rendered="#{not empty item.externalCustomer}" value="#{item.externalCustomer.customerId}" />
+									</h:column>
+									<h:column>
+										<f:facet name="header">Rufnummer</f:facet>
+										<h:outputText value="#{item.callingNumber}" />
+									</h:column>
+									<h:column>
+										<f:facet name="header">Art</f:facet>
+										<h:panelGroup rendered="#{item.extensionOfTerm}">
+											VVL
+										</h:panelGroup>
+										<h:panelGroup rendered="#{not item.extensionOfTerm}">
+											BNT
+										</h:panelGroup>
+									</h:column>
+									<h:column>
+										<f:facet name="header">Tarif</f:facet>
+										<h:outputText value="#{item.cachedTariff.productName}" />
+									</h:column>
+									<h:column>
+										<f:facet name="header">Optionen</f:facet>
+										<ui:repeat var="option" value="#{item.cachedTariffOptionList}">
+											<p><h:outputText value="#{option.productName}" /></p> 
+										</ui:repeat>
+									</h:column>
+									<h:column>
+										<f:facet name="header">Filiale</f:facet>
+										<h:outputText value="#{item.shop.name}" />
+									</h:column>
+									<h:column >
+										<f:facet name="header">VO</f:facet>
+										<h:outputText value="#{item.vo.name}" />
+									</h:column>
+									<h:column>
+										<f:facet name="header">Laufzeit</f:facet>
+										<h:outputText value="#{item.effectiveDate}" >
+									  		<f:convertDateTime type="date" pattern="dd.MM.yy" timeZone="CET"/>
+									  	</h:outputText> - 
+										<h:outputText value="#{item.expiryDate}" >
+									  		<f:convertDateTime type="date" pattern="dd.MM.yy" timeZone="CET"/>
+									  	</h:outputText>
+									</h:column>
+									<h:column>
+										<f:facet name="header">Punkte</f:facet>
+										<span class="text-navy">
+											<h:outputText value="#{item.finalCommission.points}" >
+												<f:convertNumber maxFractionDigits="2" minFractionDigits="2" />
+											</h:outputText>
+											<i class="fa fa-star"></i>
+										</span>
+									</h:column>
+									<h:column >
+										<h:commandLink action="/customer/contractView" class="btn btn-sm btn-primary ">
+												<f:setPropertyActionListener value="#{item.customer}" target="#{customerBean.selectedCustomer}" />
+												<f:setPropertyActionListener value="#{item}" target="#{contractBean.selectedContract}" />
+												<i class="fa fa-search"></i>
+										</h:commandLink>
+									</h:column>
+									
+									
+									
+									
+								</h:dataTable>
+                            
+                            </div>
+                        
+                        	</h:panelGroup>
+                        	
+                        </div>
+
+                    </div>
+                </div>
+            </h:form>
+        </div>
+		
+
+
+		
+        
+        <script type="text/javascript">
+	
+
+    $(document).ready(function() {
+        renderCharts();
+    });
+
+    function renderChartsEvent(data){
+    	if(data.status == "success"){
+    		renderCharts();
+    	}
+    }
+    
+
+  //Flot Pie Chart
+  
+  function renderCharts(){
+
+	  if (typeof data[0] !== 'undefined') {
+        var plotObj = $.plot($("#salesDistribution"), data, {
+            series: {
+                pie: {
+                    show: true,
+                }
+            },
+            grid: {
+                hoverable: true
+            },
+            tooltip: true,
+            tooltipOpts: {
+                content: "%p.0%, %s",
+                // show percentages, rounding to 2 decimal places
+                shifts: {
+                    x: 20,
+                    y: 0
+                },
+                defaultTheme: false
+            }
+        });
+	  }
+
+    }
+	
+	</script>
+        
+		</ui:define>
+
+
+	</ui:composition>
+</h:body>
+</html>

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+	  xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+	<h:body>
+	
+		<f:metadata>
+			<f:event listener="#{FEPluginBean.includeICheck}" type="preRenderComponent"></f:event>
+			<f:event listener="#{FEPluginBean.includeChosen}" type="preRenderComponent"></f:event>
+			<f:event listener="#{FEPluginBean.includeDatepicker}" type="preRenderComponent"></f:event>
+			<f:event listener="#{FEPluginBean.includeColorpicker}" type="preRenderComponent"></f:event>
+		</f:metadata>
+	
+    	<ui:composition template="/WEB-INF/template/common/commonLayout.xhtml">
+    		<ui:param name="heading1" value="Mitarbeiter" />
+    		
+    		<ui:define name="content">
+    		
+    		
+    		<div class="row">
+				<div class="col-lg-12">
+					<h:form id="userListForm">
+			            <div class="ibox float-e-margins">
+			                <div class="ibox-title">
+			                    <h5>Mitarbeiter Liste</h5>
+			                    <div class="ibox-tools">
+		            				<h:panelGroup  rendered="#{permissionBean.hasPermission('settings','edit')}">
+			                    
+										<h:commandLink action="user" class="btn btn-xs btn-primary " rendered="#{userBean.userListEditable}">
+											<f:setPropertyActionListener value="" target="#{userBean.selectedUser}" />
+											<i class="fa fa-plus"></i>
+									    </h:commandLink>
+									    
+									    <h:commandLink  class="btn btn-xs btn-primary "  action="#{userBean.toggleUserListEditable}" rendered="#{userBean.userListEditable}">
+										   <f:ajax render="userListForm"/>
+										   <i class="fa fa-times"></i>
+										</h:commandLink>
+									    <h:commandLink  class="btn btn-xs btn-primary " action="#{userBean.toggleUserListEditable}"  rendered="#{not userBean.userListEditable}">
+										   <f:ajax render="userListForm"/>
+										   <i class="fa fa-pencil"></i>
+										</h:commandLink>
+									</h:panelGroup>
+			                    </div>
+			                </div>
+			                <div class="ibox-content">
+			                
+			                <div class="project-list">
+	
+	                                <table class="table table-hover">
+	                                    <tbody>
+	                                    <ui:repeat value="#{userBean.getUserList(true)}" var="u">
+	                                    <tr>
+	                                        <td class="project-status">
+												<h:panelGroup rendered="#{u.enabled}"><i class="fa fa-check-square-o"></i></h:panelGroup>
+												<h:panelGroup rendered="#{not u.enabled}"><i class="fa fa-square-o"></i></h:panelGroup>
+	                                        </td>
+	                                        <td class="project-status">
+												<ui:fragment rendered="#{not empty u.userImage.URI}">
+													<img alt="" src="#{u.userImage.URI}"  style="width: 50px;height: 50px;"/>
+												</ui:fragment>
+	                                        </td>
+	                                        <td class="project-status">
+	                                        	<span class="color-icon color-#{u.color}"> </span>
+	                                        </td>
+	                                        <td class="project-title">
+	                                            #{u.name}
+	                                        </td>
+	                                        <td class="project-completion">
+	                                                <small>Ziel: 
+	                                                <h:outputText value="#{u.pointGoal}" >
+														<f:convertNumber maxFractionDigits="2" minFractionDigits="0" />
+													</h:outputText>
+	                                                </small>
+	                                        </td>
+	                                        <td class="project-completion">
+	                                                <small>WS: 
+	                                                <h:outputText value="#{u.weeklyWorkingTime}" >
+													</h:outputText>
+	                                                </small>
+	                                        </td>
+	                                        <td class="project-completion">
+	                                                <small>TageWoche: 
+	                                                <h:outputText value="#{u.weeklyWorkingDays}" >
+													</h:outputText>
+	                                                </small>
+	                                        </td>
+	                                        <td class="project-completion">
+	                                                <small>h/Tag: 
+	                                                <h:outputText value="#{u.fullDayWorkingTime / 60}" >
+														<f:convertNumber maxFractionDigits="2" minFractionDigits="0" />
+													</h:outputText>
+	                                                </small>
+	                                        </td>
+	                                        <td class="project-completion">
+	                                                <small>Punkte/Provision: 
+	                                                <h:outputText value="#{u.pointsPerCommission}" >
+														<f:convertNumber maxFractionDigits="4" minFractionDigits="0" />
+													</h:outputText>
+	                                                </small>
+	                                        </td>
+	                                        <td class="project-actions">
+												<h:commandLink action="user" class="btn btn-xs btn-primary" rendered="#{userBean.userListEditable and u.id gt 1}">
+													<f:setPropertyActionListener value="#{u}" target="#{userBean.selectedUser}" />
+													<i class="fa fa-pencil"></i> 
+												</h:commandLink>
+	                                        </td>
+	                                    </tr>
+	                                    
+			             				</ui:repeat>
+	                                    </tbody>
+	                                </table>
+	                                
+	                                
+	                                
+	                            </div>
+			                
+			                </div>
+		                </div>
+	                </h:form>
+                </div>
+            </div>
+    		
+            
+    		</ui:define>
+    		
+    		
+    	</ui:composition>
+    </h:body>
+</html>

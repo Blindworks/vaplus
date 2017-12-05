@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+		xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:f="http://java.sun.com/jsf/core"	
+	xmlns:p="http://primefaces.org/ui">
+
+<h:body>
+
+	<ui:composition template="/WEB-INF/template/common/commonLayout.xhtml">
+
+		<ui:param name="heading1" value="Urlaubsanträge" />
+		
+		<ui:define name="content">
+		
+	    <h:form class="form-horizontal" id="vacationRequestForm">
+		
+		<ui:fragment rendered="#{eventBean.selectedVacationRequest.id gt 0}">
+			<div class="row">
+	            
+	            <div class="col-lg-12">
+	                <div class="wrapper wrapper-content animated fadeInUp">
+	
+	                    <div class="ibox">
+	                        <div class="ibox-title">
+									Urlaubsanfrage
+	                            <div class="ibox-tools">
+	                            	<ui:fragment rendered="#{eventBean.selectedVacationRequest.id gt 0}">
+											<h:commandLink class="btn btn-xs btn-primary" action="#{eventBean.clearVacationRequest}" immediate="true" >
+												<i class="fa fa-times"></i>
+										    </h:commandLink>
+									</ui:fragment>
+									
+									<h:commandLink action="#{eventBean.ackVacationRequest}" class="btn btn-xs btn-green " >
+											<i class="fa fa-thumbs-o-up"></i>
+									</h:commandLink>
+									
+									<h:commandLink  action="#{eventBean.denyVacationRequest}" class="btn btn-xs btn-danger " >
+											<i class="fa fa-thumbs-o-down"></i>
+									</h:commandLink>
+									
+	                            </div>
+	                        </div>
+	                        <div class="ibox-content">
+	                        		<div class="form-group">
+										<label class="col-lg-2 control-label">Von</label>
+										<div class="col-lg-10">
+											<p class="form-control-static">
+												#{eventBean.selectedVacationRequest.user.name}
+											</p>
+										</div>
+									</div>
+	                        		<div class="form-group">
+										<label class="col-lg-2 control-label">Status</label>
+										<div class="col-lg-10">
+											<p class="form-control-static">
+												<ui:fragment rendered="#{eventBean.selectedVacationRequest.status == 0}">
+							    					neu
+							    				</ui:fragment>
+							    				<ui:fragment rendered="#{eventBean.selectedVacationRequest.status == 1}">
+							    					akzeptiert
+							    				</ui:fragment>
+							    				<ui:fragment rendered="#{eventBean.selectedVacationRequest.status == 2}">
+							    					abgelehnt
+							    				</ui:fragment>
+							    				<ui:fragment rendered="#{eventBean.selectedVacationRequest.status == 3}">
+							    					zurückgezogen
+							    				</ui:fragment>
+											</p>
+										</div>
+									</div>
+	                        
+	                        
+									    				
+	                        
+	                        
+	                        		<div class="form-group">
+										<label class="col-lg-2 control-label">Zeitraum</label>
+										<div class="col-lg-10">
+											<p class="form-control-static">
+												<h:outputText value="#{eventBean.selectedVacationRequest.vacationFrom}" >
+													<f:convertDateTime pattern="dd.MM.yyyy HH:mm" timeZone="CET" />
+												</h:outputText>
+												bis 
+												<h:outputText value="#{eventBean.selectedVacationRequest.vacationTo}" >
+													<f:convertDateTime pattern="dd.MM.yyyy HH:mm" timeZone="CET" />
+												</h:outputText>
+											</p>
+										</div>										
+									</div>
+	                        
+	                        		<div class="form-group">
+										<label class="col-lg-2 control-label">andere Urlaube</label>
+										<div class="col-lg-10">
+											<ui:fragment rendered="#{eventBean.parallelVacations.size() eq 0}">
+												<p class="form-control-static">
+												keine Anderen Urlaube in diesem Zeitraum
+												</p>
+											</ui:fragment>
+											<ui:repeat var="parallelEvent" value="#{eventBean.parallelVacations}">
+												<p class="form-control-static text-danger">
+													<h:outputText value="#{parallelEvent.effectiveDate}" >
+														<f:convertDateTime pattern="dd.MM.yyyy HH:mm" timeZone="CET" />
+													</h:outputText>
+													bis 
+													<h:outputText value="#{parallelEvent.expiryDate}" >
+														<f:convertDateTime pattern="dd.MM.yyyy HH:mm" timeZone="CET" />
+													</h:outputText>
+													 von <h:outputText value="#{parallelEvent.user.name}" />
+												</p>
+											</ui:repeat>
+										</div>										
+									</div>
+	                        
+									<div class="form-group">
+										<label class="col-lg-2 control-label">Kommentar</label>
+										<div class="col-lg-10">
+											<p class="form-control-static">
+												<h:outputText value="#{eventBean.selectedVacationRequest.creatorNote}"/>
+											</p>
+										</div>
+									</div>
+	                        
+									<div class="form-group">
+										<label class="col-lg-2 control-label">Antwort</label>
+										<div class="col-lg-10">
+											<h:inputTextarea value="#{eventBean.selectedVacationRequest.managerNote}" class="form-control" rows="8"/>
+										</div>
+									</div>
+									
+									<ui:fragment rendered="#{not empty eventBean.selectedVacationRequest.event}">
+		                        		<div class="form-group">
+											<label class="col-lg-2 control-label">geplanter Urlaub</label>
+											<div class="col-lg-10">
+												<p class="form-control-static">
+													<h:outputText value="#{eventBean.selectedVacationRequest.event.effectiveDate}" >
+														<f:convertDateTime pattern="dd.MM.yyyy HH:mm" timeZone="CET" />
+													</h:outputText> 
+													bis 
+													<h:outputText value="#{eventBean.selectedVacationRequest.event.expiryDate}" >
+														<f:convertDateTime pattern="dd.MM.yyyy HH:mm" timeZone="CET" />
+													</h:outputText>
+												</p>
+											</div>
+											
+										</div>
+									</ui:fragment>
+
+	                        </div>
+	                    </div>
+	                </div>
+	            </div>
+	        </div>
+	    </ui:fragment>
+		
+			<div class="row">
+	            
+	            <div class="col-lg-12">
+	            	
+	                <div class="wrapper wrapper-content animated fadeInUp">
+						<h:panelGroup id="userHolidayList" >
+							<h:panelGroup rendered="#{not empty eventBean.selectedVacationRequest.user}">
+			                    <div class="ibox">
+			                        <div class="ibox-title">
+											Urlaubsanträge
+			                            <div class="ibox-tools">
+			                            
+			                            
+			                            </div>
+			                        </div>
+			                        <div class="ibox-content">
+			                        	<h:panelGroup rendered="#{eventBean.getAllVacationRequestList().size() eq 0}">
+			                        		bisher keine Urlaubsanträge gestellt
+			                        	</h:panelGroup>
+			                        	<h:panelGroup rendered="#{eventBean.getAllVacationRequestList().size() gt 0}">
+			                        		
+				                        		<h:dataTable class="table table-striped" value="#{eventBean.getAllVacationRequestList()}" var="vacationRequest">
+									
+													<h:column>
+									    				<f:facet name="header">von</f:facet>
+									    				<h:outputText value="#{vacationRequest.user.name}" >
+															<f:convertDateTime type="date" pattern="dd.MM.yy HH:mm" timeZone="CET"/>
+														</h:outputText>
+									    			</h:column>
+									
+													<h:column>
+									    				<f:facet name="header">beantragt</f:facet>
+									    				<h:outputText value="#{vacationRequest.creationDate}" >
+															<f:convertDateTime type="date" pattern="dd.MM.yy HH:mm" timeZone="CET"/>
+														</h:outputText>
+									    			</h:column>
+									
+													<h:column>
+									    				<f:facet name="header">ab</f:facet>
+									    				<h:outputText value="#{vacationRequest.vacationFrom}" >
+															<f:convertDateTime type="date" pattern="dd.MM.yy HH:mm" timeZone="CET"/>
+														</h:outputText>
+									    			</h:column>
+									    			
+													<h:column>
+									    				<f:facet name="header">bis</f:facet>
+									    				<h:outputText value="#{vacationRequest.vacationTo}" >
+															<f:convertDateTime type="date" pattern="dd.MM.yy HH:mm" timeZone="CET"/>
+														</h:outputText>
+									    			</h:column>
+									    			
+													<h:column>
+									    				<f:facet name="header">Urlaubstage</f:facet>
+									    				<h:outputText value="#{eventBean.getVacationDays(vacationRequest)}"/>
+									    			</h:column>
+									    			
+													<h:column>
+									    				<f:facet name="header">Status</f:facet>
+									    				<ui:fragment rendered="#{vacationRequest.status == 0}">
+									    					neu
+									    				</ui:fragment>
+									    				<ui:fragment rendered="#{vacationRequest.status == 1}">
+									    					akzeptiert
+									    				</ui:fragment>
+									    				<ui:fragment rendered="#{vacationRequest.status == 2}">
+									    					abgelehnt
+									    				</ui:fragment>
+									    				<ui:fragment rendered="#{vacationRequest.status == 3}">
+									    					zurückgezogen
+									    				</ui:fragment>
+									    			</h:column>
+									    			
+													<h:column>
+													
+														<h:commandLink action="#{eventBean.setSelectedVacationRequest(vacationRequest)}" class="btn btn-sm btn-primary pull-right ">
+																<i class="fa fa-pencil"></i>
+														</h:commandLink>
+									    			</h:column>
+	
+												</h:dataTable>
+											
+			                        	</h:panelGroup>
+			                        </div>
+			                    </div>
+	                    	</h:panelGroup>
+	                    </h:panelGroup>
+	                </div>
+	            </div>
+	        </div>
+		
+		</h:form>
+
+		</ui:define>
+
+
+	</ui:composition>
+</h:body>
+</html>

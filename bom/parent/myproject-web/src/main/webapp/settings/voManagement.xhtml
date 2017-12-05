@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+	  xmlns:f="http://java.sun.com/jsf/core"
+		xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:p="http://primefaces.org/ui">
+
+	<h:body>
+	
+	<f:metadata>
+		<f:event listener="#{FEPluginBean.includePeity}" type="preRenderComponent"></f:event>
+		<f:event listener="#{FEPluginBean.includeChosen}" type="preRenderComponent"></f:event>
+	</f:metadata>
+	
+    	<ui:composition template="/WEB-INF/template/common/commonLayout.xhtml">
+    		<ui:param name="heading1" value="VO Management" />
+    		
+    		<ui:define name="headingContent">
+				<h:form class="form-horizontal" id="headerToolbar">
+		    		<div class="form-group">
+						<label class="col-sm-2 control-label">Anbieter:</label>
+						<div class="col-sm-10">
+							<h:selectOneMenu a:data-placeholder="Anbieter wählen ..."
+										value="#{VOBean.selectedVendor}"
+										class="chosen-select form-control" converter="#{vendorConverter}" style="width:350px;">
+										<f:selectItem itemValue="" itemLabel=""/>
+										<f:selectItems value="#{productBean.vendorList}" var="vendor"
+											itemValue="#{vendor}" itemLabel="#{vendor.name}" />
+								<f:ajax render="voForm voTypePanel" event="change" />
+							</h:selectOneMenu>
+						</div>
+					</div>
+				</h:form>
+    		</ui:define>
+    		
+    		<ui:define name="content">
+    		<h:panelGroup id="voTypePanel">
+    		
+    		<h:panelGroup rendered="#{productBean.vendorList.size() == 0}">
+				<div class="alert alert-danger">
+                	<strong>Bitte zuerst mind. einen Anbieter anlegen.</strong>
+                </div>
+            </h:panelGroup>
+    		<h:panelGroup rendered="#{productBean.vendorList.size() > 0}">
+    			
+    			
+    			<h:panelGroup rendered="#{empty VOBean.selectedVendor}">
+					<div class="alert alert-danger">
+	                	<strong>Bitte einen Anbieter auswählen.</strong>
+	                </div>
+    			</h:panelGroup>
+    		
+    			<h:panelGroup rendered="#{not empty VOBean.selectedVendor}">
+    		
+    		
+    		<div class="row">
+				<div class="col-lg-7">
+					<h:form id="voForm">
+			            <div class="ibox float-e-margins">
+			                <div class="ibox-title">
+			                    <h5>VO Liste</h5>
+			                    <div class="ibox-tools">
+		            				<h:panelGroup  rendered="#{permissionBean.hasPermission('settings','edit')}">
+										<h:commandLink action="vo" class="btn btn-xs btn-primary " rendered="#{VOBean.voListEditable}">
+											<f:setPropertyActionListener value="" target="#{VOBean.selectedVO}" />
+											<i class="fa fa-plus"></i>
+									    </h:commandLink>
+									    
+									    <h:commandLink  class="btn btn-xs btn-primary " immediate="true"  action="#{VOBean.toggleVoListEditable}" rendered="#{VOBean.voListEditable}">
+										   <f:ajax render="voForm"/>
+										   <i class="fa fa-times"></i>
+										</h:commandLink>
+									    <h:commandLink  class="btn btn-xs btn-primary " action="#{VOBean.toggleVoListEditable}"  rendered="#{not VOBean.voListEditable}">
+										   <f:ajax render="voForm"/>
+										   <i class="fa fa-pencil"></i>
+										</h:commandLink>
+									</h:panelGroup>
+			                    </div>
+			                </div>
+			                <div class="ibox-content">
+			                
+			                
+			                
+								<h:panelGroup
+									rendered="#{VOBean.getVOList().size() == 0}">
+									<p>Keine VOs vorhanden.</p>
+								</h:panelGroup>
+			                
+					    		<h:dataTable value="#{VOBean.getVOList()}" var="vo" rendered="#{VOBean.getVOList().size() > 0}"
+					    			styleClass="table table-hover"
+	    		>
+	 
+									<h:column>
+										<h:panelGroup rendered="#{vo.enabled}"><i class="fa fa-check-square-o"></i></h:panelGroup>
+										<h:panelGroup rendered="#{not vo.enabled}"><i class="fa fa-square-o"></i></h:panelGroup>
+									</h:column>
+									
+					    			<h:column>
+					    				<f:facet name="header">Alias</f:facet>
+					    				#{vo.name}
+					    			</h:column>
+					    			
+					    			<h:column>
+					    				<f:facet name="header">VO</f:facet>
+					    				#{vo.number}
+					    			</h:column>
+					    			
+					    			<h:column>
+					    				<f:facet name="header">VO Gruppe</f:facet>
+					    				#{vo.voType}
+					    			</h:column>
+					    			
+					    			<h:column>
+					    				<f:facet name="header">Filiale</f:facet>
+					    				#{vo.shop}
+					    			</h:column>
+					    			
+					    			<h:column>
+					    				<f:facet name="header">Anbieter</f:facet>
+					    				#{vo.vendor}
+					    			</h:column>
+					 
+					    			<h:column>
+										<h:commandLink action="vo" class="btn btn-xs btn-primary " rendered="#{VOBean.voListEditable}">
+											<f:setPropertyActionListener value="#{vo}" target="#{VOBean.selectedVO}" />
+											<i class="fa fa-pencil"></i> 
+									    </h:commandLink>
+					    			</h:column>
+					 
+					    		</h:dataTable>
+			                </div>
+			            </div>
+		            </h:form>
+		        </div>
+				<div class="col-lg-5">
+					<h:form id="voTypeForm">
+			            <div class="ibox float-e-margins">
+			                <div class="ibox-title">
+			                    <h5>VO Gruppen </h5>
+			                    <div class="ibox-tools">
+		            				<h:panelGroup  rendered="#{permissionBean.hasPermission('settings','edit')}">
+										<h:commandLink action="voType" actionListener="#{VOBean.newVOTypeRevenueLevel}" class="btn btn-xs btn-primary " rendered="#{VOBean.voTypeListEditable}">
+											<i class="fa fa-plus"></i> AU/GU
+									    </h:commandLink>
+									    
+										<h:commandLink action="voType" actionListener="#{VOBean.newVOTypeProductCommission}" class="btn btn-xs btn-primary " rendered="#{VOBean.voTypeListEditable}">
+											<i class="fa fa-plus"></i> SoKo
+									    </h:commandLink>
+									    
+									    <h:commandLink  class="btn btn-xs btn-primary " immediate="true"  action="#{VOBean.toggleVoTypeListEditable}" rendered="#{VOBean.voTypeListEditable}">
+										   <f:ajax render="voTypeForm"/>
+										   <i class="fa fa-times"></i>
+										</h:commandLink>
+									    <h:commandLink  class="btn btn-xs btn-primary " action="#{VOBean.toggleVoTypeListEditable}"  rendered="#{not VOBean.voTypeListEditable}">
+										   <f:ajax render="voTypeForm"/>
+										   <i class="fa fa-pencil"></i>
+										</h:commandLink>
+									</h:panelGroup>
+			                    </div>
+			                </div>
+			                <div class="ibox-content">
+			                
+			                
+								<h:panelGroup
+									rendered="#{VOBean.getVOTypeList().size() == 0}">
+									<p>Keine VO Gruppen vorhanden.</p>
+								</h:panelGroup>
+			                
+					    		<h:dataTable value="#{VOBean.getVOTypeList()}" var="voType" rendered="#{VOBean.getVOTypeList().size() > 0}"
+					    			styleClass="table table-hover"
+	    		>
+	 
+									<h:column>
+										<h:panelGroup rendered="#{voType.enabled}"><i class="fa fa-check-square-o"></i></h:panelGroup>
+										<h:panelGroup rendered="#{not voType.enabled}"><i class="fa fa-square-o"></i></h:panelGroup>
+									</h:column>
+								
+					    			<h:column>
+					    				<f:facet name="header">Alias</f:facet>
+					    				#{voType.name}
+					    			</h:column>
+					    			
+					    			<h:column>
+					    				<f:facet name="header">Typ</f:facet>
+					    				#{VOBean.getVOTypeShortType(voType)}
+					    			</h:column>
+					    			
+									<h:column >
+										<f:facet name="header">Punkte / Prov.</f:facet>
+										<h:outputText value="#{voType.pointsPerCommission}" >
+											<f:convertNumber maxFractionDigits="4" minFractionDigits="0" />
+										</h:outputText>
+									</h:column>
+					    			
+					 
+					    			<h:column>
+										<h:commandLink action="voType" class="btn btn-xs btn-primary " rendered="#{VOBean.voTypeListEditable}">
+											<f:setPropertyActionListener value="#{voType}" target="#{VOBean.selectedVOType}" />
+											<i class="fa fa-pencil"></i> 
+									    </h:commandLink>
+					    			</h:column>
+					 
+					 
+					    		</h:dataTable>
+			                </div>
+			            </div>
+		            </h:form>
+		        </div>
+	            
+	            
+	        </div>
+    		
+    			</h:panelGroup>
+    		</h:panelGroup>
+    		
+            </h:panelGroup>
+    		</ui:define>
+    		
+    		
+    	</ui:composition>
+    </h:body>
+</html>

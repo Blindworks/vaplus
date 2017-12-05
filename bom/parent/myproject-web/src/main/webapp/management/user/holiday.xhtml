@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+		xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:f="http://java.sun.com/jsf/core"	
+	xmlns:p="http://primefaces.org/ui">
+
+<h:body>
+
+	<ui:composition template="/WEB-INF/template/common/commonLayout.xhtml">
+
+		<ui:param name="heading1" value="Urlaub" />
+		
+		<ui:define name="content">
+		
+	    <h:form class="form-horizontal" id="holidayForm">
+		
+		
+		<div class="row">
+	            
+	            <div class="col-lg-12">
+	                <div class="wrapper wrapper-content animated fadeInUp">
+	
+	                    <div class="ibox">
+	                        <div class="ibox-title">
+									Urlaub #{holidayBean.selectedHoliday.id gt 0 ? 'ändern' : 'planen'} 
+	                            <div class="ibox-tools">
+	                            	<ui:fragment rendered="#{holidayBean.selectedHoliday.id gt 0}">
+											<h:commandLink class="btn btn-xs btn-danger confirm-btn" action="#{holidayBean.deleteHoliday}" immediate="true" >
+												<i class="fa fa-trash"></i>
+										    </h:commandLink>
+										    
+										    
+										    
+											<h:commandLink class="btn btn-xs btn-primary" action="#{holidayBean.clearHoliday}" immediate="true" >
+												<i class="fa fa-times"></i>
+										    </h:commandLink>
+									</ui:fragment>
+									
+									<h:commandLink id="saveBtn" action="#{holidayBean.saveSelectedHoliday}" class="btn btn-xs btn-primary " >
+											<i class="fa fa-save"></i>
+									</h:commandLink>
+									
+	                            </div>
+	                        </div>
+	                        <div class="ibox-content">
+	                        	
+				                     <div class="form-group">
+										<label class="col-lg-2 control-label">Mitarbeiter</label>
+	                        			<div class="col-lg-10">
+				                        	<h:selectOneMenu id="user" a:data-placeholder="Mitarbeiter wählen ..."
+														value="#{holidayBean.selectedHoliday.user}"
+														validatorMessage="Bitte Mitarbeiter wählen"
+														class="chosen-select-no-single form-control" converter="#{userConverter}"
+														disabled="#{holidayBean.selectedHoliday.id gt 0}" >
+														<f:selectItem itemValue="" itemLabel=""/>
+														<f:selectItems value="#{userBean.userList}" var="user"
+															itemValue="#{user}" itemLabel="#{user.name}" />
+														<f:validateRequired />
+														<f:ajax render="userHolidayList" />
+											</h:selectOneMenu>
+										</div>
+									</div>                        	
+	                        	
+	                        	
+	                        	
+				                     <div class="form-group">
+										<label class="col-lg-2 control-label">ganztägig</label>
+										<div class="col-lg-10">
+											<h:selectBooleanCheckbox id="allDay" class="i-checks" value="#{holidayBean.selectedHoliday.allDay}" >
+												<f:ajax event="change" render="holiday-wrapper" onevent="updatePluginsEvent"  />
+											</h:selectBooleanCheckbox>
+										</div>
+									</div>
+					            
+					            	<h:panelGroup id="holiday-wrapper">
+					            		<h:panelGroup rendered="#{holidayBean.selectedHoliday.allDay}">
+								            <div class="form-group">
+												<label class="col-lg-2 control-label">Zeitraum</label>
+												<div class="col-lg-10">
+													<div class="input-timerange input-group">
+														<h:inputText id="startDate" converterMessage="Startzeit konnte nicht als Datum interpretiert werden." autocomplete="off" class="form-control" value="#{holidayBean.selectedHoliday.effectiveDate}"  a:data-mask="99.99.9999">
+															<f:convertDateTime pattern="dd.MM.yyyy" timeZone="CET" />
+							                             </h:inputText>
+							                             <span class="input-group-addon">bis</span>
+							                             <h:inputText id="endDate" converterMessage="Endzeit konnte nicht als Datum interpretiert werden." autocomplete="off" class="form-control" value="#{holidayBean.selectedHoliday.expiryDate}"  a:data-mask="99.99.9999">
+							                            	<f:convertDateTime pattern="dd.MM.yyyy" timeZone="CET" />
+							                             </h:inputText>
+						                             </div>
+												</div>
+											</div>
+										</h:panelGroup>
+					            		<h:panelGroup rendered="#{not holidayBean.selectedHoliday.allDay}">
+								            <div class="form-group">
+												<label class="col-lg-2 control-label">Zeitraum</label>
+												<div class="col-lg-10">
+													<div class="input-timerange input-group">
+														<h:inputText autocomplete="off" class="form-control" value="#{holidayBean.selectedHoliday.effectiveDate}" >
+															<f:convertDateTime pattern="dd.MM.yyyy HH:mm" timeZone="CET" />
+							                             </h:inputText>
+							                             <span class="input-group-addon">bis</span>
+							                             <h:inputText autocomplete="off" class="form-control" value="#{holidayBean.selectedHoliday.expiryDate}" >
+							                            	<f:convertDateTime pattern="dd.MM.yyyy HH:mm" timeZone="CET" />
+							                             </h:inputText>
+						                             </div>
+												</div>
+											</div>
+										</h:panelGroup>
+									</h:panelGroup>
+									
+									 <div class="form-group">
+										<label class="col-lg-2 control-label">Notizen</label>
+										<div class="col-lg-10">
+											<h:inputTextarea id="note" value="#{holidayBean.selectedHoliday.note}" class="form-control" />
+										</div>
+									</div>
+									
+									
+
+	                        </div>
+	                    </div>
+	                </div>
+	            </div>
+	        </div>
+		
+			<div class="row">
+	            
+	            <div class="col-lg-12">
+	            	
+	                <div class="wrapper wrapper-content animated fadeInUp">
+						<h:panelGroup id="userHolidayList" >
+							<h:panelGroup rendered="#{not empty holidayBean.selectedHoliday.user}">
+			                    <div class="ibox">
+			                        <div class="ibox-title">
+											geplanter Urlaub von #{holidayBean.selectedHoliday.user}
+			                            <div class="ibox-tools">
+			                            
+			                            
+			                            </div>
+			                        </div>
+			                        <div class="ibox-content">
+			                        	<h:panelGroup rendered="#{holidayBean.getHolidayList(holidayBean.selectedHoliday.user).size() eq 0}">
+			                        		bisher kein Urlaub geplant
+			                        	</h:panelGroup>
+			                        	<h:panelGroup rendered="#{holidayBean.getHolidayList(holidayBean.selectedHoliday.user).size() gt 0}">
+			                        		
+				                        		<h:dataTable class="table table-striped" value="#{holidayBean.getHolidayList(holidayBean.selectedHoliday.user)}" var="event">
+									
+													<h:column>
+									    				<f:facet name="header">von</f:facet>
+									    				<h:outputText value="#{event.effectiveDate}" >
+															<f:convertDateTime type="date" pattern="dd.MM.yy HH:mm" timeZone="CET"/>
+														</h:outputText>
+									    			</h:column>
+									    			
+													<h:column>
+									    				<f:facet name="header">bis</f:facet>
+									    				<h:outputText value="#{event.expiryDate}" >
+															<f:convertDateTime type="date" pattern="dd.MM.yy HH:mm" timeZone="CET"/>
+														</h:outputText>
+									    			</h:column>
+									    			
+													<h:column>
+									    				<f:facet name="header">Urlaubstage</f:facet>
+									    				<h:outputText value="#{holidayBean.getVacationDays(event)}"/>
+									    			</h:column>
+									    			
+													<h:column>
+									    				<f:facet name="header">Info</f:facet>
+									    				<h:outputText value="#{event.note.length() gt 50 ? event.note.substring(0,47).concat('...') : event.note}" />
+									    			</h:column>
+									    			
+													<h:column>
+													
+														<h:commandLink action="#{holidayBean.setSelectedHoliday(event)}" class="btn btn-sm btn-primary pull-right ">
+																<i class="fa fa-pencil"></i>
+														</h:commandLink>
+									    			</h:column>
+	
+												</h:dataTable>
+											
+			                        	</h:panelGroup>
+			                        </div>
+			                    </div>
+	                    	</h:panelGroup>
+	                    </h:panelGroup>
+	                </div>
+	            </div>
+	        </div>
+		
+		</h:form>
+
+		</ui:define>
+
+
+	</ui:composition>
+</h:body>
+</html>

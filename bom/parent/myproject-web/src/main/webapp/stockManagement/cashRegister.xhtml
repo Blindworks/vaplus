@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:c="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+	  xmlns:f="http://java.sun.com/jsf/core"
+	  xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:p="http://primefaces.org/ui">
+
+	<h:body>
+	
+	
+    	<ui:composition template="/WEB-INF/template/common/commonLayout.xhtml">
+    		<ui:param name="heading1" value="Kassenstand" />
+    		
+    		<ui:define name="headingContent">
+   		
+				<h:form class="form-horizontal" id="headerToolbar">
+				
+					<h:selectOneMenu a:data-placeholder="Filiale wählen ..."
+								value="#{cashRegisterBean.selectedShop}"
+								class="chosen-select-no-single" converter="#{shopConverter}">
+								<f:selectItems value="#{shopBean.shopList}" var="shop"
+									itemValue="#{shop}" itemLabel="#{shop}" />
+						<f:ajax render="cashRegisterSummaryForm cashRegisterHistory" event="change" />
+					</h:selectOneMenu>
+							
+				</h:form>
+   			</ui:define>
+    		
+    		<ui:define name="content">
+    		
+    		<div class="row">
+				<div class="col-lg-12">
+					<h:form id="cashRegisterSummaryForm">
+			            <div class="ibox float-e-margins">
+			                <div class="ibox-title">
+			                    <h5>Kassenstand</h5>
+			                </div>
+								
+			                <div class="ibox-content">
+			                	<div class="row">
+				               		<ui:repeat var="payment" value="#{paymentBean.paymentList}">
+				               		
+				               			<div class="col-sm-2">
+				               				<h3><h:outputText value="#{payment.name}" /></h3>
+				               				<p>
+				               				<h:outputText value="#{cashRegisterBean.getLastCumulativeSum(payment)}">
+												<f:convertNumber maxFractionDigits="2" minFractionDigits="2" />
+			                                </h:outputText> €
+				               				</p>
+				               				<p>#{cashRegisterBean.getLastPaymentStatus(payment).open ? "offen" : "geschlossen"}</p>
+				               			</div>
+				               		
+				               		</ui:repeat>
+			                	</div>
+			                </div>
+		                </div>
+	                </h:form>
+                </div>
+            </div>
+    		
+    		<div class="row">
+				<div class="col-lg-12">
+			            <div class="ibox float-e-margins">
+			                <div class="ibox-title">
+			                    
+											<h5>Kassenhistorie</h5>
+				
+			                </div>
+								
+			                <div class="ibox-content">
+			                
+			                	<h:form class="form-horizontal">
+				
+									<div class="form-group">
+										<div class="col-sm-3">
+											<h:selectOneMenu 
+														value="#{cashRegisterBean.selectedPayment}"
+														class="chosen-select-no-single form-control"  converter="#{paymentConverter}">
+														<f:selectItems value="#{saleBean.paymentList}" var="payment"
+																	itemValue="#{payment}" itemLabel="#{payment.description}" />
+												<f:ajax render="cashRegisterSummaryForm cashRegisterHistory" event="change" />
+											</h:selectOneMenu>
+										</div>
+										<div class="col-sm-3">
+											<h:selectOneMenu 
+														value="#{cashRegisterBean.selectedMonth}"
+														class="chosen-select-no-single form-control" >
+														<f:selectItems value="#{helperBean.monthList}" var="month" itemLabel="#{helperBean.getMonthName(month)}" />
+												<f:ajax render="cashRegisterSummaryForm cashRegisterHistory" event="change" />
+											</h:selectOneMenu>
+										</div>
+										<div class="col-sm-3">
+											<h:selectOneMenu
+														value="#{cashRegisterBean.selectedYear}"
+														class="chosen-select-no-single form-control" >
+														<f:selectItems value="#{salesOverviewBean.yearList}"  />
+												<f:ajax render="cashRegisterSummaryForm cashRegisterHistory" event="change" />
+											</h:selectOneMenu>
+										</div>
+									</div>
+											
+								</h:form>
+			                
+			                
+			                	<h:dataTable id="cashRegisterHistory" value="#{cashRegisterBean.paymentStatusList}" var="paymentStatus" class="table table-hover">
+					
+									
+									<h:column>
+										<h:outputText value="#{paymentStatus.effectiveDate}" >
+											<f:convertDateTime type="date" pattern="dd.MM.yy HH:mm" timeZone="CET"/>
+										</h:outputText> 
+									</h:column>
+									
+									<h:column>
+										#{paymentStatus.open ? "Öffnung": "Schliessung"}
+									</h:column>
+									
+									<h:column>
+				               				<h:outputText value="#{paymentStatus.cumulativeSum}">
+												<f:convertNumber maxFractionDigits="2" minFractionDigits="2" />
+			                                </h:outputText> €
+									</h:column>
+									
+									<h:column>
+										<h:outputText value="#{paymentStatus.user}" />
+									</h:column>
+									
+									<h:column>
+										<h:outputText escape="false" value="#{helperBean.nl2br(paymentStatus.note)}" />
+									</h:column>
+								</h:dataTable>
+			                
+			                
+			                </div>
+		                </div>
+                </div>
+            </div>
+    		
+    		
+    		
+            
+    		</ui:define>
+    		
+    		
+    	</ui:composition>
+    </h:body>
+</html>

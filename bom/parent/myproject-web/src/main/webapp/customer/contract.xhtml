@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:body>
+
+	<f:metadata>
+		<f:event type="preRenderView" listener="#{customerBean.checkIfCustomerLogged}" />
+	</f:metadata>
+
+
+	<ui:composition template="/WEB-INF/template/common/commonLayout.xhtml">
+	
+		<f:event type="preRenderView" listener="#{login.checkAlreadyLoggedin}" />
+	
+		<ui:param name="heading1" value="#{contractBean.selectedContract.id == 0 ? 'Neuer Vertrag' : 'Vertrag Nr. '.concat(contractBean.selectedContract.id)}" />
+
+		<ui:define name="content">
+
+
+    		<div class="row">
+				<div class="col-lg-12">
+				
+	                <h:form class="form-horizontal" id="contractForm">
+					
+			            <div class="ibox float-e-margins">
+			                <div class="ibox-title">
+			                    <h5>Vertrag Details</h5>
+			                    <div class="ibox-tools">
+			                    	<ui:fragment rendered="#{contractBean.selectedContract.canceled}">
+			                    		<span class="label label-danger pull-right">STORNIERT</span>
+			                    	</ui:fragment>
+			                    </div>
+			                </div>
+			                <div class="ibox-content">
+								
+			                	<h:panelGroup id="contractBaseData">
+									<div class="form-group">
+										<label class="col-sm-2 control-label">VO</label>
+										<div class="col-sm-10">
+											<h:selectOneMenu disabled="#{contractBean.selectedContract.id gt 0 and not permissionBean.isAllowedToChangeContract(contractBean.selectedContract)}" a:data-placeholder="VO wählen ..."
+												value="#{contractBean.selectedContract.vo}"
+												class="chosen-select-no-single-class form-control #{ component.valid ? '' : 'select-error'}"
+												converter="#{vOConverter}"
+												validatorMessage="Bitte VO wählen"
+												id="voSelect">
+												<f:selectItem itemValue="" itemLabel=""/>
+												<f:selectItems value="#{VOBean.getPermittedShopVOList(contractBean.selectedContract.shop)}" var="vo"
+													itemValue="#{vo}" itemLabel="#{vo.name} #{vo.number}" />
+												<f:ajax event="change" listener="#{contractBean.calculateCommission}" render="contractBaseData form-info" onevent="updatePluginsEvent" />
+												<f:validateRequired />
+											</h:selectOneMenu>
+											<h:messages for="voSelect"  />
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-2 control-label">Tarif</label>
+										<div class="col-sm-10">
+											<h:selectOneMenu id="tariffSelect" disabled="#{contractBean.selectedContract.id gt 0 and not permissionBean.isAllowedToChangeContract(contractBean.selectedContract)}" a:data-placeholder="Tarif wählen ..."
+												value="#{contractBean.selectedContract.tariff}"
+												class="chosen-select-no-single-class form-control #{ component.valid ? '' : 'select-error'}"
+												converter="#{baseProductConverter}"
+												validatorMessage="Bitte Tarif wählen">
+												<f:selectItem itemValue="" itemLabel=""/>
+												<f:selectItems value="#{contractBean.tariffList}" var="tariff"
+													itemValue="#{tariff}" itemLabel="#{tariff.name}" />
+												<f:ajax event="change" listener="#{contractBean.calculateCommission}" render="contractBaseData form-info" onevent="updatePluginsEvent" />
+												<f:validateRequired />
+											</h:selectOneMenu>
+											<h:messages for="tariffSelect"  />
+										</div>
+									</div>
+									<div class="form-group">
+											<label class="col-sm-2 control-label"></label>
+											<div class="col-sm-2">
+												<h:selectBooleanCheckbox disabled="#{contractBean.selectedContract.id gt 0 and not permissionBean.isAllowedToChangeContract(contractBean.selectedContract)}"  class="i-checks" value="#{contractBean.selectedContract.extensionOfTerm}" >
+													<f:ajax event="change" listener="#{contractBean.calculateCommission}" render="contractBaseData form-info"  onevent="updatePluginsEvent"/>
+												</h:selectBooleanCheckbox>
+												<label class="control-label"> VVL</label>
+											</div>
+											<div class="col-sm-2">
+												<h:selectBooleanCheckbox disabled="#{contractBean.selectedContract.id gt 0 and not permissionBean.isAllowedToChangeContract(contractBean.selectedContract)}"  class="i-checks" value="#{contractBean.selectedContract.debidCreditChange}" >
+													<f:ajax event="change" listener="#{contractBean.calculateCommission}" render="contractBaseData form-info"  onevent="updatePluginsEvent"/>
+												</h:selectBooleanCheckbox>
+												<label class="control-label"> DC Wechsel</label>
+											</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-2 control-label">Optionen</label>
+										<div class="col-sm-10">
+											<h:selectManyMenu disabled="#{contractBean.selectedContract.id gt 0 and not permissionBean.isAllowedToChangeContract(contractBean.selectedContract)}" a:data-placeholder="Tarif Optionen wählen ..."
+												value="#{contractBean.selectedContract.tariffOptionList}"
+												class="chosen-select form-control"
+												converter="#{baseProductConverter}">
+												<f:selectItems value="#{contractBean.productOptionList}" var="option"
+													itemValue="#{option}" itemLabel="#{option.name}" />
+												<f:ajax event="change" listener="#{contractBean.calculateCommission}" render="contractBaseData form-info" onevent="updatePluginsEvent" />
+											</h:selectManyMenu>
+										</div>
+									</div>
+								</h:panelGroup>
+								
+								
+								<div class="hr-line-dashed"></div>
+								<div class="form-group">
+									<div class="col-sm-4 col-sm-offset-2">
+										<h:commandButton class="btn btn-primary form-control" value="Fremd Ware zubuchen" >
+											<f:setPropertyActionListener target="#{retailProductBean.foreignWare}" value="true" />
+											<f:ajax render="retailProductModalForm" onevent="openRetailProductModal"  />
+										</h:commandButton>
+									</div>
+									<div class="col-sm-3">
+										<ui:fragment rendered="#{not paymentBean.cashRegisterStatus}">
+											<p class="control-label" role="alert">Kasse geschlossen</p>
+										</ui:fragment>
+										
+										<ui:fragment rendered="#{paymentBean.cashRegisterStatus}">
+											<h:commandButton class="btn btn-primary form-control" value="Lager Artikel zubuchen" >
+												<f:setPropertyActionListener target="#{retailProductBean.foreignWare}" value="false" />
+												<f:ajax render="retailProductSalesModalForm" onevent="openRetailProductSalesModal"  />
+											</h:commandButton>
+										</ui:fragment>
+									</div>
+									
+									<div class="col-lg-3">
+										<ui:fragment rendered="#{paymentBean.cashRegisterStatus}">
+											<h:commandButton value="+ freier Artikel" action="#{saleBean.setManualInvoiceItem(null)}" class="btn btn-primary form-control">
+												<f:ajax render="manualInvoiceItemModalForm" onevent="openManualInvoiceItemModal"  />
+												 
+											</h:commandButton>
+										</ui:fragment>
+									</div>
+								</div>
+								
+								
+								<h:panelGroup id="contractRetailItemList">
+								<ui:fragment rendered="#{contractBean.selectedContract.contractRetailItemList.size() gt 0}">
+								<div class="hr-line-dashed"></div>
+									<div class="form-group productList">
+										<label class="col-sm-2 control-label">Fremd Ware</label>
+										<div class="col-sm-10 retailProduct">
+										
+										<ui:repeat var="retailItem" value="#{contractBean.selectedContract.contractRetailItemList}">
+												<div class="retailProduct">
+													<div class="group-item">
+														<div class="col-sm-6">
+															#{retailItem.product.name}
+														</div>
+														<div class="col-sm-6">
+															#{retailItem.serial}
+														</div>
+													</div>
+													<div class="group-button">
+														<h:commandLink class="btn btn-white pull-right" action="#{contractBean.removeRetailItemFromContract(retailItem)}" >
+																<f:ajax render="contractForm:contractRetailItemList contractForm:form-info form-info" onevent="updatePluginsEvent"  />
+																<i class="fa fa-trash"></i>
+															</h:commandLink>
+													</div>
+												</div>
+										</ui:repeat>
+										
+										</div>
+									</div>
+								</ui:fragment>
+								</h:panelGroup>
+								
+	
+								<h:panelGroup id="saleItemList" >
+								<ui:fragment rendered="#{not empty contractBean.selectedContract.subsidyInvoice and contractBean.selectedContract.subsidyInvoice.invoiceItemList.size() gt 0}">
+								<div class="hr-line-dashed"></div>
+									<div class="form-group productList">
+										<label class="col-sm-2 control-label">Lager Ware</label>
+										<div class="col-sm-10">
+										
+										<ui:repeat var="invoiceItem" value="#{contractBean.selectedContract.subsidyInvoice.invoiceItemList}">
+												<div class="retailProduct">
+													<div class="group-item">
+														<div class="col-sm-1">
+															#{invoiceItem.quantity}
+														</div>
+														<div class="col-sm-3">
+															<ui:fragment rendered="#{invoiceItem.manualItem}">
+																<h:commandLink action="#{saleBean.setManualInvoiceItem(invoiceItem)}">
+																	<f:ajax render="manualInvoiceItemModalForm" onevent="openManualInvoiceItemModal"  />
+																	 #{invoiceItem.title}
+																</h:commandLink>
+															</ui:fragment>
+															<ui:fragment rendered="#{not invoiceItem.manualItem}">
+																#{invoiceItem.title}
+															</ui:fragment>
+														</div>
+														<div class="col-sm-2">
+															#{invoiceItem.serial}
+														</div>
+														<div class="col-sm-2 text-right">
+					                        				<h:commandLink rendered="#{not invoiceItem.blockedItem}" action="#{saleBean.setInvoiceItem(invoiceItem)}">
+																<f:ajax render="retailProductPriceModalForm" onevent="openRetailProductPriceModal"  />
+																<h:outputText value="#{invoiceItem.unitGrossPrice}" >
+					                        					<f:convertNumber maxFractionDigits="2" minFractionDigits="2" />
+					                        				</h:outputText> <i class="fa fa-euro"></i>
+															</h:commandLink>
+															<h:panelGroup rendered="#{invoiceItem.blockedItem}">
+																<h:outputText value="#{invoiceItem.unitGrossPrice}" >
+						                        					<f:convertNumber maxFractionDigits="2" minFractionDigits="2" />
+						                        				</h:outputText> <i class="fa fa-euro"></i>
+															</h:panelGroup>
+														</div>
+														<div class="col-sm-2 text-right">
+															<h:outputText value="#{invoiceItem.commission.grossPrice}" >
+					                        					<f:convertNumber maxFractionDigits="2" minFractionDigits="2" />
+					                        				</h:outputText> <i class="fa fa-euro"></i>
+														</div>
+														<div class="col-sm-2 text-right text-navy">
+															<h:outputText value="#{invoiceItem.commission.points}" >
+					                        					<f:convertNumber maxFractionDigits="4" minFractionDigits="0" />
+					                        				</h:outputText> <i class="fa fa-star"></i>
+														</div>
+														
+													</div>
+													<div class="group-button">
+														<h:commandLink rendered="#{invoiceItem.blockedItem}" class="btn btn-white pull-right" action="#{saleBean.disableAutomaticSubsidy()}" >
+																<f:ajax render="contractForm:saleItemList contractForm:form-info form-info" onevent="updatePluginsEvent"  />
+																<i class="fa fa-trash"></i>
+														</h:commandLink>
+														<h:commandLink rendered="#{not invoiceItem.blockedItem}" class="btn btn-white pull-right" action="#{saleBean.removeInvoiceItemFromInvoice(invoiceItem)}" >
+																<f:ajax render="contractForm:saleItemList contractForm:form-info form-info" onevent="updatePluginsEvent"  />
+																<i class="fa fa-trash"></i>
+														</h:commandLink>
+													</div>
+												</div>
+										</ui:repeat>
+										
+										</div>
+									</div>
+								<div class="form-group">
+									<div class="col-sm-2">
+									</div>
+									<div class="col-sm-10 text-right" >
+										<div style="padding-right: 33px;">
+										<label class="col-sm-6 control-label">Retail Summe:</label>
+										<div class="col-sm-2">
+										</div>
+										<div class="col-sm-2">
+											<p class="form-control-static">
+												<h:outputText value="#{contractBean.selectedContract.subsidyInvoice.commission.price.add(contractBean.selectedContract.subsidyInvoice.commission.vat)}">
+													<f:convertNumber maxFractionDigits="2" minFractionDigits="2" />
+												</h:outputText>
+												 <i class="fa fa-euro"></i>
+											</p>
+										</div>
+										<div class="col-sm-2">
+											<p class="form-control-static text-navy">
+												<h:outputText value="#{contractBean.selectedContract.subsidyInvoice.commission.points}">
+													<f:convertNumber maxFractionDigits="4" minFractionDigits="0" />
+												</h:outputText>
+												 <i class="fa fa-star"></i>
+											</p>
+										</div>
+										</div>
+									
+									</div>
+								
+								</div>
+								</ui:fragment>
+								</h:panelGroup>
+								
+								
+								
+								<div class="hr-line-dashed"></div>
+								
+								<div class="form-group">
+									<label class="col-sm-2 control-label">KdNr. / ARC</label>
+									<div class="col-sm-4">
+										
+									<h:inputText id="extCustomerId" disabled="#{contractBean.selectedContract.id gt 0 and not permissionBean.isAllowedToChangeContract(contractBean.selectedContract)}" value="#{contractBean.selectedContract.externalCustomer.customerId}" autocomplete="off"
+											class="form-control #{ component.valid ? '' : 'error'}" validatorMessage="Bitte Kundennummer prüfen" >
+											<f:validateLength minimum="2" maximum="255" />
+											<f:ajax event="blur" listener="#{contractBean.changeExternalCustomerId}" render="customerPassword" />
+									</h:inputText>
+									<h:messages for="extCustomerId"  />
+										
+										
+									</div>
+									<label class="col-sm-2 control-label">Kennwort</label>
+									<div class="col-sm-4">
+										<h:inputText id="customerPassword" disabled="#{contractBean.selectedContract.id gt 0 and not permissionBean.isAllowedToChangeContract(contractBean.selectedContract) || contractBean.selectedContract.externalCustomer.id gt 0}" value="#{contractBean.selectedContract.externalCustomer.password}" autocomplete="off"
+											class="form-control #{ component.valid ? '' : 'error'}" validatorMessage="Bitte Kennwort prüfen" >
+											<f:validateRequired disabled="#{not empty contractBean.selectedContract.tariff and contractBean.selectedContract.tariff.askForOrderNumber()}" />
+										</h:inputText>
+										<h:messages for="customerPassword"  />
+									</div>
+								</div>
+								
+								
+								<div class="form-group">
+									<label class="col-sm-2 control-label">Rufnummer</label>
+									<div class="col-sm-4">
+										<h:inputText id="callingNumber" disabled="#{contractBean.selectedContract.id gt 0 and not permissionBean.isAllowedToChangeContract(contractBean.selectedContract)}" validatorMessage="Bitte Rufnummer prüfen" value="#{contractBean.selectedContract.callingNumber}" class="form-control numeric_only #{ component.valid ? '' : 'error'}" autocomplete="off">
+											<f:validateRequired disabled="#{contractBean.selectedContract.tariff['class'].simpleName == 'LandlineTariffEntity'}" />
+										</h:inputText>
+										<h:messages for="callingNumber"  />
+									</div>
+									<label class="col-sm-2 control-label">Tln. Kennwort</label>
+									<div class="col-sm-4">
+										<h:inputText disabled="#{contractBean.selectedContract.id gt 0 and not permissionBean.isAllowedToChangeContract(contractBean.selectedContract)}" value="#{contractBean.selectedContract.userPassword}" autocomplete="off"
+											class="form-control" >
+										</h:inputText>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-2 control-label">RV-Nummer</label>
+									<div class="col-sm-4" id="testfield">
+										<h:inputText
+										 	disabled="#{contractBean.selectedContract.id gt 0 and not permissionBean.isAllowedToChangeContract(contractBean.selectedContract)}"
+											value="#{contractBean.selectedContract.frameworkContractId}"
+											class="form-control" autocomplete="off" >
+										</h:inputText>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-2 control-label">Interne Info</label>
+									<div class="col-sm-10">
+										<h:inputTextarea rows="5"  disabled="#{contractBean.selectedContract.id gt 0 and not permissionBean.isAllowedToChangeContract(contractBean.selectedContract)}"
+											value="#{contractBean.selectedContract.info}"
+											class="form-control" autocomplete="off" >
+										</h:inputTextarea>
+									</div>
+								</div>
+		
+								<div class="form-group">
+									<label class="col-sm-2 control-label">Aktivierung</label>
+									<div class="col-sm-4 date #{contractBean.selectedContract.id gt 0 and not permissionBean.isAllowedToChangeContract(contractBean.selectedContract) ? '' : 'datepicker'}">
+										<span class="input-group-addon" style="display: none;">
+											<i class="fa fa-calendar"></i>
+										</span>
+										
+										<h:inputText  disabled="#{contractBean.selectedContract.id gt 0 and not permissionBean.isAllowedToChangeContract(contractBean.selectedContract)}" value="#{contractBean.selectedContract.effectiveDate}" class="form-control" a:data-mask="99.99.9999" >
+											<f:convertDateTime pattern="dd.MM.yyyy" timeZone="CET" />
+										</h:inputText>
+									</div>
+									<label class="col-sm-2 control-label">Vorlaufzeit</label>
+									<div class="col-sm-4">
+										
+										<h:selectOneMenu value="#{contractBean.selectedContract.leadTime}" class="chosen-select-no-single form-control" disabled="#{contractBean.selectedContract.id gt 0 and not permissionBean.isAllowedToChangeContract(contractBean.selectedContract)}" >
+											<f:selectItem itemValue="0" itemLabel="keine"/>
+											<f:selectItem itemValue="1" itemLabel="1 Monat"/>
+											<f:selectItem itemValue="2" itemLabel="2 Monate"/>
+											<f:selectItem itemValue="3" itemLabel="3 Monate"/>
+											<f:selectItem itemValue="4" itemLabel="4 Monate"/>
+											<f:selectItem itemValue="5" itemLabel="5 Monate"/>
+											<f:selectItem itemValue="6" itemLabel="6 Monate"/>
+											<f:selectItem itemValue="7" itemLabel="7 Monate"/>
+											<f:selectItem itemValue="8" itemLabel="8 Monate"/>
+											<f:selectItem itemValue="9" itemLabel="9 Monate"/>
+											<f:selectItem itemValue="10" itemLabel="10 Monate"/>
+											<f:selectItem itemValue="11" itemLabel="11 Monate"/>
+											<f:selectItem itemValue="12" itemLabel="12 Monate"/>
+										</h:selectOneMenu>
+										
+									</div>
+		
+		
+								</div>
+		
+		
+								<div class="form-group">
+		
+									<label class="col-sm-2 control-label">Mitarbeiter</label>
+									<div class="col-sm-4">
+										<h:selectOneMenu  disabled="#{contractBean.selectedContract.id gt 0 and not permissionBean.isAllowedToChangeContract(contractBean.selectedContract)}" a:data-placeholder="Mitarbeiter wählen ..."
+											value="#{contractBean.selectedContract.user}"
+											class="chosen-select-no-single form-control" converter="#{userConverter}">
+											<f:selectItem itemValue="" itemLabel=""/>
+											<f:selectItems value="#{userBean.userList}" var="user"
+												itemValue="#{user}" itemLabel="#{user.name}" />
+											<f:ajax event="change" listener="#{contractBean.calculateCommission}" render="contractBaseData form-info" onevent="updatePluginsEvent" />
+										</h:selectOneMenu>
+									</div>
+									<div class="col-sm-6">
+									<h:panelGroup id="payment_selector">
+									<div class="form-group">
+		
+									<ui:fragment rendered="#{not empty contractBean.selectedContract.subsidyInvoice and contractBean.selectedContract.subsidyInvoice.invoiceItemList.size() gt 0}">
+										<label class="col-sm-4 control-label">Zahlungsart</label>
+										<div class="col-sm-8">
+											<h:selectOneMenu id="payment" a:data-placeholder="Zahlungsart wählen ..."
+												value="#{saleBean.invoice.payment}"
+												validatorMessage="Bitte Zahlungsart wählen"
+												class="chosen-select-no-single form-control  #{ component.valid ? '' : 'select-error'}" converter="#{paymentConverter}">
+												<f:selectItem itemValue="" itemLabel=""/>
+												<f:selectItems value="#{saleBean.paymentList}" var="payment"
+													itemValue="#{payment}" itemLabel="#{payment.description}" />
+												<f:validateRequired />
+											</h:selectOneMenu>
+											<h:messages for="payment"  />
+										</div>
+									</ui:fragment>
+									</div>
+									</h:panelGroup>
+									</div>
+		
+								</div>
+		
+								<h:panelGroup id="form-info">
+								
+									<div class="form-group">
+											<label class="col-sm-2 control-label">Punkte</label>
+											<div class="col-sm-4">
+												<p class="form-control-static  text-navy">
+													<h:outputText value="#{contractBean.pointSumOfContractAndInvoice}" >
+														<f:convertNumber maxFractionDigits="4" minFractionDigits="0" />
+													</h:outputText>
+													 <i class="fa fa-star"></i>
+												</p>
+												
+											</div>
+											
+											<label class="col-sm-2 control-label">mtl. Preis</label>
+											<div class="col-sm-4">
+												<p class="form-control-static  text-navy">
+													<h:outputText value="#{contractBean.selectedContract.finalCommission.grossPrice}" >
+														<f:convertNumber maxFractionDigits="2" minFractionDigits="2" />
+													</h:outputText>
+													 <i class="fa fa-euro"></i>
+												</p>
+											</div>
+									</div>
+									</h:panelGroup>
+									<h:panelGroup rendered="false">
+									<hr />
+									<div class="form-group">
+										<label class="col-sm-2 control-label">Vertrags Punkte</label>
+										<div class="col-sm-1">
+											<label class="control-label">Vertrags Punkte</label>
+											<p class="form-control-static  text-navy">
+												<h:outputText value="#{contractBean.selectedContract.finalCommission.points}" >
+													<f:convertNumber maxFractionDigits="4" minFractionDigits="0" />
+												</h:outputText>
+												 <i class="fa fa-star"></i>
+											</p>
+											
+										</div>
+										<label class="col-sm-2 control-label">Retail Punkte</label>
+										<div class="col-sm-1">
+											<p class="form-control-static  text-navy">
+												<h:outputText value="#{contractBean.selectedContract.subsidyInvoice.commission.points}" rendered="#{not empty contractBean.selectedContract.subsidyInvoice}">
+													<f:convertNumber maxFractionDigits="4" minFractionDigits="0" />
+												</h:outputText>
+													<h:outputText value="0" rendered="#{empty contractBean.selectedContract.subsidyInvoice}" />
+												 <i class="fa fa-star"></i>
+											</p>
+											
+										</div>
+										
+										<label class="col-sm-2 control-label">AU / GU</label>
+										<div class="col-sm-2">
+											<p class="form-control-static  text-navy">
+												<h:outputText value="#{contractBean.selectedContract.revenueStepCommission.grossPrice}" >
+													<f:convertNumber maxFractionDigits="2" minFractionDigits="2" />
+												</h:outputText>
+												 <i class="fa fa-euro"></i>
+											</p>
+										</div>
+										
+										<label class="col-sm-2 control-label">generierter Umsatz</label>
+										<div class="col-sm-2">
+											<p class="form-control-static  text-navy">
+												<h:outputText value="#{contractBean.selectedContract.generatedRevenue}" >
+													<f:convertNumber maxFractionDigits="2" minFractionDigits="2" />
+												</h:outputText>
+												 <i class="fa fa-euro"></i>
+											</p>
+										</div>
+										
+										
+										
+										<label class="col-sm-2 control-label"> NETTO mtl. Preis</label>
+										<div class="col-sm-2">
+											<p class="form-control-static  text-navy">
+												<h:outputText value="#{contractBean.selectedContract.finalCommission.price}" >
+													<f:convertNumber maxFractionDigits="2" minFractionDigits="2" />
+												</h:outputText>
+												 <i class="fa fa-euro"></i>
+											</p>
+										</div>
+										
+										</div>
+										<div class="form-group">
+										
+										<label class="col-sm-2 control-label">NETTO AU / GU</label>
+										<div class="col-sm-2">
+											<p class="form-control-static  text-navy">
+												<h:outputText value="#{contractBean.selectedContract.revenueStepCommission.price}" >
+													<f:convertNumber maxFractionDigits="2" minFractionDigits="2" />
+												</h:outputText>
+												 <i class="fa fa-euro"></i>
+											</p>
+										</div>
+										
+										
+									</div>
+								</h:panelGroup>
+		
+								<div class="hr-line-dashed"></div>
+		
+		
+		
+		
+								<div class="form-group">
+									<div class="col-sm-12 text-right ">
+										<h:commandLink value="stornieren" action="#{contractBean.cancelContract}" class="btn btn-danger " rendered="#{contractBean.selectedContract.id gt 0 and permissionBean.isAllowedToCancelContract(contractBean.selectedContract)}" />
+										<div class="spacer"></div>
+										<h:commandLink value="speichern und neu" action="#{contractBean.saveContractAndCreateNew}" class="btn btn-primary " rendered="#{not contractBean.selectedContract.canceled and (contractBean.selectedContract.id == 0 or permissionBean.isAllowedToChangeContract(contractBean.selectedContract))}" />
+										<div class="spacer"></div>		
+										<h:commandLink value="speichern" action="#{contractBean.saveContract}" class="btn btn-primary " rendered="#{not contractBean.selectedContract.canceled and (contractBean.selectedContract.id == 0 or permissionBean.isAllowedToChangeContract(contractBean.selectedContract))}" />
+											
+										
+									</div>
+								</div>
+					                
+			                
+			                </div>
+            			</div>
+            			
+	                </h:form>
+            			
+    			</div>
+    		</div>
+			<h:outputScript>
+			
+			
+			function loadAutocomplete(){
+			
+				$("#contractForm\\:extCustomerId").autocomplete({
+			        source: [
+			        <ui:repeat var="externalCustomer" value="#{customerBean.externalCustomerList}">
+            			"#{externalCustomer.customerId}", 
+            		</ui:repeat>
+			                 ],
+			        open: function() {
+        				$("#extCustomerIdAutocomplete").width( $(this).innerWidth() );
+    				}
+			    }).data("ui-autocomplete")._renderItem = function (ul, item) {
+		
+			    	ul.attr('id','extCustomerIdAutocomplete');
+			    	ul.attr('class','list-group autocomplete');
+		
+			        return $("<li></li>")
+			        .attr('class','list-group-item')
+			        .append(item.label)
+			        .data("ui-autocomplete-item", item)
+			        .appendTo(ul);
+			    };
+			    $("#contractForm\\:extCustomerId").data("ui-autocomplete")._trigger("change");
+			}
+		  
+		  </h:outputScript>
+		  
+		  
+			<ui:decorate template="/WEB-INF/include/order/retailProductForm.xhtml">
+				<ui:define name="submitButton">
+					<h:commandButton id="submitButton" class="btn btn-primary form-control" value="Hinzufügen" action="#{contractBean.addRetailProduct}" >
+						<f:ajax onevent="closeRetailProductModal" render="retailProductModalForm contractForm:contractRetailItemList contractForm:form-info messages" />
+					</h:commandButton>
+				</ui:define>
+			</ui:decorate>
+		  
+			<ui:decorate template="/WEB-INF/include/order/retailProductPriceForm.xhtml">
+				<ui:param name="item" value="#{saleBean.invoiceItem}" />
+				<ui:define name="checkButton">
+					<h:commandButton class="btn btn-primary" value="check" action="#{saleBean.checkInvoiceItem(saleBean.invoiceItem)}" >
+						<f:ajax render="retailProductPriceModalForm" onevent="priceChanged"/>
+					</h:commandButton>
+				</ui:define>
+				<ui:define name="submitButton">
+					<h:commandButton id="submitButton" class="btn btn-primary" value="anwenden" action="#{saleBean.calculateCommission()}" >
+						<f:ajax onevent="closeRetailProductPriceModal" render="retailProductModalPriceForm contractForm:saleItemList contractForm:form-info messages" />
+					</h:commandButton>
+				</ui:define>
+			</ui:decorate>
+
+
+		<div class="modal inmodal" id="retailProductSalesModal" tabindex="-1"
+			role="dialog" aria-hidden="true" style="display: none;"
+			data-keyboard="true" data-backdrop="static">
+				<div class="modal-dialog">
+					<div class="modal-content animated bounceInRight">
+					<h:form class="form-horizontal" id="retailProductSalesModalForm">
+						<h:inputHidden id="nextFormField" value="#{saleBean.nextFormField}" />
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal">
+								<span aria-hidden="true">×</span><span class="sr-only">Close</span>
+							</button>
+							<i class="fa fa-codepen modal-icon"></i>
+							<h4 class="modal-title">Artikel zubuchen?</h4>
+							<small class="font-bold">Barcode einscannen oder Artikel suchen.</small>
+						</div>
+						<div class="modal-body">
+							<h:messages  class="list-group-item danger"/>
+								
+							<h:inputHidden id="error" value="#{retailProductBean.error}" />
+							<h:inputHidden id="finish" value="#{retailProductBean.finish}" />
+							
+							
+							<div class="form-group">
+	                        		<h:inputText id="ean" 
+	                        			autocomplete="off" 
+	                        			class="chosen-select-no-single form-control col-sm-12" 
+	                        			onkeypress="if (event.keyCode == 13) {$(this).change(); return false; }" 
+	                        			a:placeholder="EAN" 
+	                        			value="#{saleBean.ean}">
+											<f:ajax event="change" listener="#{saleBean.loadProductByEan()}" render="retailProductSalesModalForm messages"  onevent="setInvoiceAddProductFormFocus" />
+									</h:inputText>
+							</div>
+							<div class="form-group">
+							
+	                        		<h:selectOneMenu 
+	                        			id="retailProduct"
+	                        			disabled="#{saleBean.eanProductFound}"
+	                        			onkeydown="return event.keyCode != 13;"
+	                        			a:data-placeholder="Artikel wählen ..."
+													value="#{saleBean.product}"
+													class="chosen-select-no-single form-control col-sm-10"
+													converter="#{baseProductConverter}">
+													<f:selectItem itemValue="" itemLabel=""/>
+													<f:selectItems value="#{saleBean.orderableProductList}" var="product"
+														itemValue="#{product}" itemLabel="#{product.name}" />
+													<f:validateRequired />
+													<f:ajax event="change" listener="#{saleBean.initProduct()}" render="retailProductSalesModalForm messages" onevent="setInvoiceAddProductFormFocus" />
+									</h:selectOneMenu>
+								</div>
+							
+							<h:panelGroup rendered="#{not empty saleBean.product}">
+			                	<div class="form-group">
+									
+										<ui:fragment rendered="#{saleBean.product.serialRequired}">
+											<h:inputText 
+			                        			id="serial"
+			                        			onkeypress="if (event.keyCode == 13) {$(this).change(); return false; }" 
+				                        		onkeydown="if (event.keyCode == 9) {$(this).change(); return false; }" 
+			                        			value="#{saleBean.serial}" 
+			                        			autocomplete="off" 
+			                        			a:placeholder="IMEI / Seriennummer"
+			                        			class="form-control">
+			                        			<f:ajax event="change" listener="#{saleBean.checkSerial}" render="retailProductSalesModalForm invoiceForm messages" onevent="setInvoiceAddProductFormFocus" />
+											</h:inputText>
+										</ui:fragment>
+									
+										<ui:fragment rendered="#{not saleBean.product.serialRequired}">
+			                        		<h:inputText id="quantity" 
+			                        			autocomplete="off" 
+			                        			onkeypress="if (event.keyCode == 13) {$(this).change(); return false; }" 
+					                        		onkeydown="if (event.keyCode == 9) {$(this).change(); return false; }" 
+		                        				class="form-control"
+			                        			value="#{saleBean.quantity}">
+													<f:convertNumber maxFractionDigits="4" minFractionDigits="0" />
+													<f:ajax event="change" listener="#{saleBean.checkQuantity}" render="retailProductSalesModalForm invoiceForm messages" onevent="setInvoiceAddProductFormFocus" />
+											</h:inputText>
+										</ui:fragment>
+											
+									
+											
+								</div>
+								
+								<div class="form-group">
+									<h:commandButton class="btn btn-primary form-control" value="Hinzufügen" action="#{saleBean.checkQuantity}" >
+										<f:ajax render="retailProductSalesModalForm contractForm:saleItemList contractForm:form-info contractForm:payment_selector messages" onevent="closeRetailProductSalesModal"/>
+									</h:commandButton>
+								</div>
+								
+							</h:panelGroup>
+							
+                        </div>
+						</h:form>
+					</div>
+				</div>
+		</div>
+		
+		
+		  <div class="modal inmodal" id="manualInvoiceItemModal" tabindex="-1"
+			role="dialog" aria-hidden="true" style="display: none;"
+			data-keyboard="true" data-backdrop="static">
+				<div class="modal-dialog modal-m">
+				<div class="modal-content">
+				
+					<h:form class="form-horizontal" id="manualInvoiceItemModalForm">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal">
+								<span aria-hidden="true">×</span><span class="sr-only">Close</span>
+							</button>
+							<h4 class="modal-title">Freier Inhalt</h4>
+						</div>
+						<div class="modal-body">
+							<h:messages  class="list-group-item danger"/>
+								
+								
+                        	<div class="form-group">
+								<h:inputText 
+                        			autocomplete="off" 
+                        			class="form-control " 
+                        			a:placeholder="Titel" 
+                        			value="#{saleBean.manualInvoiceItem.title}">
+								</h:inputText>
+							</div>
+								
+                        	<div class="form-group">
+								<h:inputText 
+                        			autocomplete="off" 
+                        			class="form-control " 
+                        			a:placeholder="Untertitel" 
+                        			value="#{saleBean.manualInvoiceItem.subTitle}">
+								</h:inputText>
+							</div>
+								
+									
+                        	<div class="form-group">
+                        		<h:inputText id="quantity" 
+                        			autocomplete="off" 
+                        			class="form-control text-right #{ component.valid ? '' : 'error'}" 
+                        			a:placeholder="Anzahl" 
+                        			value="#{saleBean.manualInvoiceItem.quantity}">
+												<f:ajax event="change" />
+									<f:convertNumber maxFractionDigits="2" minFractionDigits="0" />
+								</h:inputText>
+								<h:messages for="unitPrice"  />
+                        	</div>
+								
+									
+                        	<div class="form-group">
+                        		<h:inputText id="unitPrice" 
+                        			autocomplete="off" 
+                        			class="form-control text-right #{ component.valid ? '' : 'error'}" 
+                        			a:placeholder="Preis" 
+                        			value="#{saleBean.manualInvoiceItem.commission.grossPrice}">
+												<f:ajax event="change" />
+									<f:convertNumber maxFractionDigits="2" minFractionDigits="2" />
+								</h:inputText>
+								<h:messages for="unitPrice"  />
+                        	</div>
+                        	
+                        </div>
+						<div class="modal-footer">
+							<h:commandButton id="submitButton" class="btn btn-primary" value="anwenden" action="#{saleBean.saveManualInvoiceItem()}" >
+								<f:ajax execute="@form" onevent="closeManualInvoiceItemModal" render="retailProductSalesModalForm contractForm:saleItemList contractForm:form-info contractForm:payment_selector messages" />
+							</h:commandButton>
+                        </div>
+					</h:form>
+				</div>
+				</div>
+		</div>
+		
+			<script>
+					function productSelected(){
+						updatePlugins();
+						if($('#retailProductSalesModalForm\\:error').val() == "true"){
+							$('#retailProductSalesModalForm\\:ean').focus();
+							return;
+						}
+						else if($('#retailProductSalesModalForm\\:finish').val() == "true"){
+							$('#retailProductSalesModalForm\\:submitButton').click();
+							
+						}else{
+							$('#retailProductSalesModalForm\\:serial').focus();
+						}
+							
+					}
+					function closeRetailProductSalesModal(){
+						updatePlugins();
+						$('#retailProductSalesModal').modal('hide');
+					}
+					
+					function openRetailProductSalesModal(){
+						updatePlugins();
+						$('#retailProductSalesModal').modal('show');
+					}
+		
+					$( document ).ready(function() {
+						$('#retailProductSalesModal').on('shown.bs.modal', function() {
+							window.setTimeout(function(){
+						      $('#retailProductModalSalesForm\\:ean').focus();
+						    }, 500);
+						})
+					});
+					
+					
+						
+					function setInvoiceAddProductFormFocus(data){
+						if(data.status == "success"){
+		
+							
+							switch ($("#retailProductSalesModalForm\\:nextFormField").val()) {
+							  case "ean":
+								  $("#retailProductSalesModalForm\\:ean").focus();
+							    break;
+							  case "serial":
+								  $("#retailProductSalesModalForm\\:serial").focus();
+							    break;
+							  case "quantity":
+								  $("#retailProductSalesModalForm\\:quantity").focus();
+							    break;
+							}
+							
+							
+							updatePlugins();
+						}
+					}
+
+
+
+					function closeManualInvoiceItemModal(){
+						updatePlugins();
+						$('#manualInvoiceItemModal').modal('hide');
+					}
+					
+					function openManualInvoiceItemModal(){
+						updatePlugins();
+						$('#manualInvoiceItemModal').modal('show');
+					}
+		
+				</script>
+
+
+		</ui:define>
+
+
+	</ui:composition>
+</h:body>
+</html>

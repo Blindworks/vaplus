@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:body>
+
+
+	<ui:composition template="/WEB-INF/template/common/commonLayout.xhtml">
+		<ui:param name="heading1" value="Provisions Abgleich" />
+		<ui:param name="bodyClass" value="right-sidebar-closed" />
+		
+				<ui:define name="headingContent">
+			<h:form class="form-horizontal hidden-print" id="headerToolbar">
+				<div class="form-group">
+					
+					<div class="col-sm-2">
+					<h:selectOneMenu 
+								value="#{payrollBean.month}"
+								class="chosen-select-no-single form-control" >
+								<f:selectItems value="#{helperBean.monthList}" var="month" itemLabel="#{helperBean.getMonthName(month)}" />
+						<f:ajax render="payrollForm" event="change" />
+					</h:selectOneMenu>
+					</div>
+					<div class="col-sm-2">
+					<h:selectOneMenu
+								value="#{payrollBean.year}"
+								class="chosen-select-no-single form-control" >
+								<f:selectItems value="#{salesOverviewBean.yearList}"  />
+						<f:ajax render="payrollForm" event="change" />
+					</h:selectOneMenu>
+					</div>
+				</div>
+			</h:form>
+   		</ui:define>
+		
+		<ui:define name="content">	
+			<h:form id="payrollForm">
+		
+			<br/>
+			<br/>
+			Wenn noch keine Abrechnungen vorhangen,<br/>
+			zeige Erstell button.<br/>
+			<br/>
+			Warnung.. hiermit wird der Monat abgeschlossen.<br/>
+			<br/>
+			<br/><br/><br/><br/>
+			
+			<div class="ibox">
+                        <div class="ibox-title">
+                        	<h5>Mitarbeiter Lohnabrechnungen im #{helperBean.getMonthName(payrollBean.month)} #{payrollBean.year}</h5>
+                        	
+                        	<div class="ibox-tools">
+                        		<h:commandLink action="#{payrollBean.generateUserPayrolls()}" class="btn btn-xs btn-primary">
+	                                <i class="fa fa-gears"></i>
+	                            </h:commandLink>
+			                </div>
+                        </div>
+                        <div class="ibox-content">
+	                        <h:panelGroup rendered="#{payrollBean.userPayrollList.size() == 0}">
+				                	<p>Keine Lohnabrechnungen in diesem Zeitraum vorhanden.</p>
+				            </h:panelGroup>
+				            <h:panelGroup rendered="#{payrollBean.userPayrollList.size() > 0}">
+				            		<h:dataTable value="#{payrollBean.userPayrollList}" var="userPayroll" class="table table-striped" >
+
+										<h:column>
+											<f:facet name="header">Mitarbeiter</f:facet>
+											<h:outputText value="#{userPayroll.user.name}" />
+										</h:column>
+							
+										<h:column>
+											<f:facet name="header">Punkte</f:facet>
+											<h:outputText value="#{userPayroll.points}" >
+												<f:convertNumber maxFractionDigits="4" minFractionDigits="0" />
+											</h:outputText> <i class="fa fa-star"></i>
+										</h:column>
+							
+										<h:column>
+											<f:facet name="header">Zielerreichung</f:facet>
+											<h:outputText value="#{userPayroll.goalAttainment}" >
+												<f:convertNumber maxFractionDigits="1" minFractionDigits="0" />
+											</h:outputText> %
+										</h:column>
+										
+							
+										<h:column>
+											<f:facet name="header">Fixgehalt</f:facet>
+											<h:outputText value="#{userPayroll.basicSalary}" >
+												<f:convertNumber maxFractionDigits="2" minFractionDigits="2" />
+											</h:outputText> €
+										</h:column>
+							
+										<h:column>
+											<f:facet name="header">Bonus</f:facet>
+											<h:outputText value="#{userPayroll.commission}" >
+												<f:convertNumber maxFractionDigits="2" minFractionDigits="2" />
+											</h:outputText> €
+										</h:column>
+							
+										<h:column>
+											<f:facet name="header">Erwirt. Prov.</f:facet>
+											<h:outputText value="#{userPayroll.yieldedCommission}" >
+												<f:convertNumber maxFractionDigits="2" minFractionDigits="2" />
+											</h:outputText> €
+										</h:column>
+							
+										<h:column>
+											<h:commandLink action="userPayroll" class="btn btn-xs btn-primary" title="Details">
+												<f:setPropertyActionListener value="#{userPayroll}" target="#{payrollBean.selectedUserPayroll}" />
+												<i class="fa fa-list"></i> 
+											</h:commandLink>
+										</h:column>
+										
+									</h:dataTable>
+				            </h:panelGroup>
+			            </div>
+            </div>
+			
+			
+			
+			</h:form>
+		</ui:define>
+		
+	</ui:composition>
+	</h:body>
+</html>

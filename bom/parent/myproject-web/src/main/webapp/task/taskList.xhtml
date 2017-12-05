@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:body>
+
+
+	<ui:composition template="/WEB-INF/template/common/commonLayout.xhtml">
+	
+	
+	
+		<ui:param name="heading1" value="Aufgaben" />
+		
+		
+	
+		<ui:define name="content">
+		
+		
+    		<div class="row">
+				<div class="col-lg-12">
+					<h:panelGroup id="fileListPanel">
+					
+						<h:form id="fileForm" enctype="multipart/form-data" class="form-horizontal">
+						
+			            <div class="ibox float-e-margins">
+			                <div class="ibox-title">
+			                    <h5>Eigene Aufgaben</h5>
+			                    <div class="ibox-tools">
+			                    
+									<h:commandLink action="taskEdit" class="btn btn-xs btn-primary " >
+										<f:setPropertyActionListener value="" target="#{taskBean.selectedTask}" />
+										<i class="fa fa-plus"></i>
+								    </h:commandLink>
+						            
+			                    </div>
+			                </div>
+			                <div class="ibox-content">
+		        				
+		        				<h:dataTable id="taskList" value="#{taskBean.getOwnTaskList()}" var="task" class="table table-hover table-clickable">
+									
+									
+									<h:column>
+										<f:facet name="header">Status</f:facet>
+										
+										<h:commandLink action="task" class="full-size" >
+											<f:setPropertyActionListener value="#{task}" target="#{taskBean.selectedTask}" />
+
+											<ui:fragment rendered="#{task.completed}">
+												<span class="label label-green">erledigt</span>
+											</ui:fragment>
+											<ui:fragment rendered="#{not task.completed and not task.overdue}">
+												<span class="label label-warning">offen</span>
+											</ui:fragment>
+											<ui:fragment rendered="#{not task.completed and task.overdue}">
+												<span class="label label-danger">überfällig</span>
+											</ui:fragment>
+										
+									    </h:commandLink>
+									</h:column>
+									
+									
+									<h:column>
+										<f:facet name="header">Zeitpunkt</f:facet>
+									  	
+										<h:commandLink action="task" >
+											<f:setPropertyActionListener value="#{task}" target="#{taskBean.selectedTask}" />
+											<h:outputText value="#{task.targetDate}" >
+										  		<f:convertDateTime type="date" pattern="dd.MM.yy" timeZone="CET"/>
+										  	</h:outputText>
+									    </h:commandLink>
+									</h:column>
+									
+									<h:column>
+										<f:facet name="header">erstellt am</f:facet>
+										
+										<h:commandLink action="task" class="full-size" >
+											<f:setPropertyActionListener value="#{task}" target="#{taskBean.selectedTask}" />
+											<h:outputText value="#{task.creationDate}" >
+										  		<f:convertDateTime type="date" pattern="dd.MM.yy" timeZone="CET"/>
+											</h:outputText>
+									    </h:commandLink>
+									</h:column>
+									
+									<h:column>
+										<f:facet name="header">Titel</f:facet>
+										
+										<h:commandLink action="task" class="full-size" >
+											<f:setPropertyActionListener value="#{task}" target="#{taskBean.selectedTask}" />
+											<h:outputText value="#{task.title}" />
+									    </h:commandLink>
+									</h:column>
+									
+									<h:column>
+										<f:facet name="header">Empfänger</f:facet>
+										
+										<h:commandLink action="task" class="full-size" >
+											<f:setPropertyActionListener value="#{task}" target="#{taskBean.selectedTask}" />
+											<h:outputText value="#{task.receipients}" />
+									    </h:commandLink>
+									</h:column>
+									
+									<h:column>
+										<f:facet name="header">Ersteller</f:facet>
+										
+										<h:commandLink action="task" class="full-size" >
+											<f:setPropertyActionListener value="#{task}" target="#{taskBean.selectedTask}" />
+											<h:outputText value="#{task.user.name}" />
+									    </h:commandLink>
+									</h:column>
+									
+						
+									</h:dataTable>
+			                
+			                </div>
+            			</div>
+            			
+            			</h:form>
+            			
+            		</h:panelGroup>
+    			</div>
+    		</div>
+
+		
+<div class="row">
+				<div class="col-lg-12">
+					<h:panelGroup id="fileListPanel2">
+					
+						<h:form id="fileForm2" enctype="multipart/form-data" class="form-horizontal">
+						
+			            <div class="ibox float-e-margins">
+			                <div class="ibox-title">
+			                    <h5>Erstellte Aufgaben</h5>
+			                    <div class="ibox-tools">
+			                    
+			                    
+									<h:commandLink action="taskEdit" class="btn btn-xs btn-primary " >
+										<f:setPropertyActionListener value="" target="#{taskBean.selectedTask}" />
+										<i class="fa fa-plus"></i>
+								    </h:commandLink>
+						            
+			                    </div>
+			                </div>
+			                <div class="ibox-content">
+		        				
+		        				<h:dataTable id="taskList2" value="#{taskBean.getCreatedTaskList()}" var="task" class="table table-hover table-clickable">
+									
+									
+									<h:column>
+										<f:facet name="header">Status</f:facet>
+										
+										<h:commandLink action="task" class="full-size" >
+											<f:setPropertyActionListener value="#{task}" target="#{taskBean.selectedTask}" />
+
+											<ui:fragment rendered="#{task.completed}">
+												<span class="label label-green">erledigt</span>
+											</ui:fragment>
+											<ui:fragment rendered="#{not task.completed and not task.overdue}">
+												<span class="label label-warning">offen</span>
+											</ui:fragment>
+											<ui:fragment rendered="#{not task.completed and task.overdue}">
+												<span class="label label-danger">überfällig</span>
+											</ui:fragment>
+										
+									    </h:commandLink>
+									</h:column>
+									
+									
+									<h:column>
+										<f:facet name="header">Zeitpunkt</f:facet>
+									  	
+										<h:commandLink action="task" >
+											<f:setPropertyActionListener value="#{task}" target="#{taskBean.selectedTask}" />
+											<h:outputText value="#{task.targetDate}" >
+										  		<f:convertDateTime type="date" pattern="dd.MM.yy" timeZone="CET"/>
+										  	</h:outputText>
+									    </h:commandLink>
+									</h:column>
+									
+									<h:column>
+										<f:facet name="header">erstellt am</f:facet>
+										
+										<h:commandLink action="task" class="full-size" >
+											<f:setPropertyActionListener value="#{task}" target="#{taskBean.selectedTask}" />
+											<h:outputText value="#{task.creationDate}" >
+										  		<f:convertDateTime type="date" pattern="dd.MM.yy" timeZone="CET"/>
+											</h:outputText>
+									    </h:commandLink>
+									</h:column>
+									
+									<h:column>
+										<f:facet name="header">Titel</f:facet>
+										
+										<h:commandLink action="task" class="full-size" >
+											<f:setPropertyActionListener value="#{task}" target="#{taskBean.selectedTask}" />
+											<h:outputText value="#{task.title}" />
+									    </h:commandLink>
+									</h:column>
+									
+									<h:column>
+										<f:facet name="header">Empfänger</f:facet>
+										
+										<h:commandLink action="task" class="full-size" >
+											<f:setPropertyActionListener value="#{task}" target="#{taskBean.selectedTask}" />
+											<h:outputText value="#{task.receipients}" />
+									    </h:commandLink>
+									</h:column>
+									
+									<h:column>
+										<f:facet name="header">Ersteller</f:facet>
+										
+										<h:commandLink action="task" class="full-size" >
+											<f:setPropertyActionListener value="#{task}" target="#{taskBean.selectedTask}" />
+											<h:outputText value="#{task.user.name}" />
+									    </h:commandLink>
+									</h:column>
+									
+						
+									</h:dataTable>
+			                
+			                </div>
+            			</div>
+            			
+            			</h:form>
+            			
+            		</h:panelGroup>
+    			</div>
+    		</div>
+
+	    </ui:define>
+
+	</ui:composition>
+</h:body>
+</html>

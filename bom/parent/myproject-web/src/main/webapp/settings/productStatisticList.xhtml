@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+	  xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+	<h:body>
+	
+    	<ui:composition template="/WEB-INF/template/common/commonLayout.xhtml">
+    		<ui:param name="heading1" value="Produkt Statistik Einstellungen" />
+    		
+    		<ui:define name="content">
+    	
+    		
+			<h:form id="productStatisticForm">
+    		<div class="row">
+				<div class="col-lg-12">
+			            <div class="ibox float-e-margins">
+			                <div class="ibox-title">
+			                    <h5>Produkt Statistik Einstellungen</h5>
+			                    <div class="ibox-tools">
+										<h:commandLink action="productStatistic" class="btn btn-xs btn-primary " rendered="#{productStatisticBean.productStatisticListEditable}">
+											<f:setPropertyActionListener value="" target="#{productStatisticBean.selectedProductStatistic}" />
+											<i class="fa fa-plus"></i>
+									    </h:commandLink>
+									    
+									    <h:commandLink  class="btn btn-xs btn-primary "  immediate="true" action="#{productStatisticBean.toggleProductStatisticListEditable}" rendered="#{productStatisticBean.productStatisticListEditable}">
+										   <f:ajax render="productStatisticForm"/>
+										   <i class="fa fa-times"></i>
+										</h:commandLink>
+									    <h:commandLink  class="btn btn-xs btn-primary " action="#{productStatisticBean.toggleProductStatisticListEditable}"  rendered="#{not productStatisticBean.productStatisticListEditable}">
+										   <f:ajax render="productStatisticForm"/>
+										   <i class="fa fa-pencil"></i>
+										</h:commandLink>
+			                    </div>
+			                </div>
+			                <div class="ibox-content">
+								<h:panelGroup
+									rendered="#{productStatisticBean.productStatisticList.size() == 0}">
+									<p>Keine Produkt Statistik Einstellungen vorhanden.</p>
+								</h:panelGroup>
+					    		
+					    		<h:dataTable value="#{productStatisticBean.productStatisticList}" var="item" class="table table-hover" rendered="#{productStatisticBean.productStatisticList.size() > 0}">
+					
+									<h:column>
+										<f:facet name="header">Name</f:facet>
+										<h:outputText value="#{item.name}" />
+									</h:column>
+									
+									<h:column>
+									
+										<div class="ibox-tools">
+										
+										<h:commandLink action="productStatistic" class="btn btn-xs btn-primary" rendered="#{productStatisticBean.productStatisticListEditable}">
+											<f:setPropertyActionListener value="#{item}" target="#{productStatisticBean.selectedProductStatistic}" />
+											<i class="fa fa-pencil"></i>
+									    </h:commandLink>
+									    
+									    </div>
+									</h:column>
+								</h:dataTable>
+					    		
+					    		
+			                </div>
+			            </div>
+		        </div>
+	            
+	        </div>
+    		
+            </h:form>
+    		
+            
+    		</ui:define>
+    		
+    		
+    	</ui:composition>
+    </h:body>
+</html>

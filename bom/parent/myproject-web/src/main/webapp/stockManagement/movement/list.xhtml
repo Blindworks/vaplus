@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:c="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+	  xmlns:f="http://java.sun.com/jsf/core"
+	  xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:p="http://primefaces.org/ui">
+
+	<h:body>
+	
+	
+    	<ui:composition template="/WEB-INF/template/common/commonLayout.xhtml">
+    		<ui:param name="heading1" value="Warenbewegungen" />
+    		
+    		<ui:define name="content">
+    		
+            
+            <div class="ibox-content m-b-sm border-bottom">
+                <div class="row">
+                <h:form id="productFilterForm">
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label class="control-label" for="product_name">Lager</label>
+                       		<h:selectOneMenu 
+                       			id="stock"
+                       			a:data-placeholder="Lager wählen ..."
+											value="#{stockMovementBean.selectedStock}"
+											class="chosen-select-no-single form-control col-sm-10"
+											converter="#{stockConverter}">
+											<f:selectItem itemValue=""  itemLabel="Alle Lager" />
+											<f:selectItems value="#{stockBean.stockList}" var="stock"
+												itemValue="#{stock}" itemLabel="#{stock.name}" />
+								<f:ajax execute="@this" event="change" render="pickslipList" />
+							</h:selectOneMenu>
+                        </div>
+                    </div>
+                    
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label class="control-label" for="product_name">Lieferant</label>
+                       		<h:selectOneMenu 
+                       			id="supplier"
+                       			a:data-placeholder="Lieferant wählen ..."
+											value="#{stockMovementBean.selectedSupplier}"
+											class="chosen-select-no-single form-control col-sm-10"
+											converter="#{supplierConverter}">
+											<f:selectItem itemValue="" itemLabel="Alle Lieferanten" />
+											<f:selectItems value="#{supplierBean.supplierList}" var="supplier"
+												itemValue="#{supplier}" itemLabel="#{supplier.name}" />
+								<f:ajax execute="@this" event="change" render="pickslipList" />
+							</h:selectOneMenu>
+                        </div>
+                    </div>
+                    
+                </h:form>
+                </div>
+
+            </div>
+    		
+    		<div class="row">
+				<div class="col-lg-12">
+					<h:form id="pickslipList">
+			            <div class="ibox float-e-margins">
+			                <div class="ibox-title">
+			                    <h5>Lieferscheine</h5>
+			                </div>
+			                <div class="ibox-content">
+			                
+								<h:panelGroup
+									rendered="#{stockMovementBean.stockPickslipList.size() == 0}">
+									<p>Keine Lieferscheine vorhanden.</p>
+								</h:panelGroup>
+								
+			                <h:dataTable value="#{stockMovementBean.stockPickslipList}" var="item" class="table table-hover" rendered="#{stockMovementBean.stockPickslipList.size() > 0}"
+			                	columnClasses_="text-left, text-left, text-left, text-left, text-left, text-right, text-right, text-right, text-right, text-right">
+
+
+								<h:column>
+									<f:facet name="header">Nr.</f:facet>
+									<h:outputText value="#{item.number}">
+									</h:outputText>
+								</h:column>
+								<h:column>
+									<f:facet name="header">Typ</f:facet>
+									<ui:fragment rendered="#{item.stock eq item.src_stock}">Ausgang</ui:fragment>
+									<ui:fragment rendered="#{item.stock eq item.dst_stock}">Eingang</ui:fragment>
+								</h:column>
+								<h:column>
+									<f:facet name="header">Lieferschein Datum</f:facet>
+									<h:outputText value="#{item.effectiveDate}">
+									  <f:convertDateTime type="date" pattern="dd.MM.yyyy" timeZone="CET"/>
+									</h:outputText>
+								</h:column>
+								<h:column>
+									<f:facet name="header">Import Datum</f:facet>
+									<h:outputText value="#{item.creationDate}">
+									  <f:convertDateTime type="date" pattern="dd.MM.yyyy HH:mm" timeZone="CET"/>
+									</h:outputText>
+								</h:column>
+								<h:column>
+									<f:facet name="header">Lager</f:facet>
+									<h:outputText value="#{item.stock.name}" rendered="#{not empty item.stock}" />
+								</h:column>
+								<h:column>
+									<f:facet name="header">Lieferant</f:facet>
+									<h:outputText value="#{item.supplier.name}" rendered="#{not empty item.supplier}" />
+								</h:column>
+								<h:column>
+									<f:facet name="header">Kunde</f:facet>
+									<h:outputText value="#{item.customer.name}" rendered="#{not empty item.customer}" />
+								</h:column>
+								<h:column>
+									<f:facet name="header">Quell Lager</f:facet>
+									<h:outputText value="#{item.src_stock.name}" rendered="#{not empty item.src_stock}" />
+								</h:column>
+								<h:column>
+									<f:facet name="header">Ziel Lager</f:facet>
+									<h:outputText value="#{item.dst_stock.name}" rendered="#{not empty item.dst_stock}"/>
+								</h:column>
+								<h:column>
+									<f:facet name="header">Artikel Anzahl</f:facet>
+									<h:outputText value="#{item.movementCount}" >
+											<f:convertNumber maxFractionDigits="2" minFractionDigits="0" />
+									</h:outputText>
+								</h:column>
+								<h:column>
+									<f:facet name="header">Einkaufssumme</f:facet>
+									<h:outputText value="#{item.purchaseSum}" >
+											<f:convertNumber maxFractionDigits="2" minFractionDigits="2" /> €
+									</h:outputText>
+								</h:column>
+								<h:column>
+									<div class="ibox-tools">
+									<h:commandLink action="product" class="btn btn-xs btn-primary" rendered="#{productBean.productListEditable}" title="kopieren">
+										<f:setPropertyActionListener value="#{item}" target="#{productBean.cloneProduct}" />
+										<i class="fa fa-copy"></i> 
+									</h:commandLink>
+									<h:commandLink action="product" class="btn btn-xs btn-primary" rendered="#{productBean.productListEditable}" title="bearbeiten">
+										<f:setPropertyActionListener value="#{item}" target="#{productBean.selectedProduct}" />
+										<i class="fa fa-pencil"></i> 
+									</h:commandLink>
+									</div>
+								</h:column>
+									<h:column >
+										<h:commandLink action="/stockManagement/movement/movement" class="btn btn-sm btn-success " >
+											<f:setPropertyActionListener value="#{item}" target="#{stockMovementBean.selectedStockPickslip}" />
+											<i class="fa fa-search"></i>
+									    </h:commandLink>
+									</h:column>
+							</h:dataTable>
+			                
+			                </div>
+		                </div>
+	                </h:form>
+                </div>
+            </div>
+    		
+    		
+    		
+            
+    		</ui:define>
+    		
+    		
+    	</ui:composition>
+    </h:body>
+</html>

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+    xmlns:f="http://java.sun.com/jsf/core">
+
+	<h:body>
+    
+	<f:metadata>
+		<f:event listener="#{FEPluginBean.includeFlot}" type="preRenderComponent"></f:event>
+	</f:metadata>
+	
+    	<ui:composition template="/WEB-INF/template/common/commonLayout.xhtml">
+    	
+    	
+ 			<ui:param name="heading1" value="TEST - NUR CONTENT" />
+ 			
+ 			 
+    		<ui:define name="footer"></ui:define>
+ 
+    		<ui:define name="navBar"></ui:define>
+ 
+    		<ui:define name="topNavBar"></ui:define>
+ 
+    		<ui:define name="sideBar"></ui:define>
+ 
+    		<ui:define name="content">
+    		
+    		<div id="sidebarTab-1" class="tab-pane #{propertyBean.defaultSideBarTab == 1 ? 'active' : ''}">
+
+					<div class="sidebar-title">
+						<h3>
+							<i class="fa fa-group"></i> TOP Mitarbeiter
+						</h3>
+					</div>
+					<h:form>
+					<ul class="sidebar-list">
+					
+						<ui:repeat var="user" value="#{sortingBean.orderRankableList( userBean.salesUserList)}">
+						
+							<li class="link-item list-item">
+							<h:commandLink action="/controlling/contractList" >
+							<f:setPropertyActionListener target="#{salesOverviewBean.user}" value="#{user}" />
+							<span>#{user.name}</span>
+								<div class="stat-percent text-peter-river"><h:outputText value="#{user.liveCommissionCache.goalAttainment}" >
+										<f:convertNumber maxFractionDigits="0" minFractionDigits="0" />
+								</h:outputText>% <span class="text-concrete"><h:outputText value="#{user.currentCommissionCache.goalAttainment}" >
+										<f:convertNumber maxFractionDigits="0" minFractionDigits="0" />
+								</h:outputText>%</span></div>
+								<div class="progress progress-mini" style="position: relative;">
+									<div style="width: #{user.currentCommissionCache.goalAttainment}%; " class="progress-bar progress-bar-plain"></div>
+									<div style="width: #{user.liveCommissionCache.goalAttainment}%; position: absolute; top: 0; left: 0;" class="progress-bar "></div>
+								</div>
+								<div class="progress progress-mini" style="position: relative;">
+									<div style="width: #{user.nextCommissionCache.goalAttainment}%; " class="progress-bar progress-bar-plain"></div>
+								</div>
+							</h:commandLink>
+							</li>
+						</ui:repeat>
+						
+					</ul>
+					</h:form>
+					<div class="sidebar-title">
+						<h3>
+							<i class="fa fa-building"></i> Shops
+						</h3>
+					</div>
+
+
+					<ul class="sidebar-list">
+					
+						
+						<ui:repeat var="shop" value="#{sortingBean.orderRankableList( shopBean.shopList )}">
+							<li class="list-item"><span>#{shop.name}</span>
+								<div class="stat-percent text-peter-river">
+								<h:outputText value="#{shop.liveCommissionCache.goalAttainment}" >
+										<f:convertNumber maxFractionDigits="0" minFractionDigits="0" />
+								</h:outputText>% <span class="text-concrete">
+								<h:outputText value="#{shop.currentCommissionCache.goalAttainment}" >
+										<f:convertNumber maxFractionDigits="0" minFractionDigits="0" />
+								</h:outputText>%</span></div>
+								<div class="progress progress-mini" style="position: relative;">
+									<div style="width: #{shop.currentCommissionCache.goalAttainment}%; " class="progress-bar progress-bar-plain"></div>
+									<div style="width: #{shop.liveCommissionCache.goalAttainment}%; position: absolute; top: 0; left: 0;" class="progress-bar "></div>
+								</div>
+								<div class="progress progress-mini" style="position: relative;">
+									<div style="width: #{shop.nextCommissionCache.goalAttainment}%; " class="progress-bar progress-bar-plain"></div>
+								</div>
+									
+							</li>
+						</ui:repeat>
+					
+						
+					</ul>
+
+
+				</div>
+
+    		</ui:define>
+    	</ui:composition>
+    </h:body>
+</html>

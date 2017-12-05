@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	  xmlns:f="http://java.sun.com/jsf/core"
+	  xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+
+<ui:composition>
+		<h:form id="calendarDraggableListForm" >
+		
+			<h:inputText id="calendarRangeStart" value="#{calendarBean.calendarRangeStart}" class="hide" >
+				<f:convertDateTime pattern="yyyy-MM-dd" timeZone="CET" />
+			</h:inputText>
+			<h:inputText id="calendarRangeEnd" value="#{calendarBean.calendarRangeEnd}" class="hide" >
+				<f:convertDateTime pattern="yyyy-MM-dd" timeZone="CET" />
+			</h:inputText>
+			
+			<h:commandButton id="calendarRangeSubmit" value="update" class="hide">
+				<f:ajax execute="@form" render="draggableList" onevent="initEventDraggablesEvent" />
+			</h:commandButton>
+		</h:form>
+		<script>
+
+    	var calendarRangeStart = '<h:outputText value="#{calendarBean.calendarRangeStart}" ><f:convertDateTime pattern="yyyy-MM-dd" timeZone="CET" /></h:outputText>';
+    	var calendarRangeEnd = '<h:outputText value="#{calendarBean.calendarRangeEnd}" ><f:convertDateTime pattern="yyyy-MM-dd" timeZone="CET" /></h:outputText>';
+
+		</script>
+</ui:composition>
+</html>

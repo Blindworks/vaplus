@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+    xmlns:f="http://java.sun.com/jsf/core">
+
+	<h:body>
+    
+	<f:metadata>
+		<f:event listener="#{FEPluginBean.includeFlot}" type="preRenderComponent"></f:event>
+	</f:metadata>
+	
+    	<ui:composition template="/WEB-INF/template/common/commonLayout.xhtml">
+    	
+    	
+    		<ui:define name="heading">
+    		
+
+                    <div class="col-sm-4">
+                        <h2>Willkommen im Shop Gruppen Dashboard</h2>
+                        
+    					Zusammenfassung
+                        
+                        
+                    </div>
+                    <div class="col-sm-8">
+                        
+
+                   </div>
+           
+    		
+    		</ui:define>
+    	
+    	
+ 			<ui:param name="heading1" value="Dashboard" />
+ 
+    		<ui:define name="content">
+    		
+    		<div class="row">
+                
+                <ui:repeat var="achievement" value="#{achievementBean.activeAchievementListForCompanyDashboard}">
+	                <div class="col-lg-6">
+	                	<ui:include src="/WEB-INF/include/achievement/achievement.xhtml" >
+			        		<ui:param name="achievement" value="#{achievement}" />
+			        	</ui:include>
+	               	</div>
+               	</ui:repeat>
+               	
+               </div>
+    		
+    		<ui:repeat value="#{shopBean.shopGroupList}" var="shopGroup" varStatus="status">
+    		
+    		
+		        	<ui:include src="/WEB-INF/include/sales/entityOverviewPanel.xhtml" >
+		        		<ui:param name="element" value="#{shopGroup}" />
+		        	</ui:include>
+    		
+    		
+	    		
+	        </ui:repeat>
+    		
+    		
+    		<h:panelGroup rendered="#{modulBean.developmentView}">
+        	<div class="row">
+                    
+                    <!-- 
+                    <div class="col-lg-4">
+                        <div class="ibox float-e-margins ibox-dark">
+                            <div class="ibox-title">
+                                <h5>Elsbeth</h5>
+                            </div>
+                            <div class="ibox-content">
+                                <h1 class="no-margins">36</h1>
+                                <div class="stat-percent font-bold text-danger">noch 58 <i class="fa fa-male"></i></div>
+                                <small>Calls</small>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-4">
+                        <div class="ibox float-e-margins ibox-dark">
+                            <div class="ibox-title">
+                                <h5>CS Wert</h5>
+                            </div>
+                            <div class="ibox-content">
+                                <h1 class="no-margins">5.63</h1>
+                                <div class="stat-percent font-bold text-green">4.25 <i class="fa fa-level-up"></i></div>
+                                <small>dieser Monat</small>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-4">
+                        <div class="ibox float-e-margins ibox-dark">
+                            <div class="ibox-title">
+                                <h5>MS Wert</h5>
+                            </div>
+                            <div class="ibox-content">
+                                <h1 class="no-margins">2.63</h1>
+                                <div class="stat-percent font-bold text-danger">8.47 <i class="fa fa-level-down"></i></div>
+                                <small>dieser Monat</small>
+                            </div>
+                        </div>
+                    </div>
+                    
+                     -->
+                    
+		</div>
+		</h:panelGroup>
+		
+
+
+                
+                
+                
+                
+    			
+    		</ui:define>
+    	</ui:composition>
+    </h:body>
+</html>

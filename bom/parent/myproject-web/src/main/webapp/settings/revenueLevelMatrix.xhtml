@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:body>
+
+	<f:metadata>
+		<f:event listener="#{FEPluginBean.includePeity}"
+			type="preRenderComponent"></f:event>
+		<f:event listener="#{FEPluginBean.includeChosen}"
+			type="preRenderComponent"></f:event>
+	</f:metadata>
+
+	<ui:composition template="/WEB-INF/template/common/commonLayout.xhtml">
+		<ui:param name="heading1" value="AU/GU Matrix" />
+
+
+		<ui:define name="headingContent">
+			<h:form class="form-horizontal">
+				<div class="form-group">
+					<label class="col-sm-2 control-label">Anbieter:</label>
+					<div class="col-sm-10">
+						<h:selectOneMenu a:data-placeholder="Anbieter wählen ..."
+							value="#{VOBean.selectedVendor}"
+							class="chosen-select form-control" converter="#{vendorConverter}"
+							style="width:350px;">
+							<f:selectItem itemValue="" itemLabel="" />
+							<f:selectItems value="#{productBean.vendorList}" var="vendor"
+								itemValue="#{vendor}" itemLabel="#{vendor.name}" />
+							<f:ajax render="matrix" event="change" />
+						</h:selectOneMenu>
+					</div>
+				</div>
+			</h:form>
+		</ui:define>
+
+		<ui:define name="content">
+
+
+			<h:panelGroup id="matrix">
+
+				<h:panelGroup rendered="#{productBean.vendorList.size() == 0}">
+					<div class="alert alert-danger">
+						<strong>Bitte zuerst mind. einen Anbieter anlegen.</strong>
+					</div>
+				</h:panelGroup>
+				<h:panelGroup rendered="#{productBean.vendorList.size() > 0}">
+
+
+					<h:panelGroup rendered="#{empty VOBean.selectedVendor}">
+						<div class="alert alert-danger">
+							<strong>Bitte einen Anbieter auswählen.</strong>
+						</div>
+					</h:panelGroup>
+
+					<h:panelGroup rendered="#{not empty VOBean.selectedVendor}">
+
+
+
+						<div class="row">
+							<div class="col-sm-12">
+								<div class="ibox float-e-margins scrollBox_x">
+									<h:form id="aquiredRevenueLevelList">
+										<div class="ibox-title">
+											<h5>AU Matrix</h5>
+											<div class="ibox-tools">
+											
+		            							<h:panelGroup  rendered="#{permissionBean.hasPermission('settings','edit')}">
+													<h:commandLink action="revenueLevel"
+														actionListener="#{VOBean.newAquiredRevenueLevel}"
+														class="btn btn-xs btn-primary "
+														rendered="#{VOBean.aquiredRevenueMatrixEditable}">
+														<i class="fa fa-plus"></i> AU Stufe
+									    			</h:commandLink>
+	
+	
+	
+													<h:commandLink class="btn btn-xs btn-primary "
+														action="#{VOBean.saveAquiredRevenueMatrix}"
+														rendered="#{VOBean.aquiredRevenueMatrixEditable}">
+														<f:ajax execute="@form" render="aquiredRevenueLevelList"
+															onevent="updatePluginsEvent" />
+														<i class="fa fa-save"></i>
+													</h:commandLink>
+													<h:commandLink class="btn btn-xs btn-primary "
+														action="#{VOBean.reloadAquiredRevenueMatrix}"
+														rendered="#{VOBean.aquiredRevenueMatrixEditable}">
+														<f:ajax render="aquiredRevenueLevelList" />
+														<i class="fa fa-times"></i>
+													</h:commandLink>
+													<h:commandLink class="btn btn-xs btn-primary "
+														action="#{VOBean.toggleAquiredRevenueMatrixEditable}"
+														rendered="#{not VOBean.aquiredRevenueMatrixEditable}">
+														<f:ajax render="aquiredRevenueLevelList"
+															onevent="updatePluginsEvent" />
+														<i class="fa fa-pencil"></i>
+													</h:commandLink>
+												</h:panelGroup>
+											</div>
+										</div>
+										<div class="ibox-content">
+
+
+											<h:panelGroup
+												rendered="#{VOBean.getAquiredRevenueLevelList().size() == 0}">
+												<p>Keine AU Stufen vorhanden.</p>
+											</h:panelGroup>
+
+											<h:panelGroup
+												rendered="#{VOBean.getAquiredRevenueLevelList().size() gt 0}">
+												<table class="table table-hover">
+													<thead>
+														<tr>
+															<th scope="col" style="min-width: 130px;">Name</th>
+															<th scope="col" style="min-width: 150px;">mtl. Basispreis</th>
+
+															<c:forEach
+																items="#{VOBean.editableVOTypeRevenueLevelList}"
+																var="voType">
+																<th scope="col">#{voType.name}</th>
+															</c:forEach>
+														</tr>
+													</thead>
+													<tbody>
+														<c:forEach items="#{VOBean.getAquiredRevenueLevelList()}"
+															var="revenueLevel" varStatus="levelStatus">
+															<tr>
+																<td><span><h:outputText
+																			value="#{revenueLevel.name}" /></span> <span
+																	class="pull-right"> <h:commandLink
+																			action="revenueLevel" class="btn btn-xs btn-primary "
+																			rendered="#{VOBean.aquiredRevenueMatrixEditable}">
+																			<f:setPropertyActionListener value="#{revenueLevel}"
+																				target="#{VOBean.selectedRevenueLevel}" />
+																			<i class="fa fa-pencil"></i>
+																		</h:commandLink>
+																</span></td>
+																<td><span><h:outputText
+																			value="#{revenueLevel.scaleFrom}">
+																			<f:convertNumber maxFractionDigits="2"
+																				minFractionDigits="2" />
+																		</h:outputText> bis <h:outputText value="#{revenueLevel.scaleTo}">
+																			<f:convertNumber maxFractionDigits="2"
+																				minFractionDigits="2" groupingUsed="false" />
+																		</h:outputText></span></td>
+
+																<c:forEach
+																	items="#{VOBean.editableVOTypeRevenueLevelList}"
+																	var="voType" varStatus="typeStatus">
+																	<h:panelGroup
+																			rendered="#{not VOBean.aquiredRevenueMatrixEditable}">
+																			<td style="min-width: 200px;">
+																				<span><h:outputText
+																						value="#{voType.getVoTypeCommissionRevenueLevel(revenueLevel).commission}">
+																						<f:convertNumber maxFractionDigits="2"
+																							minFractionDigits="0" />
+																					</h:outputText> <i class="fa fa-euro"></i>
+																				</span>
+																				<span class="spacer"></span>
+																				<span class="text-navy"><h:outputText
+																						value="#{commissionBean.calculateRevenuePoints( voType.getVoTypeCommissionRevenueLevel(revenueLevel).commission, voType.getVoTypeCommissionRevenueLevel(revenueLevel))}">
+																						<f:convertNumber maxFractionDigits="2"
+																							minFractionDigits="0" />
+																					</h:outputText> <i class="fa fa-star"></i>
+																				</span>
+																			</td>
+																		</h:panelGroup>
+																		<h:panelGroup rendered="#{VOBean.aquiredRevenueMatrixEditable}">
+																			<td style="min-width: 300px;">
+											                                    	<div class="input-group">
+											                                    		<h:inputText id="au_#{revenueLevel.id}_#{voType.id}"
+																							class=" form-control #{ component.valid ? '' : 'error'}"
+																							value="#{voType.getVoTypeCommissionRevenueLevel(revenueLevel).commission}"
+																							tabindex="1#{typeStatus.index lt 10 ? '0' : ''}#{typeStatus.index}#{levelStatus.index lt 10 ? '0' : ''}#{levelStatus.index}"
+																							>
+																							<f:validateRequired />
+																							<f:convertNumber maxFractionDigits="2" minFractionDigits="0" />
+																						</h:inputText>
+											                                    		<span class="input-group-addon"><i class="fa fa-euro"></i></span>
+											                                    		<h:inputText id="au_#{revenueLevel.id}_#{voType.id}_points"
+																							class=" text-navy form-control"
+																							a:placeholder="#{commissionBean.calculateRevenuePoints( voType.getVoTypeCommissionRevenueLevel(revenueLevel).commission, voType.getVoTypeCommissionRevenueLevel(revenueLevel))}"
+																							value="#{voType.getVoTypeCommissionRevenueLevel(revenueLevel).points}" >
+																							<f:convertNumber maxFractionDigits="2" minFractionDigits="0" />
+																						</h:inputText>
+																						<span class="input-group-addon  text-navy "><i class="fa fa-star"></i></span>
+											                                    	</div>
+											                                   </td>
+										                                </h:panelGroup>
+																</c:forEach>
+															</tr>
+
+														</c:forEach>
+													</tbody>
+												</table>
+											</h:panelGroup>
+
+										</div>
+									</h:form>
+								</div>
+							</div>
+
+
+
+						</div>
+						
+						<div class="row">
+							<div class="col-lg-12">
+								<div class="ibox float-e-margins scrollBox_x">
+									<h:form id="contractedRevenueLevelList">
+										<div class="ibox-title">
+											<h5>GU Matrix</h5>
+											<div class="ibox-tools">
+		            							<h:panelGroup  rendered="#{permissionBean.hasPermission('settings','edit')}">
+													<h:commandLink action="revenueLevel"
+														actionListener="#{VOBean.newContractedRevenueLevel}"
+														class="btn btn-xs btn-primary "
+														rendered="#{VOBean.contractedRevenueMatrixEditable}">
+														<i class="fa fa-plus"></i> GU Stufe
+									    			</h:commandLink>
+	
+	
+	
+													<h:commandLink class="btn btn-xs btn-primary "
+														action="#{VOBean.saveContractedRevenueMatrix}"
+														rendered="#{VOBean.contractedRevenueMatrixEditable}">
+														<f:ajax execute="@form" render="contractedRevenueLevelList"
+															onevent="updatePluginsEvent" />
+														<i class="fa fa-save"></i>
+													</h:commandLink>
+													<h:commandLink class="btn btn-xs btn-primary "
+														action="#{VOBean.reloadContractedRevenueMatrix}"
+														rendered="#{VOBean.contractedRevenueMatrixEditable}">
+														<f:ajax render="contractedRevenueLevelList" />
+														<i class="fa fa-times"></i>
+													</h:commandLink>
+													<h:commandLink class="btn btn-xs btn-primary "
+														action="#{VOBean.toggleContractedRevenueMatrixEditable}"
+														rendered="#{not VOBean.contractedRevenueMatrixEditable}">
+														<f:ajax render="contractedRevenueLevelList"
+															onevent="updatePluginsEvent" />
+														<i class="fa fa-pencil"></i>
+													</h:commandLink>
+												</h:panelGroup>
+											</div>
+										</div>
+										<div class="ibox-content">
+
+
+											<h:panelGroup
+												rendered="#{VOBean.getContractedRevenueLevelList().size() == 0}">
+												<p>Keine GU Stufen vorhanden.</p>
+											</h:panelGroup>
+
+											<h:panelGroup
+												rendered="#{VOBean.getContractedRevenueLevelList().size() gt 0}">
+												<table class="table table-hover">
+													<thead>
+														<tr>
+															<th scope="col" style="min-width: 130px;">Name</th>
+															<th scope="col" style="min-width: 150px;">mtl. Basispreis</th>
+
+															<c:forEach
+																items="#{VOBean.editableVOTypeRevenueLevelList}"
+																var="voType">
+																<th scope="col" >#{voType.name}</th>
+															</c:forEach>
+														</tr>
+													</thead>
+													<tbody>
+														<c:forEach items="#{VOBean.getContractedRevenueLevelList()}"
+															var="revenueLevel" varStatus="levelStatus">
+															<tr>
+																<td><span><h:outputText
+																			value="#{revenueLevel.name}" /></span> <span
+																	class="pull-right"> <h:commandLink
+																			action="revenueLevel" class="btn btn-xs btn-primary "
+																			rendered="#{VOBean.contractedRevenueMatrixEditable}">
+																			<f:setPropertyActionListener value="#{revenueLevel}"
+																				target="#{VOBean.selectedRevenueLevel}" />
+																			<i class="fa fa-pencil"></i>
+																		</h:commandLink>
+																</span></td>
+																<td><span><h:outputText
+																			value="#{revenueLevel.scaleFrom}">
+																			<f:convertNumber maxFractionDigits="2"
+																				minFractionDigits="2" />
+																		</h:outputText> bis <h:outputText value="#{revenueLevel.scaleTo}">
+																			<f:convertNumber maxFractionDigits="2"
+																				minFractionDigits="2" groupingUsed="false" />
+																		</h:outputText></span></td>
+
+																<c:forEach
+																	items="#{VOBean.editableVOTypeRevenueLevelList}"
+																	var="voType" varStatus="typeStatus">
+																	<h:panelGroup
+																			rendered="#{not VOBean.contractedRevenueMatrixEditable}">
+																			<td style="min-width: 200px;">
+																			<span><h:outputText
+																					value="#{voType.getVoTypeCommissionRevenueLevel(revenueLevel).commission}">
+																					<f:convertNumber maxFractionDigits="2"
+																						minFractionDigits="0" />
+																				</h:outputText> <i class="fa fa-euro"></i></span>
+																			<span class="spacer"></span>
+																			<span class="text-navy"><h:outputText
+																					value="#{commissionBean.calculateRevenuePoints( voType.getVoTypeCommissionRevenueLevel(revenueLevel).commission, voType.getVoTypeCommissionRevenueLevel(revenueLevel))}">
+																					<f:convertNumber maxFractionDigits="2"
+																						minFractionDigits="0" />
+																				</h:outputText> <i class="fa fa-star"></i></span>
+																			</td>
+																		</h:panelGroup>
+																		<h:panelGroup rendered="#{VOBean.contractedRevenueMatrixEditable}">
+																			<td style="min-width: 200px;">
+											                                    	<div class="input-group">
+											                                    		<h:inputText id="gu_#{revenueLevel.id}_#{voType.id}"
+																							class=" form-control #{ component.valid ? '' : 'error'}"
+																							value="#{voType.getVoTypeCommissionRevenueLevel(revenueLevel).commission}"
+																							tabindex="2#{typeStatus.index lt 10 ? '0' : ''}#{typeStatus.index}#{levelStatus.index lt 10 ? '0' : ''}#{levelStatus.index}"
+																							>
+																							<f:validateRequired />
+																							<f:convertNumber maxFractionDigits="2" minFractionDigits="0" />
+																						</h:inputText>
+											                                    		<span class="input-group-addon"><i class="fa fa-euro"></i></span>
+											                                    		<h:inputText id="gu_#{revenueLevel.id}_#{voType.id}_points"
+																							class=" text-navy form-control"
+																							a:placeholder="#{commissionBean.calculateRevenuePoints( voType.getVoTypeCommissionRevenueLevel(revenueLevel).commission, voType.getVoTypeCommissionRevenueLevel(revenueLevel))}"
+																							value="#{voType.getVoTypeCommissionRevenueLevel(revenueLevel).points}" >
+																							<f:convertNumber maxFractionDigits="2" minFractionDigits="0" />
+																						</h:inputText>
+																						<span class="input-group-addon  text-navy "><i class="fa fa-star"></i></span>
+																						
+											                                    	</div>
+											                                   </td>
+										                                </h:panelGroup>
+																</c:forEach>
+															</tr>
+
+														</c:forEach>
+													</tbody>
+												</table>
+											</h:panelGroup>
+
+										</div>
+									</h:form>
+								</div>
+							</div>
+
+
+
+						</div>
+
+						
+					</h:panelGroup>
+				</h:panelGroup>
+			</h:panelGroup>
+
+		</ui:define>
+
+
+	</ui:composition>
+</h:body>
+</html>

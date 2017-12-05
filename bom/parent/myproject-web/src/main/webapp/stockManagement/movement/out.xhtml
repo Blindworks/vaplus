@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:body>
+
+
+	<ui:composition template="/WEB-INF/template/common/commonLayout.xhtml">
+
+		<ui:param name="heading1" value="Warenausgang aus #{stockMovementBean.stockPickslipExport.src_stock.name}" />
+
+		<ui:define name="content">
+		
+		<script>
+			function setRetailProductFormFocus(data){
+				if(data.status == "success"){
+
+					console.log("nextFormField: "+$("#addRetailProductForm\\:nextFormField").val());
+					
+					switch ($("#addRetailProductForm\\:nextFormField").val()) {
+					  case "ean":
+						  $("#addRetailProductForm\\:ean").focus();
+					    break;
+					  case "serial":
+						  $("#addRetailProductForm\\:serial").focus();
+					    break;
+					  case "quantity":
+						  $("#addRetailProductForm\\:quantity").focus();
+					    break;
+					}
+					
+					
+					updatePlugins();
+				}
+			}
+
+		</script>
+
+
+<div class="row">
+				<div class="col-lg-12">
+				
+	                <h:form class="form-horizontal" id="addRetailProductForm" onkeypress="if (event.keyCode == 13) {console.log('form ENTER; '); return false;}" >
+					
+			            <div class="ibox float-e-margins">
+			                <div class="ibox-title">
+			                    <h5>Artikel hinzufügen</h5>
+			                    <div class="ibox-tools">
+			                    </div>
+			                </div>
+			                <div class="ibox-content">
+			                	<h:inputHidden id="nextFormField" value="#{stockMovementBean.nextFormField}" />
+			                	
+			                	<div class="form-group">
+									<div class="col-lg-6">
+			                        		<h:inputText id="ean" 
+			                        			autocomplete="off" 
+			                        			class="chosen-select-no-single form-control col-sm-8" 
+			                        			onkeypress="if (event.keyCode == 13) {$(this).change(); return false; }" 
+			                        			a:placeholder="EAN" 
+			                        			value="#{stockMovementBean.ean}">
+													<f:ajax event="change" listener="#{stockMovementBean.loadProductByEan()}" render="addRetailProductForm messages"  onevent="setRetailProductFormFocus" />
+											</h:inputText>
+									</div>
+									<div class="col-lg-6">
+			                        		<h:selectOneMenu 
+			                        			id="retailProduct"
+			                        			disabled="#{stockMovementBean.eanProductFound}"
+			                        			onkeydown="return event.keyCode != 13;"
+			                        			a:data-placeholder="Artikel wählen ..."
+															value="#{stockMovementBean.product}"
+															class="chosen-select-no-single form-control col-sm-10"
+															converter="#{baseProductConverter}">
+															<f:selectItem itemValue="" itemLabel=""/>
+															<f:selectItems value="#{stockMovementBean.productList}" var="product"
+																itemValue="#{product}" itemLabel="#{product.name}" />
+															<f:validateRequired />
+															<f:ajax event="change" listener="#{stockMovementBean.initProduct()}" render="addRetailProductForm messages" onevent="setRetailProductFormFocus" />
+											</h:selectOneMenu>
+									</div>
+								</div>
+								
+                        	
+                        	<h:panelGroup rendered="#{not empty stockMovementBean.product}">
+			                	<div class="form-group">
+									<div class="col-lg-6">
+									
+										<ui:fragment rendered="#{stockMovementBean.product.serialRequired}">
+											<h:inputText 
+			                        			id="serial"
+			                        			onkeypress="if (event.keyCode == 13) {$(this).change(); return false; }" 
+				                        		onkeydown="if (event.keyCode == 9) {$(this).change(); return false; }" 
+			                        			value="#{stockMovementBean.serial}" 
+			                        			autocomplete="off" 
+			                        			a:placeholder="IMEI / Seriennummer"
+			                        			class="form-control">
+			                        			<f:ajax event="change" listener="#{stockMovementBean.checkSerial(stockMovementBean.stockPickslipExport)}" render="addRetailProductForm picklistForm messages" onevent="setRetailProductFormFocus" />
+											</h:inputText>
+										</ui:fragment>
+									
+										<ui:fragment rendered="#{not stockMovementBean.product.serialRequired}">
+			                        		<h:inputText id="quantity" 
+			                        			autocomplete="off" 
+			                        			onkeypress="if (event.keyCode == 13) {$(this).change(); return false; }" 
+					                        		onkeydown="if (event.keyCode == 9) {$(this).change(); return false; }" 
+		                        				class="form-control"
+			                        			value="#{stockMovementBean.quantity}">
+													<f:convertNumber maxFractionDigits="4" minFractionDigits="0" />
+													<f:ajax event="change" listener="#{stockMovementBean.checkQuantity(stockMovementBean.stockPickslipExport)}" render="addRetailProductForm picklistForm messages" onevent="setRetailProductFormFocus" />
+											</h:inputText>
+										</ui:fragment>
+											
+									</div>
+								</div>
+								
+							</h:panelGroup>
+								
+								
+			                	<div class="form-group #{empty stockMovementBean.product ? 'hidden_' : ''}">
+									<div class="col-lg-12">
+										<h:commandButton class="btn btn-primary pull-right" value="Hinzufügen" action="#{stockMovementBean.checkProduct(stockMovementBean.stockPickslipExport)}" >
+											<f:ajax render="addRetailProductForm picklistForm messages" onevent="setRetailProductFormFocus"/>
+										</h:commandButton>
+									</div>
+								</div>
+								
+			                </div>
+            			</div>
+            			
+	                </h:form>
+            			
+    			</div>
+    		</div>
+
+    		<div class="row">
+				<div class="col-lg-12">
+				
+	                <h:form class="form-horizontal" id="picklistForm">
+					
+			            <div class="ibox float-e-margins">
+			                <div class="ibox-title">
+			                    <h5>Lieferschein</h5>
+			                    <div class="ibox-tools">
+			                    </div>
+			                </div>
+			                <div class="ibox-content">
+			                
+			                
+									<div class="form-group productList">
+										<label class="col-sm-2 control-label">Artikelliste</label>
+										<div class="col-sm-10">
+										
+										<ui:repeat var="stockMovement" value="#{stockMovementBean.stockPickslipExport.stockMovementList}">
+												<div class="stockMovement row">
+													<div class="col-sm-1 control-label">
+														<h:outputText value="#{stockMovement.quantity}" >
+															<f:convertNumber maxFractionDigits="4" minFractionDigits="0" />	
+														</h:outputText>
+													</div>
+													<div class="col-sm-4 control-label">
+														#{stockMovement.product.name}
+													</div>
+													<div class="col-sm-3 control-label">
+														#{stockMovement.serial}
+													</div>
+													<div class="col-sm-2 control-label">
+														<h:outputText value="#{stockMovement.purchasePrice}" >
+															<f:convertNumber maxFractionDigits="2" minFractionDigits="2" />	
+														</h:outputText> €
+													</div>
+													<div class="col-sm-2 group-button">
+														<h:commandLink class="btn btn-white pull-right" action="#{stockMovementBean.removeStockMovementFromPickslip(stockMovementBean.stockPickslipExport, stockMovement)}" >
+																<f:ajax render="picklistForm" onevent="setRetailProductFormFocus"  />
+																<i class="fa fa-trash"></i>
+														</h:commandLink>
+													</div>
+												</div>
+										</ui:repeat>
+										
+										</div>
+									</div>
+								
+								
+								
+								
+								<div class="form-group">
+									<label class="col-sm-2 control-label">Interne Info</label>
+									<div class="col-sm-10">
+										<h:inputTextarea rows="5" 
+											value="#{stockMovementBean.stockPickslipExport.note}"
+											class="form-control" autocomplete="off" />
+									</div>
+								</div>
+								
+								<div class="form-group">
+									<h:panelGroup id="dst_stock_wrapper">
+									<label class="col-sm-2 control-label">Ziel Lager</label>
+									<div class="col-sm-10">
+			                        		<h:selectOneMenu 
+			                        			id="dst_stock"
+			                        			a:data-placeholder="Lager wählen ..."
+															value="#{stockMovementBean.stockPickslipExport.dst_stock}"
+															class="chosen-select-no-single form-control col-sm-10"
+															converter="#{stockConverter}">
+															<f:selectItem itemValue="" itemLabel=""/>
+															<f:selectItems value="#{stockBean.getStockListWithoutStock(stockMovementBean.stockPickslipExport.src_stock)}" var="stock"
+																itemValue="#{stock}" itemLabel="#{stock.name}" />
+															<f:ajax event="change" listener="#{stockMovementBean.clearExportSupplier}" render="supplier_wrapper" onevent="updatePluginsEvent" />
+											</h:selectOneMenu>
+									</div>
+									</h:panelGroup>
+								</div>
+								
+								<div class="form-group">
+									<h:panelGroup id="supplier_wrapper">
+									<label class="col-sm-2 control-label">Lieferant</label>
+									<div class="col-sm-10">
+			                        		<h:selectOneMenu 
+			                        			id="supplier"
+			                        			a:data-placeholder="Lieferant wählen ..."
+															value="#{stockMovementBean.stockPickslipExport.supplier}"
+															class="chosen-select-no-single form-control col-sm-10"
+															converter="#{supplierConverter}">
+															<f:selectItem itemValue="" itemLabel=""/>
+															<f:selectItems value="#{supplierBean.supplierList}" var="supplier"
+																itemValue="#{supplier}" itemLabel="#{supplier.name}" />
+															<f:ajax event="change"  listener="#{stockMovementBean.clearExportStock}" render="dst_stock_wrapper" onevent="updatePluginsEvent" />
+											</h:selectOneMenu>
+									</div>
+									</h:panelGroup>
+								</div>
+
+								<div class="hr-line-dashed"></div>
+
+								<div class="form-group">
+									<div class="col-sm-12">
+												
+										<h:commandButton value="speichern"
+											action="#{stockMovementBean.savePickslipExport()}" class="btn btn-primary pull-right" />
+									</div>
+								</div>
+					                
+			                
+			                </div>
+            			</div>
+            			
+	                </h:form>
+            			
+    			</div>
+    		</div>
+		  
+
+
+		</ui:define>
+
+
+	</ui:composition>
+</h:body>
+</html>

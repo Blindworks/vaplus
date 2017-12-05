@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:body>
+
+
+	<ui:composition template="/WEB-INF/template/common/commonLayout.xhtml">
+		<ui:param name="heading1" value="Provisions Zuweisungen" />
+		
+		<ui:define name="content">	
+		
+		<h:form>
+		
+		<div class="row">
+				<h:panelGroup id="userAliasAdjustmentList">
+					<div class="col-lg-12">
+	                    <div class="ibox">
+	                        <div class="ibox-title">
+	                            <h5>Mitarbeiter Zuweisungen</h5>
+	                            
+								<div class="ibox-tools">
+				                </div>
+	                        </div>
+	                        <div class="ibox-content">
+	                        
+	                        <h:panelGroup rendered="#{userBean.userAliasList.size() eq 0}">
+			                    bisher keine Zuweisungen vorhanden
+                        	</h:panelGroup>
+                        	<h:panelGroup rendered="#{userBean.userAliasList.size() gt 0}">
+                        		
+	                        		<h:dataTable class="table table-striped" value="#{userBean.userAliasList}" var="item">
+						
+										<h:column>
+						    				<f:facet name="header">Alias</f:facet>
+						    				<h:outputText value="#{item.alias}" >
+											</h:outputText>
+						    			</h:column>
+						    			
+										<h:column>
+						    				<f:facet name="header">User</f:facet>
+						    				<h:outputText value="#{item.user.name}" >
+											</h:outputText>
+						    			</h:column>
+						    			
+										<h:column>
+										
+											<h:commandLink action="#{userBean.deleteUserAlias(item)}" class="btn btn-sm btn-danger  pull-right ">
+												<i class="fa fa-trash"></i>
+											</h:commandLink>
+						    			</h:column>
+
+									</h:dataTable>
+								
+                        	</h:panelGroup>
+	                        
+	                        </div>
+                        </div>
+                    </div>
+               </h:panelGroup>
+           </div>
+				
+			<div class="row">
+				<h:panelGroup id="shopAliasAdjustmentList">
+					<div class="col-lg-12">
+	                    <div class="ibox">
+	                        <div class="ibox-title">
+	                            <h5>Shop Zuweisungen</h5>
+	                            
+								<div class="ibox-tools">
+				                </div>
+	                        </div>
+	                        <div class="ibox-content">
+	                        
+	                        <h:panelGroup rendered="#{shopBean.shopAliasList.size() eq 0}">
+			                    bisher keine Zuweisungen vorhanden
+                        	</h:panelGroup>
+                        	<h:panelGroup rendered="#{shopBean.shopAliasList.size() gt 0}">
+                        		
+	                        		<h:dataTable class="table table-striped" value="#{shopBean.shopAliasList}" var="item">
+						
+										<h:column>
+						    				<f:facet name="header">Alias</f:facet>
+						    				<h:outputText value="#{item.alias}" >
+											</h:outputText>
+						    			</h:column>
+						    			
+										<h:column>
+						    				<f:facet name="header">Shop</f:facet>
+						    				<h:outputText value="#{item.shop.name}" >
+											</h:outputText>
+						    			</h:column>
+						    			
+										<h:column>
+										
+											<h:commandLink action="#{shopBean.deleteShopAlias(item)}" class="btn btn-sm btn-danger  pull-right ">
+												<i class="fa fa-trash"></i>
+											</h:commandLink>
+						    			</h:column>
+
+									</h:dataTable>
+								
+                        	</h:panelGroup>
+	                        
+	                        </div>
+                        </div>
+                    </div>
+               </h:panelGroup>
+           </div>
+		
+		
+			<div class="row">
+				<h:panelGroup id="commissionTypeAdjustmentList">
+					<div class="col-lg-12">
+	                    <div class="ibox">
+	                        <div class="ibox-title">
+	                            <h5>Zuweisungen</h5>
+	                            
+								<div class="ibox-tools">
+				                </div>
+	                        </div>
+	                        <div class="ibox-content">
+	                        
+	                        <h:panelGroup rendered="#{accountingBean.commissionTypeAssociationList.size() eq 0}">
+			                    bisher keine Zuweisungen vorhanden
+                        	</h:panelGroup>
+                        	<h:panelGroup rendered="#{accountingBean.commissionTypeAssociationList.size() gt 0}">
+                        		
+	                        		<h:dataTable class="table table-striped" value="#{accountingBean.commissionTypeAssociationList}" var="item">
+						
+										<h:column>
+						    				<f:facet name="header">Titel</f:facet>
+						    				<h:outputText value="#{item.commissionText}" >
+											</h:outputText>
+						    			</h:column>
+						    			
+										<h:column>
+						    				<f:facet name="header">Subtitel</f:facet>
+						    				<h:outputText value="#{item.commissionSubText}" >
+											</h:outputText>
+						    			</h:column>
+						    			
+										<h:column>
+						    				<f:facet name="header">Produkt</f:facet>
+						    				<h:outputText value="#{item.product}" >
+											</h:outputText>
+						    			</h:column>
+						    			
+										<h:column>
+						    				<f:facet name="header">Optionen</f:facet>
+											<ui:repeat var="option" value="#{item.productOptionList}">
+												<p><h:outputText value="#{option.name}" /></p> 
+											</ui:repeat>
+						    			</h:column>
+						    			
+										<h:column>
+						    				<f:facet name="header">VVL</f:facet>
+											<h:panelGroup rendered="#{item.extensionOfTheTerm}"><i class="fa fa-check-square-o"></i></h:panelGroup>
+											<h:panelGroup rendered="#{not item.extensionOfTheTerm}"><i class="fa fa-square-o"></i></h:panelGroup>
+						    			</h:column>
+						    			
+										<h:column>
+										
+											<h:commandLink action="commissionTypeAssociation" class="btn btn-sm btn-primary pull-right ">
+												<f:setPropertyActionListener value="#{item}" target="#{accountingBean.selectedCommissionTypeAssociation}" />
+												<i class="fa fa-pencil"></i>
+											</h:commandLink>
+						    			</h:column>
+
+									</h:dataTable>
+								
+                        	</h:panelGroup>
+	                        
+	                        </div>
+                        </div>
+                    </div>
+               </h:panelGroup>
+           </div>
+
+		</h:form>
+        </ui:define>
+    </ui:composition>
+</h:body>
+</html>

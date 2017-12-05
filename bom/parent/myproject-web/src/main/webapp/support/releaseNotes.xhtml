@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:body>
+
+	<ui:composition template="/WEB-INF/template/common/commonLayout.xhtml">
+
+		<ui:param name="heading1" value="Versionshinweise" />
+
+		<ui:define name="content">
+
+
+			<div class="wrapper wrapper-content animated fadeInRight">
+
+
+				<div class="col-lg-12">
+					<div class="ibox float-e-margins">
+						<div class="ibox-title">
+							<h5>Neue Versionen werden nach und nach den Nutzern zu verfügung gestellt</h5>
+							<div class="ibox-tools">
+								
+							</div>
+						</div>
+
+						<div class="ibox-content inspinia-timeline">
+
+							<div class="timeline-item">
+								<div class="row">
+									<div class="col-xs-3 date">
+										<i class="fa fa-file-text-o"></i> 0.4.4<br />
+										<small class="text-navy">Version</small>
+									</div>
+									<div class="col-xs-7 content">
+										<p class="m-b-xs">
+											<strong>HOTFIX</strong>
+										</p>
+										<p>Ausblenden der rechten Seitenleiste als Performance-Schub</p>
+										<p>Zum aktivieren einmalig pro einloggen folgenden Parameter an die URL hängen: ?hideRightSideBar=true</p>
+									</div>
+								</div>
+							</div>
+
+							<div class="timeline-item">
+								<div class="row">
+									<div class="col-xs-3 date">
+										<i class="fa fa-file-text-o"></i> 0.4.3<br />
+										<small class="text-navy">Version</small>
+									</div>
+									<div class="col-xs-7 content">
+										<p class="m-b-xs">
+											<strong>Neuerungen</strong>
+										</p>
+										<p>Termine können nun kopiert werden. (Serientermin)</p>
+										<p>manuelle Punkte Korrektur</p>
+									</div>
+								</div>
+							</div>
+							
+							<div class="timeline-item">
+								<div class="row">
+									<div class="col-xs-3 date">
+										<i class="fa fa-file-text-o"></i> 0.4.2<br />
+										<small class="text-navy">Version</small>
+									</div>
+									<div class="col-xs-7 content">
+										<p class="m-b-xs">
+											<strong>Neuerungen</strong>
+										</p>
+										<p>Urlaubsanträge von Mitarbeitern</p>
+									</div>
+								</div>
+							</div>
+
+							<div class="timeline-item">
+								<div class="row">
+									<div class="col-xs-3 date">
+										<i class="fa fa-file-text-o"></i> 0.4.1<br />
+										<small class="text-navy">Version</small>
+									</div>
+									<div class="col-xs-7 content">
+										<p class="m-b-xs">
+											<strong>Updates</strong>
+										</p>
+										<p>Performanceverbesserung der Kundenliste</p>
+									</div>
+								</div>
+							</div>
+
+							<div class="timeline-item">
+								<div class="row">
+									<div class="col-xs-3 date">
+										<i class="fa fa-file-text-o"></i> 0.4<br />
+										<small class="text-navy">Version</small>
+									</div>
+									<div class="col-xs-7 content">
+										<p class="m-b-xs">
+											<strong>Neuerungen</strong>
+										</p>
+										<p>Aufgaben-Planung</p>
+									</div>
+								</div>
+							</div>
+
+							<div class="timeline-item">
+								<div class="row">
+									<div class="col-xs-3 date">
+										<i class="fa fa-file-text-o"></i> 0.3<br />
+										<small class="text-navy">Version</small>
+									</div>
+									<div class="col-xs-7 content">
+										<p class="m-b-xs">
+											<strong>Neuerungen</strong>
+										</p>
+										<p>Dateiuploads</p>
+									</div>
+								</div>
+							</div>
+
+							<div class="timeline-item">
+								<div class="row">
+									<div class="col-xs-3 date">
+										<i class="fa fa-file-text-o"></i> 0.2.0<br />
+										<small class="text-navy">Version</small>
+									</div>
+									<div class="col-xs-7 content">
+										<p class="m-b-xs">
+											<strong>Neuerungen</strong>
+										</p>
+										<p>Leistungsziele</p>
+									</div>
+								</div>
+							</div>
+
+							<div class="timeline-item">
+								<div class="row">
+									<div class="col-xs-3 date">
+										<i class="fa fa-file-text-o"></i> 0.1.20<br />
+										<small class="text-navy">Version</small>
+									</div>
+									<div class="col-xs-7 content">
+										<p class="m-b-xs">
+											<strong>Neuerungen</strong>
+										</p>
+										<p>VVL Übersich / Icon</p>
+										<p>Alt-Daten Import</p>
+										<p>Urlaubsplanung: Liste aller MA-Urlaube</p>
+										<p>Feiertage Hessen bis 2018</p>
+										
+										<p class="m-b-xs">
+											<strong>Bug Fixes</strong>
+										</p>
+										
+										<p>Kalender: Arbeitszeit an Feiertagen fehlerhaft berechnet.</p>
+									</div>
+								</div>
+							</div>
+
+							<div class="timeline-item">
+								<div class="row">
+									<div class="col-xs-3 date">
+										<i class="fa fa-file-text-o"></i> 0.1.19<br />
+										<small class="text-navy">Version</small>
+									</div>
+									<div class="col-xs-7 content">
+										<p class="m-b-xs">
+											<strong>Neuerungen</strong>
+										</p>
+										<p>Neues Shop Übersicht Dashboard</p>
+										<p>Übersicht -> MA Vergleich</p>
+										<p>Übersicht -> Filial Vergleich</p>
+										<p>Übersicht -> VO Vergleich</p>
+										<p>Verwaltung -> Kundenliste</p>
+										<p class="m-b-xs">
+											<strong>Änderungen</strong>
+										</p>
+										<p>Provisionsabgleich</p>
+										
+										<p class="m-b-xs">
+											<strong>Bug Fixes</strong>
+										</p>
+										
+										<p>Fehler beim zurücksetzen des Passworts bzw. bei Neu-User behoben.</p>
+										<p>Performaceverbesserungen</p>
+										<p>Verbesserung der Suche</p>
+										<p>Responsive Design angepasst</p>
+										<p>Dubletten bei Suche entfernt</p>
+									</div>
+								</div>
+							</div>
+
+							<div class="timeline-item">
+								<div class="row">
+									<div class="col-xs-3 date">
+										<i class="fa fa-file-text-o"></i> 0.1.18<br />
+										<small class="text-navy">Version</small>
+									</div>
+									<div class="col-xs-7 content">
+										<p class="m-b-xs">
+											<strong>Änderungen</strong>
+										</p>
+										<p>Login wird nach 3 Fehlversuchen gesperrt</p>
+										<p>erweitertes Rechtemanagement</p>
+										<p>Mitarbeiter Gruppen</p>
+										<p>Kalender überarbeitet</p>
+										<p>Termin-Arten: Urlaub, Krankheit, Schule, Schulung</p>
+										<p>Eigene Termin-Arten</p>
+										<p>Mitarbeiter deaktivierbar</p>
+										<p>Filialen deaktivierbar</p>
+										<p>Controlling->Verträge ganzes Jahr</p>
+										<p>Controlling->Verträge alle Mitarbeiter</p>
+										<p>Controlling->Verträge Recht: Nur eigene anzeigen</p>
+										<p>Supervisor Konto komplett ausgeblendet</p>
+										<p>Überstunden</p>
+										<p>Einstellungen Produktliste filterbar</p>
+										
+										<p class="m-b-xs">
+											<strong>Bug Fixes</strong>
+										</p>
+										<p>Bearbeiten von Verträgen nun unabhängig von aktiver Filiale</p>
+									</div>
+								</div>
+							</div>
+
+							<div class="timeline-item">
+								<div class="row">
+									<div class="col-xs-3 date">
+										<i class="fa fa-file-text-o"></i> 0.1.17 alpha <br />
+										<small class="text-navy">Version</small>
+									</div>
+									<div class="col-xs-7 content">
+										<p class="m-b-xs">
+											<strong>Änderungen</strong>
+										</p>
+										<p>Produkt Aktiv-Flag sowie Zeitspanne nun nutzbar</p>
+										<p>Produkte nun löschbar</p>
+										<p>Produkt kopieren</p>
+										<p>Einführung Mehrwert Steuer</p>
+										<p>Neue System Einstellung: Punkte pro Euro Marge</p>
+										<p>Neue System Einstellung: Mindest EK-Aufschlag in %</p>
+										<p>Vertragsbearbeitung nun über Controlling->Verträge aufrufbar</p>
+										<p>Kalender: Zeitraum für neue Einträge nun variierbar</p>
+										<p>Klick auf MA in Seitenleiste zeigt Mitarbeiter Verträge</p>
+										<p>Browser Druckansicht der Vertragsübersicht verbessert</p>
+										<p>Produkt-Optionen können nun VVL bei der Eingabe forcieren</p>
+										
+										<p class="m-b-xs">
+											<strong>Bug Fixes</strong>
+										</p>
+										<p>Doppelte VO Listung bei Verträgen.</p>
+										<p>Ranking in Seitenleiste nicht aktuell.</p>
+										<p>Bei Vertragseingabe für anderen MA werden die Punkte nicht aktualisiert.</p>
+										
+
+									</div>
+								</div>
+							</div>
+
+
+							
+							
+							<div class="timeline-item">
+								<div class="row">
+									<div class="col-xs-3 date">
+										<i class="fa fa-file-text-o"></i> 0.1.16 alpha <br />
+										<small class="text-navy">Version</small>
+									</div>
+									<div class="col-xs-7 content">
+										<p class="m-b-xs">
+											<strong>Änderungen</strong>
+										</p>
+										<p>Seitenleiste sortiert nun Ranking</p>
+										<p>User ohne Punkte Ziel nun nicht mehr in Seitenleiste</p>
+										<p>Verträge nun als Administrator bearbeitbar</p>
+
+									</div>
+								</div>
+							</div>
+
+							<div class="timeline-item">
+								<div class="row">
+									<div class="col-xs-3 date">
+										<i class="fa fa-file-text-o"></i> 0.1.15 alpha <br />
+										<small class="text-navy">Version</small>
+									</div>
+									<div class="col-xs-7 content">
+										<p class="m-b-xs">
+											<strong>Änderungen</strong>
+										</p>
+										<p>Kundendaten nun editierbar</p>
+										<p class="m-b-xs">
+											<strong>Bug Fixes</strong>
+										</p>
+										<p>Fehler bei Vertragseingabe behoben</p>
+
+									</div>
+								</div>
+							</div>
+
+							<div class="timeline-item">
+								<div class="row">
+									<div class="col-xs-3 date">
+										<i class="fa fa-file-text-o"></i> 0.1.14 alpha <br />
+										<small class="text-navy">Version</small>
+									</div>
+									<div class="col-xs-7 content">
+										<p class="m-b-xs">
+											<strong>Änderungen</strong>
+										</p>
+										<p>Gewichtung bei Produkt-Optionen</p>
+
+									</div>
+								</div>
+							</div>
+
+							<div class="timeline-item">
+								<div class="row">
+									<div class="col-xs-3 date">
+										<i class="fa fa-file-text-o"></i> 0.1.13 alpha <br />
+										<small class="text-navy">Version</small>
+									</div>
+									<div class="col-xs-7 content">
+										<p class="m-b-xs">
+											<strong>Änderungen</strong>
+										</p>
+										<p>Punkte pro Provision auf MA Ebene überschreibbar</p>
+										<p class="m-b-xs">
+											<strong>Bug Fixes</strong>
+										</p>
+										<p>div. Fehler behoben</p>
+
+									</div>
+								</div>
+							</div>
+
+							<div class="timeline-item">
+								<div class="row">
+									<div class="col-xs-3 date">
+										<i class="fa fa-file-text-o"></i> 0.1.12 alpha <br />
+										<small class="text-navy">Version</small>
+									</div>
+									<div class="col-xs-7 content">
+										<p class="m-b-xs">
+											<strong>Bug Fixes</strong>
+										</p>
+										<p>Kalender: Fix bei langsamer Verbindung und schnellen Aktivitäten</p>
+										<p>Sonderkonditionen nun Produkt Produkt-Options Kombinationen</p>
+										<p>div. Fehler behoben</p>
+
+									</div>
+								</div>
+							</div>
+
+							<div class="timeline-item">
+								<div class="row">
+									<div class="col-xs-3 date">
+										<i class="fa fa-file-text-o"></i> 0.1.11 alpha <br />
+										<small class="text-navy">Version</small>
+									</div>
+									<div class="col-xs-7 content">
+										<p class="m-b-xs">
+											<strong>Änderungen</strong>
+										</p>
+										<p>Datenbank-Schema Umstellung:</p>
+										<p>Verträge, Notizen, Events erweitern nun Aktivitäten</p>
+
+									</div>
+								</div>
+							</div>
+
+							<div class="timeline-item">
+								<div class="row">
+									<div class="col-xs-3 date">
+										<i class="fa fa-file-text-o"></i> 0.1.10 alpha <br />
+										<small class="text-navy">Version</small>
+									</div>
+									<div class="col-xs-7 content">
+										<p class="m-b-xs">
+											<strong>Features</strong>
+										</p>
+										<p>Punkte Pro Provision werden nun in der VO-Gruppe definiert</p>
+										<p>Punkte Pro Provision können nun in der AU/GU Matrix überschrieben werden</p>
+										<p>Neue Produkt Arten:</p>
+										<p>Mobilfunk-Tarif (entspricht früherem Tarif)</p>
+										<p>Festnetz-Tarif (Keine VO-Gruppen Punkte-Berechnung, erzeugt "Auftragsnummer" in Vertrag)</p>
+										<p>PrePaid-Tarif (Keine VO-Gruppen Punkte-Berechnung, selbst definierbarer generierter Umsatz, keine VVL bzw. Mindestvertragslaufzeit)</p>
+										<p class="m-b-xs">
+											<strong>Features</strong>
+										</p>
+										<p>Fehlerbehebungen am Kalender.</p>
+									</div>
+								</div>
+							</div>
+
+							<div class="timeline-item">
+								<div class="row">
+									<div class="col-xs-3 date">
+										<i class="fa fa-file-text-o"></i> 0.1.9.1 alpha <br />
+										<small class="text-navy">Version</small>
+									</div>
+									<div class="col-xs-7 content">
+										<p class="m-b-xs">
+											<strong>Bug Fixes</strong>
+										</p>
+										<p>Prüfung auf Fehleingaben Einstellungen angepasst.</p>
+										<p>Preis bei Sonder-Konditionen entfernt</p>
+										<p>Eigenes Passwort nun oben link änderbar</p>
+									</div>
+								</div>
+							</div>
+
+							<div class="timeline-item">
+								<div class="row">
+									<div class="col-xs-3 date">
+										<i class="fa fa-file-text-o"></i> 0.1.9 alpha <br />
+										<small class="text-navy">Version</small>
+									</div>
+									<div class="col-xs-7 content">
+										<p class="m-b-xs">
+											<strong>Feature</strong>
+										</p>
+										<p>Lizenzierung einzelner Module</p>
+									</div>
+								</div>
+							</div>
+
+							<div class="timeline-item">
+								<div class="row">
+									<div class="col-xs-3 date">
+										<i class="fa fa-file-text-o"></i> 0.1.8 alpha <br />
+										<small class="text-navy">Version</small>
+									</div>
+									<div class="col-xs-7 content">
+										<p class="m-b-xs">
+											<strong>BugFixes</strong>
+										</p>
+										<p>Dashboard redesign</p>
+										<p>Farbanpassungen</p>
+										<p>DB Updates</p>
+										<p>VLL Notifier oben rechts</p>
+									</div>
+								</div>
+							</div>
+
+							<div class="timeline-item">
+								<div class="row">
+									<div class="col-xs-3 date">
+										<i class="fa fa-file-text-o"></i> 0.1.7 alpha <br />
+										<small class="text-navy">Version</small>
+									</div>
+									<div class="col-xs-7 content">
+										<p class="m-b-xs">
+											<strong>Feature</strong>
+										</p>
+										<p>MA Planung in MA Kalender integriert</p>
+									</div>
+								</div>
+							</div>
+
+							<div class="timeline-item">
+								<div class="row">
+									<div class="col-xs-3 date">
+										<i class="fa fa-file-text-o"></i> 0.1.6 alpha <br />
+										<small class="text-navy">Version</small>
+									</div>
+									<div class="col-xs-7 content">
+										<p class="m-b-xs">
+											<strong>Feature</strong>
+										</p>
+										<p>Farbbelegung bei Mitarbeitern</p>
+										<p>Farbbelegung bei Filialen</p>
+										<p>MA Planung</p>
+									</div>
+								</div>
+							</div>
+
+							
+							<div class="timeline-item">
+								<div class="row">
+									<div class="col-xs-3 date">
+										<i class="fa fa-file-text-o"></i> 0.1.5 alpha <br />
+										<small class="text-navy">Version</small>
+									</div>
+									<div class="col-xs-7 content">
+										<p class="m-b-xs">
+											<strong>Feature</strong>
+										</p>
+										<p>Fehlerbehandlung</p>
+										<p>AU/GU Nutzung finalisiert</p>
+										<p>VO Berechtigung für Produkte</p>
+										<p>SoKo VO-Gruppen</p>
+										<p>Prozentuale Tarif Optionen</p>
+										<p>Neukundenformular Optimiert (Vorauswahl vorhandender)</p>
+										<p> - Vorauswahl vorhandener ext. Kundennummern</p>
+										<p> - Stadtvorauswahl anhand bisher eingegebener PLZ</p>
+										<p> - Pflichtfeld-Überarbeitung</p>
+										<p> - Bei vorhandenen Kunden werden gefundene Kunden zur Nutzung aufgelistet</p>
+										<p>Email Template</p>
+										<p>Minimale Benutzer-Recht Einstellungen</p>
+										<p>PLZ, Rufnummerneingabe nun nur noch numerisch</p>
+										<p>Vor- und Nachname nun bei Firmenkunden kein Pflichtfeld mehr</p>
+										<p>div. Schreibfehler korrigert</p>
+										<p>Umbenennung: Vertragsdatum -> Aktivierungsdatum</p>
+										<p>Rufnummern nun minmal 11 maxmimal 12 Zeichen</p>
+										<p>Software und Datenbank Version nun permanent unten Rechts sichtbar</p>
+										<p>Vertragsübersicht | Stats->Verträge</p>
+									</div>
+								</div>
+							</div>
+
+							<div class="timeline-item">
+								<div class="row">
+									<div class="col-xs-3 date">
+										<i class="fa fa-file-text-o"></i> 0.1.4 alpha <br />
+										<small class="text-navy">Version</small>
+									</div>
+									<div class="col-xs-7 content">
+										<p class="m-b-xs">
+											<strong>Feature</strong>
+										</p>
+										<p>Kontaktdaten für Filiaten</p>
+										<p>Überarbeitung der Einstellungsseiten</p>
+										<p>Seitenleister merkt sich zuletzt geöffneten Tab</p>
+										<p>Filal eigene VOs in Shop Details sichtbar</p>
+										<p>VOs von anderen Filalen aus nutzbar</p>
+										<p>Produkt VO-Gruppen nun über "Produkt Kond." Seite administrierbar</p>
+									</div>
+								</div>
+							</div>
+
+							<div class="timeline-item">
+								<div class="row">
+									<div class="col-xs-3 date">
+										<i class="fa fa-file-text-o"></i> 0.1.3 alpha <br />
+										<small class="text-navy">Version</small>
+									</div>
+									<div class="col-xs-7 content">
+										<p class="m-b-xs">
+											<strong>Feature</strong>
+										</p>
+										<p>Neue Punkte Einstellung (AU/GU)</p>
+									</div>
+								</div>
+							</div>
+
+							<div class="timeline-item">
+								<div class="row">
+									<div class="col-xs-3 date">
+										<i class="fa fa-file-text-o"></i> 0.1.2 alpha <br />
+										<small class="text-navy">Version</small>
+									</div>
+									<div class="col-xs-7 content">
+										<p class="m-b-xs">
+											<strong>Feature</strong>
+										</p>
+										<p>Darstellung aller Produkte in rechter Seitenleiste</p>
+										<p>Feature- &amp; Funktions-Anfragen</p>
+										<p class="m-b-xs">
+											<strong>BugFix</strong>
+										</p>
+										<p>Verbesserte Ansicht auf Mobilen Endgeräten</p>
+										<p>Seitenleisten nun Scrollbar</p>
+										<p>Beim verkleinern der Seite nun linke Seitenleiste automatisch in Mini-Ansicht</p>
+									</div>
+								</div>
+							</div>
+
+							<div class="timeline-item">
+								<div class="row">
+									<div class="col-xs-3 date">
+										<i class="fa fa-file-text-o"></i> 0.1.1 alpha <br />
+										<small class="text-navy">Version</small>
+									</div>
+									<div class="col-xs-7 content">
+										<p class="m-b-xs">
+											<strong>Bug Fixes</strong>
+										</p>
+										<p>Sortieren von Aktivitäten</p>
+										<p>Speichern von neuen Notizen</p>
+									</div>
+								</div>
+							</div>
+
+							<div class="timeline-item">
+								<div class="row">
+									<div class="col-xs-3 date">
+										<i class="fa fa-file-text-o"></i> 0.1 alpha <br />
+										<small class="text-navy">Version</small>
+									</div>
+									<div class="col-xs-7 content">
+										<p class="m-b-xs">
+											<strong>Erstes Release</strong>
+										</p>
+										<p>Primärfunktionen: Shop,Mitarbeiter,Produkte,Kunde,Verträge</p>
+										<p>Einige Grafische Elemente dienen zZ. noch als Platzhalter!</p>
+									</div>
+								</div>
+							</div>
+							
+						</div>
+					</div>
+				</div>
+			</div>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

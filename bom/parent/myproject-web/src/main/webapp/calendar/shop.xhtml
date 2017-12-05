@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+		xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:f="http://java.sun.com/jsf/core"	
+	xmlns:c="http://java.sun.com/jstl/core"	
+	xmlns:p="http://primefaces.org/ui">
+
+<h:body>
+
+	<ui:composition template="/WEB-INF/template/common/commonLayout.xhtml">
+	
+		<ui:define name="script">
+			<h:outputScript library="plugins" name="fullcalendar/moment.min.js"  />
+			<h:outputScript library="plugins" name="fullcalendar/fullcalendar.min.js"  />
+			<h:outputScript library="plugins" name="fullcalendar/de.js"  />
+			<h:outputScript library="plugins" name="fullcalendar/calendar.js"  />
+		</ui:define>
+
+
+		<ui:param name="bodyClass" value="right-sidebar-closed force-right-sidebar-closed" />
+		<ui:param name="heading1" value="Filial Kalender" />
+		
+		
+   		<ui:define name="headingContent">
+			<h:form class="form-horizontal #{calendarBean.calendarEditable and permissionBean.hasPermission('calendar','edit') ? 'editable' : ''}" id="headerToolbar" rendered="#{permissionBean.hasPermission('calendar','edit')}">
+			
+					    <h:commandLink  class="btn btn-xs btn-primary pull-right"  action="#{calendarBean.toggleCalendarEditable}" rendered="#{calendarBean.calendarEditable}">
+						   <f:ajax render="pageContent headerToolbar eventLoadingForm eventModalForm sideBar calendar-draggables-wrapper" onevent="reinitCalendar"/>
+						   <i class="fa fa-times"></i>
+						</h:commandLink>
+					    <h:commandLink  class="btn btn-xs btn-primary pull-right" action="#{calendarBean.toggleCalendarEditable}"  rendered="#{not calendarBean.calendarEditable}">
+						   <f:ajax render="pageContent headerToolbar eventLoadingForm eventModalForm sideBar calendar-draggables-wrapper" onevent="reinitCalendar"/>
+						   <i class="fa fa-pencil"></i>
+						</h:commandLink>
+						
+						<h:selectOneMenu a:data-placeholder="Filiale wählen ..." 
+									rendered="#{calendarBean.calendarEditable}"
+									value="#{shopBean.selectedShop}"
+									class="chosen-select-no-single form-control" converter="#{shopConverter}" style="width:350px;">
+									<f:selectItem itemValue="" itemLabel=""/>
+									<f:selectItems value="#{shopBean.shopList}" var="shop"
+										itemValue="#{shop}" itemLabel="#{shop.name}" />
+							<f:ajax render="pageContent eventLoadingForm eventForm" event="change" onevent="initCalendar"  />
+						</h:selectOneMenu>
+						
+			</h:form>
+   		</ui:define>
+   		
+   		<ui:define name="sub-content">
+			<ui:include src="/WEB-INF/include/calendar/calendarSideBar.xhtml" >
+				<ui:param name="showUserDraggables" value="true" />
+			</ui:include>
+        </ui:define>
+		
+		<ui:define name="content">
+		
+		<h:panelGroup id="pageContent">
+		
+		<div class="row calendarContent #{calendarBean.calendarEditable and permissionBean.hasPermission('calendar','edit') ? 'editable' : ''}">
+			
+			<div class="col-lg-12">
+			
+		            <div class="ibox float-e-margins">
+		                <div class="ibox-content">
+		                	<div class="fc-toolbar">
+		                						
+		                				<div class="fc-right">
+		                					<div class="fc-button-group">
+		                						<button type="button" onclick="prevCalendarTimeSpan();" class="fc-prev-button fc-button fc-state-default fc-corner-left"><span class="fc-icon fc-icon-left-single-arrow"></span></button>
+		                						<button type="button" onclick="nextCalendarTimeSpan();" class="fc-next-button fc-button fc-state-default fc-corner-right"><span class="fc-icon fc-icon-right-single-arrow"></span></button>
+		                						<button type="button" onclick="todayCalendarTimeSpan();" class="fc-today-button fc-button fc-state-default fc-corner-left fc-corner-right">heute</button>
+		                					</div>
+		                				</div>
+		                				<div class="fc-center">
+		                					<h2 class="calendarDuration"></h2>
+		                				</div>
+		                				<div class="fc-clear"></div></div>
+		                				
+		                				
+		                				
+								<h:panelGroup rendered="#{calendarBean.calendarEditable and shopBean.selectedShop.id == 0}">
+				               		<div class="alert alert-danger">
+				                               Bitte eine Filiale wählen.
+				                    </div>
+				                </h:panelGroup>
+		                		<h:panelGroup rendered="#{calendarBean.calendarEditable and shopBean.selectedShop.id > 0 and permissionBean.hasPermission('calendar','edit')}">
+			                		<div class="m-t">
+			                			<h2>#{shopBean.selectedShop.name} <small>#{shopBean.selectedShop.calendarNote}</small></h2>
+			                		</div>
+		                    		<div id="calendar_#{shopBean.selectedShop.uuid}" class="calendar"  data-shopid="#{shopBean.selectedShop.uuid}" data-from_0="#{shopBean.selectedShop.businessHours_start_0.replaceAll(':','')}" data-to_0="#{shopBean.selectedShop.businessHours_end_0.replaceAll(':','')}" data-from_1="#{shopBean.selectedShop.businessHours_start_1.replaceAll(':','')}" data-to_1="#{shopBean.selectedShop.businessHours_end_1.replaceAll(':','')}" data-from_2="#{shopBean.selectedShop.businessHours_start_2.replaceAll(':','')}" data-to_2="#{shopBean.selectedShop.businessHours_end_2.replaceAll(':','')}" data-from_3="#{shopBean.selectedShop.businessHours_start_3.replaceAll(':','')}" data-to_3="#{shopBean.selectedShop.businessHours_end_3.replaceAll(':','')}" data-from_4="#{shopBean.selectedShop.businessHours_start_4.replaceAll(':','')}" data-to_4="#{shopBean.selectedShop.businessHours_end_4.replaceAll(':','')}" data-from_5="#{shopBean.selectedShop.businessHours_start_5.replaceAll(':','')}" data-to_5="#{shopBean.selectedShop.businessHours_end_5.replaceAll(':','')}" data-from_6="#{shopBean.selectedShop.businessHours_start_6.replaceAll(':','')}" data-to_6="#{shopBean.selectedShop.businessHours_end_6.replaceAll(':','')}" data-editable="true">
+		                    			<div class="user" data-userid="0" data-holiday="true"></div>
+		                    			<ui:repeat var="user" value="#{userBean.userList}">
+		                    				<div class="user" data-userid="#{user.uuid}" data-color="#{user.color}"></div>
+										</ui:repeat>
+		                    		</div>
+	            				</h:panelGroup>
+		                    	
+	            				<h:panelGroup rendered="#{not calendarBean.calendarEditable}">
+	            				
+			                		<div class="m-t">
+			                			<h2>#{shopBean.activeShop.name} <small>#{shopBean.activeShop.calendarNote}</small></h2>
+			                		</div>
+		                    		<div id="calendar_#{shopBean.activeShop.uuid}" class="calendar"  data-shopid="#{shopBean.activeShop.uuid}" data-editable="false">
+		                    			<div class="user" data-userid="0" data-holiday="true"></div>
+		                    			<ui:repeat var="user" value="#{userBean.userList}">
+		                    				<div class="user" data-userid="#{user.uuid}" data-color="#{user.color}"></div>
+										</ui:repeat>
+		                    		</div>
+		                    	</h:panelGroup>
+		                </div>
+		            </div>
+	            
+	        </div>
+	            
+	            
+	            
+			
+	            
+	    </div>
+        
+
+        </h:panelGroup>
+		
+	
+	
+        	<ui:include src="/WEB-INF/include/calendar/eventModal.xhtml" />
+        	<ui:include src="/WEB-INF/include/calendar/calendarDraggableListForm.xhtml" />
+
+		</ui:define>
+
+
+
+	</ui:composition>
+</h:body>
+</html>

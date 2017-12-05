@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core">
+
+<h:body>
+
+
+
+	<ui:composition template="/WEB-INF/template/common/commonLayout.xhtml">
+	
+		<ui:param name="heading1" value="Offline" />
+	
+		<ui:define name="content">
+
+			<div class="middle-box text-center animated fadeInDown">
+				<h1>Ups</h1>
+				<br/>
+				<h3 class="font-bold">Controller Offline</h3>
+
+				
+				<div class="error-desc">
+					Der Controller Server ist zur Zeit nicht erreichbar.<br/>
+					Bitte versuchen Sie es später erneut.
+				</div>
+			</div>
+
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

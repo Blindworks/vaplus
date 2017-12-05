@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:body>
+
+
+
+	<f:metadata>
+		<f:event type="preRenderView" listener="#{customerBean.checkIfCustomerLogged}" />
+	</f:metadata>
+
+	<ui:composition template="/WEB-INF/template/common/commonLayout.xhtml">
+
+		<ui:param name="heading1" value="#{saleBean.invoice.id == 0 ? 'Neuer Verkauf' : 'Verkauf Nr. '.concat(saleBean.invoice.id)}" />
+
+		<ui:define name="content">
+
+			<ui:fragment rendered="#{not paymentBean.cashRegisterStatus}">
+				<div class="alert alert-danger" role="alert"><strong>Kasse geschlossen</strong></div>
+			</ui:fragment>
+			
+			<ui:fragment rendered="#{paymentBean.cashRegisterStatus}">
+
+
+    		<div class="row">
+				<div class="col-lg-12">
+				
+					
+			            <div class="ibox float-e-margins">
+			                <div class="ibox-title">
+			                    <h5>Verkaufs Details</h5>
+			                    <div class="ibox-tools">
+			                    </div>
+			                </div>
+			                <div class="ibox-content">
+			                
+	                			<h:form class="form-horizontal" id="invoiceAddProductForm">
+	                			
+			                	<h:inputHidden id="nextFormField" value="#{saleBean.nextFormField}" />
+			                
+			                	<div class="form-group">
+									<div class="col-lg-4">
+			                        		<h:inputText id="ean" 
+			                        			autocomplete="off" 
+			                        			class="chosen-select-no-single form-control col-sm-8" 
+			                        			onkeypress="if (event.keyCode == 13) {$(this).change(); return false; }" 
+			                        			a:placeholder="EAN" 
+			                        			value="#{saleBean.ean}">
+													<f:ajax event="change" listener="#{saleBean.loadProductByEan()}" render="invoiceAddProductForm messages"  onevent="setInvoiceAddProductFormFocus" />
+											</h:inputText>
+									</div>
+									<div class="col-lg-4">
+			                        		<h:selectOneMenu 
+			                        			id="retailProduct"
+			                        			disabled="#{saleBean.eanProductFound}"
+			                        			onkeydown="return event.keyCode != 13;"
+			                        			a:data-placeholder="Artikel wählen ..."
+															value="#{saleBean.product}"
+															class="chosen-select-no-single form-control col-sm-10"
+															converter="#{baseProductConverter}">
+															<f:selectItem itemValue="" itemLabel=""/>
+															<f:selectItems value="#{saleBean.orderableProductList}" var="product"
+																itemValue="#{product}" itemLabel="#{product.name}" />
+															<f:validateRequired />
+															<f:ajax event="change" listener="#{saleBean.initProduct()}" render="invoiceAddProductForm messages" onevent="setInvoiceAddProductFormFocus" />
+											</h:selectOneMenu>
+									</div>
+									
+									<div class="col-lg-4">
+										<h:commandButton value="+ freier Artikel" action="#{saleBean.setManualInvoiceItem(null)}" class="btn btn-primary form-control">
+											<f:ajax render="manualInvoiceItemModalForm" onevent="openManualInvoiceItemModal"  />
+											 
+										</h:commandButton>
+									</div>
+								</div>
+								
+                        	
+                        	<h:panelGroup rendered="#{not empty saleBean.product}">
+			                	<div class="form-group">
+									<div class="col-lg-6">
+									
+										<ui:fragment rendered="#{saleBean.product.serialRequired}">
+											<h:inputText 
+			                        			id="serial"
+			                        			onkeypress="if (event.keyCode == 13) {$(this).change(); return false; }" 
+				                        		onkeydown="if (event.keyCode == 9) {$(this).change(); return false; }" 
+			                        			value="#{saleBean.serial}" 
+			                        			autocomplete="off" 
+			                        			a:placeholder="IMEI / Seriennummer"
+			                        			class="form-control">
+			                        			<f:ajax event="change" listener="#{saleBean.checkSerial}" render="invoiceAddProductForm invoiceForm messages" onevent="setInvoiceAddProductFormFocus" />
+											</h:inputText>
+										</ui:fragment>
+									
+										<ui:fragment rendered="#{not saleBean.product.serialRequired}">
+			                        		<h:inputText id="quantity" 
+			                        			autocomplete="off" 
+			                        			onkeypress="if (event.keyCode == 13) {$(this).change(); return false; }" 
+					                        		onkeydown="if (event.keyCode == 9) {$(this).change(); return false; }" 
+		                        				class="form-control"
+			                        			value="#{saleBean.quantity}">
+													<f:convertNumber maxFractionDigits="4" minFractionDigits="0" />
+													<f:ajax event="change" listener="#{saleBean.checkQuantity}" render="invoiceAddProductForm invoiceForm messages" onevent="setInvoiceAddProductFormFocus" />
+											</h:inputText>
+										</ui:fragment>
+											
+									</div>
+									
+										<div class="col-lg-6">
+											<h:commandButton class="btn btn-primary pull-right" value="Hinzufügen" action="#{saleBean.checkQuantity}" >
+												<f:ajax render="invoiceAddProductForm invoiceForm messages" onevent="setInvoiceAddProductFormFocus"/>
+											</h:commandButton>
+										</div>
+								</div>
+								
+							</h:panelGroup>
+							
+							
+							
+			                
+	                </h:form>
+			                
+	                <h:form class="form-horizontal" id="invoiceForm">
+								
+								<h:panelGroup rendered="#{saleBean.invoice.invoiceItemList.size() gt 0}">
+								<div class="hr-line-dashed"></div>
+									<div class="form-group productList">
+										<label class="col-sm-2 control-label">Artikel</label>
+										<div class="col-sm-10">
+										
+										<ui:repeat var="invoiceItem" value="#{saleBean.invoice.invoiceItemList}">
+												<div class="retailProduct">
+													<div class="group-item">
+														<div class="col-sm-1">
+															<h:outputText value="#{invoiceItem.quantity}" >
+					                        					<f:convertNumber maxFractionDigits="2" minFractionDigits="0" />
+					                        				</h:outputText>
+														</div>
+														<div class="col-sm-3">
+															<ui:fragment rendered="#{invoiceItem.manualItem}">
+																<h:commandLink action="#{saleBean.setManualInvoiceItem(invoiceItem)}">
+																	<f:ajax render="manualInvoiceItemModalForm" onevent="openManualInvoiceItemModal"  />
+																	 #{invoiceItem.title}
+																</h:commandLink>
+															</ui:fragment>
+															<ui:fragment rendered="#{not invoiceItem.manualItem}">
+																#{invoiceItem.title}
+															</ui:fragment>
+														</div>
+														<div class="col-sm-2">
+															#{invoiceItem.serial}
+														</div>
+														<div class="col-sm-2 text-right">
+					                        				<h:commandLink action="#{saleBean.setInvoiceItem(invoiceItem)}">
+																<f:ajax render="retailProductPriceModalForm" onevent="openRetailProductPriceModal"  />
+																<h:outputText value="#{invoiceItem.unitPrice}" >
+					                        					<f:convertNumber maxFractionDigits="2" minFractionDigits="2" />
+					                        				</h:outputText> <i class="fa fa-euro"></i>
+															</h:commandLink>
+														</div>
+														<div class="col-sm-2 text-right">
+															<h:outputText value="#{invoiceItem.commission.grossPrice}" >
+					                        					<f:convertNumber maxFractionDigits="2" minFractionDigits="2" />
+					                        				</h:outputText> <i class="fa fa-euro"></i>
+														</div>
+														<div class="col-sm-2 text-right text-navy">
+															<h:outputText value="#{invoiceItem.commission.points}" >
+					                        					<f:convertNumber maxFractionDigits="4" minFractionDigits="0" />
+					                        				</h:outputText> <i class="fa fa-star"></i>
+														</div>
+														
+													</div>
+													<div class="group-button">
+														<h:commandLink class="btn btn-white pull-right" action="#{saleBean.removeInvoiceItemFromInvoice(invoiceItem)}" >
+																<f:ajax render="invoiceForm" onevent="updatePluginsEvent"  />
+																<i class="fa fa-trash"></i>
+														</h:commandLink>
+													</div>
+												</div>
+										</ui:repeat>
+										
+										</div>
+									</div>
+								<div class="form-group">
+									<div class="col-sm-2">
+									</div>
+									<div class="col-sm-10 text-right">
+										<div class="row" style="padding-right: 47px;">
+											<label class="col-sm-10 control-label">Punkte:</label>
+											<label class="col-sm-2 control-label text-navy">
+												<h:outputText value="#{saleBean.invoice.commission.points}">
+													<f:convertNumber maxFractionDigits="4" minFractionDigits="0" />
+												</h:outputText>
+												<i class="fa fa-star"></i>
+											</label>
+										</div>
+										<div class="row" style="padding-right: 47px;">
+											<label class="col-sm-10 control-label">Netto Summe:</label>
+											<label class="col-sm-2 control-label">
+												<h:outputText value="#{saleBean.invoice.commission.price}">
+													<f:convertNumber maxFractionDigits="2" minFractionDigits="2" />
+												</h:outputText>
+												<i class="fa fa-euro"></i>
+											</label>
+										</div>
+										
+										<ui:repeat var="tax" value="#{saleBean.invoice.vatList.keySet().toArray()}">
+										
+										<div class="row" style="padding-right: 47px;">
+											<label class="col-sm-10 control-label">
+												<h:outputText value="#{tax}">
+													<f:convertNumber maxFractionDigits="0" minFractionDigits="0" />
+												</h:outputText>% MwSt:</label>
+											<label class="col-sm-2 control-label">
+												<h:outputText value="#{saleBean.invoice.vatList.get(tax)}">
+													<f:convertNumber maxFractionDigits="2" minFractionDigits="2" />
+												</h:outputText>
+												<i class="fa fa-euro"></i>
+											</label>
+										</div>
+										
+										</ui:repeat>
+										
+										<div class="row" style="padding-right: 47px;">
+											<label class="col-sm-10 control-label">Betrag:</label>
+											<label class="col-sm-2 control-label">
+												<h:outputText value="#{saleBean.invoice.commission.price.add(saleBean.invoice.commission.vat)}">
+													<f:convertNumber maxFractionDigits="2" minFractionDigits="2" />
+												</h:outputText>
+												<i class="fa fa-euro"></i>
+											</label>
+										</div>
+									
+									
+										
+									</div>
+								
+								</div>
+								</h:panelGroup>
+								
+								
+								
+								
+								
+								<div class="form-group">
+									<label class="col-sm-2 control-label">Interne Info</label>
+									<div class="col-sm-10">
+										<h:inputTextarea rows="5"  
+											value="#{saleBean.invoice.note}"
+											class="form-control" autocomplete="off" />
+									</div>
+								</div>
+		
+								<div class="form-group">
+		
+									<label class="col-sm-2 control-label">Mitarbeiter</label>
+									<div class="col-sm-2">
+										<h:selectOneMenu id="user" disabled="#{saleBean.invoice.id gt 0 and not permissionBean.isAllowedToChangeOrder(saleBean.invoice)}" a:data-placeholder="Mitarbeiter wählen ..."
+											value="#{saleBean.invoice.user}"
+											validatorMessage="Bitte Mitarbeiter wählen"
+											class="chosen-select-no-single form-control  #{ component.valid ? '' : 'select-error'}" converter="#{userConverter}">
+											<f:selectItem itemValue="" itemLabel=""/>
+											<f:selectItems value="#{userBean.userList}" var="user"
+												itemValue="#{user}" itemLabel="#{user.name}" />
+											<f:ajax event="change" listener="#{saleBean.calculateCommission}" render="orderForm" onevent="updatePluginsEvent" />
+											<f:validateRequired />
+										</h:selectOneMenu>
+										<h:messages for="user"  />
+									</div>
+		
+								</div>
+		
+								<div class="form-group">
+		
+									<label class="col-sm-2 control-label">Zahlungsart</label>
+									<div class="col-sm-2">
+										<h:selectOneMenu id="payment" a:data-placeholder="Zahlungsart wählen ..."
+											value="#{saleBean.invoice.payment}"
+											validatorMessage="Bitte Zahlungsart wählen"
+											class="chosen-select-no-single form-control  #{ component.valid ? '' : 'select-error'}" converter="#{paymentConverter}">
+											<f:selectItem itemValue="" itemLabel=""/>
+											<f:selectItems value="#{saleBean.paymentList}" var="payment"
+												itemValue="#{payment}" itemLabel="#{payment.description}" />
+											<f:validateRequired />
+										</h:selectOneMenu>
+										<h:messages for="payment"  />
+									</div>
+		
+								</div>
+		
+		
+		
+								<div class="hr-line-dashed"></div>
+		
+		
+		
+		
+								<div class="form-group">
+									<div class="col-sm-12">
+												
+										<h:commandButton value="speichern"
+											action="#{saleBean.saveInvoice}" class="btn btn-primary pull-right" />
+									</div>
+								</div>
+					               
+					               
+					               
+	                </h:form>
+					                
+			                
+			                </div>
+            			</div>
+            			
+            			
+    			</div>
+    		</div>
+		  
+		  
+		  
+		  <div class="modal inmodal" id="manualInvoiceItemModal" tabindex="-1"
+			role="dialog" aria-hidden="true" style="display: none;"
+			data-keyboard="true" data-backdrop="static">
+				<div class="modal-dialog modal-m">
+				<div class="modal-content">
+				
+					<h:form class="form-horizontal" id="manualInvoiceItemModalForm">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal">
+								<span aria-hidden="true">×</span><span class="sr-only">Close</span>
+							</button>
+							<h4 class="modal-title">Freier Inhalt</h4>
+						</div>
+						<div class="modal-body">
+							<h:messages  class="list-group-item danger"/>
+								
+								
+                        	<div class="form-group">
+								<h:inputText 
+                        			autocomplete="off" 
+                        			class="form-control " 
+                        			a:placeholder="Titel" 
+                        			value="#{saleBean.manualInvoiceItem.title}">
+								</h:inputText>
+							</div>
+								
+                        	<div class="form-group">
+								<h:inputText 
+                        			autocomplete="off" 
+                        			class="form-control " 
+                        			a:placeholder="Untertitel" 
+                        			value="#{saleBean.manualInvoiceItem.subTitle}">
+								</h:inputText>
+							</div>
+								
+									
+                        	<div class="form-group">
+                        		<h:inputText id="quantity" 
+                        			autocomplete="off" 
+                        			class="form-control text-right #{ component.valid ? '' : 'error'}" 
+                        			a:placeholder="Anzahl" 
+                        			value="#{saleBean.manualInvoiceItem.quantity}">
+												<f:ajax event="change" />
+									<f:convertNumber maxFractionDigits="2" minFractionDigits="0" />
+								</h:inputText>
+								<h:messages for="unitPrice"  />
+                        	</div>
+								
+									
+                        	<div class="form-group">
+                        		<h:inputText id="unitPrice" 
+                        			autocomplete="off" 
+                        			class="form-control text-right #{ component.valid ? '' : 'error'}" 
+                        			a:placeholder="Preis" 
+                        			value="#{saleBean.manualInvoiceItem.commission.grossPrice}">
+												<f:ajax event="change" />
+									<f:convertNumber maxFractionDigits="2" minFractionDigits="2" />
+								</h:inputText>
+								<h:messages for="unitPrice"  />
+                        	</div>
+                        	
+                        </div>
+						<div class="modal-footer">
+							<h:commandButton id="submitButton" class="btn btn-primary" value="anwenden" action="#{saleBean.saveManualInvoiceItem()}" >
+								<f:ajax execute="@form" onevent="closeManualInvoiceItemModal" render="manualInvoiceItemModalForm invoiceForm messages" />
+							</h:commandButton>
+                        </div>
+					</h:form>
+				</div>
+				</div>
+		</div>
+			
+		  
+			
+			<ui:decorate template="/WEB-INF/include/order/retailProductPriceForm.xhtml">
+				<ui:param name="item" value="#{saleBean.invoiceItem}" />
+				<ui:define name="checkButton">
+					<h:commandButton class="btn btn-primary" value="check" action="#{saleBean.checkInvoiceItem(saleBean.invoiceItem)}" >
+						<f:ajax render="retailProductPriceModalForm" onevent="priceChanged"/>
+					</h:commandButton>
+				</ui:define>
+				<ui:define name="submitButton">
+					<h:commandButton id="submitButton" class="btn btn-primary" value="anwenden" action="#{saleBean.calculateCommission()}" >
+						<f:ajax onevent="closeRetailProductPriceModal" render="retailProductModalPriceForm invoiceForm messages" />
+					</h:commandButton>
+				</ui:define>
+			</ui:decorate>
+
+				<script>
+					function productSelected(){
+						updatePlugins();
+						if($('#invoiceAddProductForm\\:error').val() == "true"){
+							$('#invoiceAddProductForm\\:ean').focus();
+							return;
+						}
+						else if($('#invoiceAddProductForm\\:finish').val() == "true"){
+							$('#invoiceAddProductForm\\:submitButton').click();
+							
+						}else{
+							$('#retailProductModalForm\\:serial').focus();
+						}
+							
+					}
+		
+					$( document ).ready(function() {
+						$('#retailProductModal').on('shown.bs.modal', function() {
+							window.setTimeout(function(){
+						      $('#retailProductModalForm\\:ean').focus();
+						    }, 500);
+						})
+					});
+					
+						
+					function setInvoiceAddProductFormFocus(data){
+						if(data.status == "success"){
+		
+							
+							switch ($("#invoiceAddProductForm\\:nextFormField").val()) {
+							  case "ean":
+								  $("#invoiceAddProductForm\\:ean").focus();
+							    break;
+							  case "serial":
+								  $("#invoiceAddProductForm\\:serial").focus();
+							    break;
+							  case "quantity":
+								  $("#invoiceAddProductForm\\:quantity").focus();
+							    break;
+							}
+							
+							
+							updatePlugins();
+						}
+					}
+
+
+					function closeManualInvoiceItemModal(){
+						updatePlugins();
+						$('#manualInvoiceItemModal').modal('hide');
+					}
+					
+					function openManualInvoiceItemModal(){
+						updatePlugins();
+						$('#manualInvoiceItemModal').modal('show');
+					}
+		
+				</script>
+
+			</ui:fragment>
+		</ui:define>
+
+
+	</ui:composition>
+</h:body>
+</html>

@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    JBoss, Home of Professional Open Source
+    Copyright 2013, Red Hat, Inc. and/or its affiliates, and individual
+    contributors by the @authors tag. See the copyright.txt in the
+    distribution for a full listing of individual contributors.
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+    http://www.apache.org/licenses/LICENSE-2.0
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+<persistence version="2.1"
+   xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="
+        http://java.sun.com/xml/ns/persistence
+        http://java.sun.com/xml/ns/persistence/persistence_2_1.xsd">
+-->        
+        
+<persistence xmlns="http://xmlns.jcp.org/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence
+             http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd"
+             version="2.1">
+   <persistence-unit name="vaplus-client">
+      <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+      <jta-data-source>java:jboss/datasources/vaplus</jta-data-source>
+      
+      
+      <class>de.vaplus.client.entity.StateEntity</class>
+      <class>de.vaplus.client.entity.PropertyEntity</class>
+      <class>de.vaplus.client.entity.HolidayEntity</class>
+      <class>de.vaplus.client.entity.AchievementEntity</class>
+      <class>de.vaplus.client.entity.AchievementTargetEntity</class>
+      <class>de.vaplus.client.entity.ShopEntity</class>
+      <class>de.vaplus.client.entity.UserEntity</class>
+      <class>de.vaplus.client.entity.UserPropertyEntity</class>
+      <class>de.vaplus.client.entity.UserPermissionEntity</class>
+      <class>de.vaplus.client.entity.UserPayrollEntity</class>
+      <class>de.vaplus.client.entity.UserGroupPermissionEntity</class>
+      <class>de.vaplus.client.entity.UserGroupEntity</class>
+      <class>de.vaplus.client.entity.UserCustomerHistoryEntity</class>
+      <class>de.vaplus.client.entity.UserAliasEntity</class>
+      <class>de.vaplus.client.entity.TaxRateEntity</class>
+      <class>de.vaplus.client.entity.TaskActivityEntity</class>
+      <class>de.vaplus.client.entity.TariffEntity</class>
+      <class>de.vaplus.client.entity.SupplierEntity</class>
+      <class>de.vaplus.client.entity.StockPickslipEntity</class>
+      <class>de.vaplus.client.entity.StockMovementEntity</class>
+      <class>de.vaplus.client.entity.StockEntity</class>
+      <class>de.vaplus.client.entity.StatusBaseEntity</class>
+      <class>de.vaplus.client.entity.ShopGroupEntity</class>
+      <class>de.vaplus.client.entity.UserStatsEntity</class>
+      <class>de.vaplus.client.entity.ShopDocNumberRangesEntity</class>
+      <class>de.vaplus.client.entity.ShopAliasEntity</class>
+      <class>de.vaplus.client.entity.SecureUserLinkEntity</class>
+      <class>de.vaplus.client.entity.SecureLinkEntity</class>
+      <class>de.vaplus.client.entity.RevenueLevelVOTypeEntity</class>
+      <class>de.vaplus.client.entity.ProductStockCacheEntity</class>
+      <class>de.vaplus.client.entity.ProductStatisticEntity</class>
+      <class>de.vaplus.client.entity.ProductStatisticCacheEntity</class>
+      <class>de.vaplus.client.entity.ProductOptionEntity</class>
+      <class>de.vaplus.client.entity.ProductEntity</class>
+      <class>de.vaplus.client.entity.ProductCommissionVOTypeProductRelationEntity</class>
+      <class>de.vaplus.client.entity.ProductCommissionVOTypeEntity</class>
+      <class>de.vaplus.client.entity.ProductCategoryEntity</class>
+      <class>de.vaplus.client.entity.PrePaidTariffEntity</class>
+      <class>de.vaplus.client.entity.PhoneContractEntity</class>
+      <class>de.vaplus.client.entity.PermissionEntity</class>
+      <class>de.vaplus.client.entity.PaymentStatusEntity</class>
+      <class>de.vaplus.client.entity.ProductCategorySalesCacheEntity</class>
+      <class>de.vaplus.client.entity.PaymentShopAccountEntity</class>
+      <class>de.vaplus.client.entity.PaymentEntity</class>
+      <class>de.vaplus.client.entity.PaymentAccountTransactionEntity</class>
+      <class>de.vaplus.client.entity.PaymentAccountEntity</class>
+      <class>de.vaplus.client.entity.OrderEntity</class>
+      <class>de.vaplus.client.entity.NoteEntity</class>
+      <class>de.vaplus.client.entity.OrderItemEntity</class>
+      <class>de.vaplus.client.entity.LandlineTariffEntity</class>
+      <class>de.vaplus.client.entity.JobTitleEntity</class>
+      <class>de.vaplus.client.entity.ManualCommissionEntity</class>
+      <class>de.vaplus.client.entity.InvoiceEntity</class>
+      <class>de.vaplus.client.entity.FileSystemFileEntity</class>
+      <class>de.vaplus.client.entity.FileEntity</class>
+      <class>de.vaplus.client.entity.FileActivityEntity</class>
+      <class>de.vaplus.client.entity.ExternalCustomerEntity</class>
+      <class>de.vaplus.client.entity.EventTypeEntity</class>
+      <class>de.vaplus.client.entity.EventEntity</class>
+      <class>de.vaplus.client.entity.EmploymentFormEntity</class>
+      <class>de.vaplus.client.entity.DBFileEntity</class>
+      <class>de.vaplus.client.entity.CustomerEntity</class>
+      <class>de.vaplus.client.entity.CrosscanDataEntity</class>
+      <class>de.vaplus.client.entity.CountryEntity</class>
+      <class>de.vaplus.client.entity.ContractStatusEntity</class>
+      <class>de.vaplus.client.entity.ContractStatusChangeEntity</class>
+      <class>de.vaplus.client.entity.ContractRetailItemEntity</class>
+      <class>de.vaplus.client.entity.ContractItemEntity</class>
+      <class>de.vaplus.client.entity.CommissionCacheEntity</class>
+      <class>de.vaplus.client.entity.CommissionActivityEntity</class>
+      <class>de.vaplus.client.entity.ChangeHistoryEntity</class>
+      <class>de.vaplus.client.entity.CellPhoneTariffEntity</class>
+      <class>de.vaplus.client.entity.BaseProductEntity</class>
+      <class>de.vaplus.client.entity.BaseProductCombinationEntity</class>
+      <class>de.vaplus.client.entity.BaseEntity</class>
+      <class>de.vaplus.client.entity.BaseContractEntity</class>
+      <class>de.vaplus.client.entity.BaseContractCancellationEntity</class>
+      <class>de.vaplus.client.entity.ActivityEntity</class>
+      <class>de.vaplus.client.entity.AchievementUserGoalAttainmentEntity</class>
+      <class>de.vaplus.client.entity.InvoiceItemEntity</class>
+      <class>de.vaplus.client.entity.VacationRequestEntity</class>
+      <class>de.vaplus.client.entity.VendorEntity</class>
+      <class>de.vaplus.client.entity.VOCommissionEntity</class>
+      <class>de.vaplus.client.entity.VOEntity</class>
+      <class>de.vaplus.client.entity.VOTypeEntity</class>
+      
+      <class>de.vaplus.client.entity.commission.AquiredRevenueLevelEntity</class>
+      <class>de.vaplus.client.entity.commission.ContractedRevenueLevelEntity</class>
+      <class>de.vaplus.client.entity.commission.RevenueLevelEntity</class>
+      <class>de.vaplus.client.entity.commission.VOTypeCommissionRevenueLevelEntity</class>
+      
+      <class>de.vaplus.client.entity.commission.vendor.AccountingAssignmentEntity</class>
+      <class>de.vaplus.client.entity.commission.vendor.CommissionTypeAssociationEntity</class>
+      <class>de.vaplus.client.entity.commission.vendor.VendorCommissionAccountingFileEntity</class>
+      <class>de.vaplus.client.entity.commission.vendor.VendorCommissionAccountingItemEntity</class>
+      <class>de.vaplus.client.entity.commission.vendor.VodafoneCommissionAccountingItemEntity</class>
+      
+      <class>de.vaplus.client.entity.embeddable.AddressEmbeddable</class>
+      <class>de.vaplus.client.entity.embeddable.BusinessHoursEmbeddable</class>
+      <class>de.vaplus.client.entity.embeddable.CommissionableEmbeddable</class>
+      
+      <class>org.picketlink.idm.jpa.model.sample.simple.AttributedTypeEntity</class>
+      <class>org.picketlink.idm.jpa.model.sample.simple.AccountTypeEntity</class>
+      <class>org.picketlink.idm.jpa.model.sample.simple.RoleTypeEntity</class>
+      <class>org.picketlink.idm.jpa.model.sample.simple.GroupTypeEntity</class>
+      <class>org.picketlink.idm.jpa.model.sample.simple.IdentityTypeEntity</class>
+      <class>org.picketlink.idm.jpa.model.sample.simple.RelationshipTypeEntity</class>
+      <class>org.picketlink.idm.jpa.model.sample.simple.RelationshipIdentityTypeEntity</class>
+      <class>org.picketlink.idm.jpa.model.sample.simple.PartitionTypeEntity</class>
+      <class>org.picketlink.idm.jpa.model.sample.simple.PasswordCredentialTypeEntity</class>
+      <class>org.picketlink.idm.jpa.model.sample.simple.AttributeTypeEntity</class>
+      <class>org.picketlink.idm.jpa.model.sample.simple.PermissionTypeEntity</class>
+   </persistence-unit>
+</persistence>

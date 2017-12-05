@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	  xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:body>
+
+	<f:metadata>
+		<f:event listener="#{FEPluginBean.includePeity}" type="preRenderComponent"></f:event>
+		<f:event listener="#{FEPluginBean.includeChosen}" type="preRenderComponent"></f:event>
+	</f:metadata>
+
+	<ui:composition template="/WEB-INF/template/common/commonLayout.xhtml">
+
+		<ui:param name="heading1" value="#{userBean.selectedJobTitle.id == 0 ? 'Neue Mitarbeiter Position' : userBean.selectedJobTitle.name}" />
+
+		<ui:define name="content">
+
+			<div class="row">
+				<div class="col-lg-12">
+		            <div class="ibox float-e-margins">
+					<h:form id="eventTypeForm" class="form-horizontal">
+		                <div class="ibox-title">
+		                    <h5>Mitarbeiter Positions Details</h5>
+		                    <div class="ibox-tools">
+								    <h:commandLink  class="btn btn-xs btn-primary " action="#{userBean.saveJobTitle}">
+									   <i class="fa fa-save"></i>
+									</h:commandLink>
+									<h:commandLink action="lists" class="btn btn-xs btn-primary " immediate="true" >
+										<i class="fa fa-times"></i>
+								    </h:commandLink>
+		                    </div>
+		                </div>
+		                <div class="ibox-content">
+									<div class="form-group">
+										<label class="col-sm-2 control-label">Name</label>
+										<div class="col-sm-10">
+											<h:inputText id="title" value="#{userBean.selectedJobTitle.name}" class="form-control #{ component.valid ? '' : 'error'}"
+											validatorMessage="Name erforderlich (mind. 3 Zeichen)">
+												<f:validateLength minimum="3" maximum="30"/>
+											</h:inputText>
+										<h:messages for="title"  />
+										</div>
+									</div>
+		                </div>
+	               </h:form>
+	               </div>
+               </div>
+               
+               
+            </div>
+
+
+		</ui:define>
+
+
+	</ui:composition>
+</h:body>
+</html>

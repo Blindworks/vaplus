@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:c="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+	  xmlns:f="http://java.sun.com/jsf/core"
+	  xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:p="http://primefaces.org/ui">
+
+	<h:body>
+	
+	
+    	<ui:composition template="/WEB-INF/template/common/commonLayout.xhtml">
+    		<ui:param name="heading1" value="Offene Warenbewegungen" />
+    		
+    		
+    		
+    		
+    		<ui:define name="content">
+    		
+    		
+    		<div class="row">
+				<div class="col-lg-12">
+					<h:form id="stockListForm">
+			            <div class="ibox float-e-margins">
+			                <div class="ibox-title">
+			                    <h5>Offene Warenbewegungen</h5>
+			                </div>
+								
+			                <div class="ibox-content">
+			                
+			                 <h:dataTable value="#{stockMovementBean.openMovementsList}" var="item" class="table table-hover" >
+
+								<h:column>
+									<f:facet name="header">Produkt</f:facet>
+									<h:outputText value="#{item.product}">
+									</h:outputText>
+								</h:column>
+								<h:column>
+									<f:facet name="header">Menge</f:facet>
+									<h:outputText value="#{item.quantity}">
+										<f:convertNumber maxFractionDigits="2" minFractionDigits="0" />
+									</h:outputText>
+								</h:column>
+								<h:column>
+									<f:facet name="header">Seriennummer</f:facet>
+									<h:outputText value="#{item.serial}">
+									</h:outputText>
+								</h:column>
+								<h:column>
+									<f:facet name="header">Lieferschein</f:facet>
+									<h:commandLink action="/stockManagement/movement/movement" >
+										<f:setPropertyActionListener value="#{item.stockPickslip}" target="#{stockMovementBean.selectedStockPickslip}" />
+										<h:outputText value="#{item.stockPickslip.number}" />
+								    </h:commandLink>
+								</h:column>
+								<h:column>
+									<f:facet name="header">Quell Lager</f:facet>
+									<h:outputText value="#{item.stockPickslip.src_stock}">
+									</h:outputText>
+								</h:column>
+								<h:column>
+									<f:facet name="header">Ziel Lager</f:facet>
+									<h:outputText value="#{item.stockPickslip.dst_stock}">
+									</h:outputText>
+								</h:column>
+								<h:column>
+									<f:facet name="header">Lieferschein Datum</f:facet>
+									<h:outputText value="#{item.stockPickslip.effectiveDate}">
+									  <f:convertDateTime type="date" pattern="dd.MM.yyyy" timeZone="CET"/>
+									</h:outputText>
+								</h:column>
+							</h:dataTable>
+			                
+			                </div>
+		                </div>
+	                </h:form>
+                </div>
+            </div>
+    		
+    		
+    		
+            
+    		</ui:define>
+    		
+    		
+    	</ui:composition>
+    </h:body>
+</html>

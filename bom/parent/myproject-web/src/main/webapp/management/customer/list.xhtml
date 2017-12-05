@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:body>
+
+	<f:metadata>
+	</f:metadata>
+
+	<ui:composition template="/WEB-INF/template/common/commonLayout.xhtml">
+		<ui:param name="heading1" value="Kunden" />
+
+		<ui:define name="content">	
+
+
+			<div class="row">
+			
+            <h:form id="customerListForm">
+	                <div class="col-sm-8">
+	                    <div class="ibox">
+	                        <div class="ibox-content">
+	                            <div class="input-group">
+	                                <h:inputText id="searchQuery" value="#{customerListBean.searchQuery}" a:placeholder="Suche Kunde "  autocomplete="off" class="input form-control" onkeypress="if (event.keyCode == 13) { $('#customerListForm\\:searchButton').click(); return false; }"  />
+	                                <span class="input-group-btn">
+	                                	<h:commandLink id="searchButton" class="btn btn btn-primary">
+	                                		<f:ajax execute="searchQuery" render="customerListPanel" />
+	                                		<i class="fa fa-search"></i> Suchen
+	                                	</h:commandLink>
+	                                </span>
+	                            </div>
+	                            <div class="clients-list">
+	                            	<h:panelGroup id="customerListPanel">
+	                                <span class="pull-right small text-muted">#{customerListBean.filteredCustomerCount} Kunden</span>
+	                                    <div class="">
+	                                <table class=" table table-stripped dataTable table-clickable" >
+	                                         <thead>
+		                                <tr>
+		                                    <th >
+		                                    	<h:commandLink action="#{customerListBean.toggleSortField_id()}" value="" >
+		                                    		<f:ajax execute="@this" render="customerListPanel" />
+		                                    		<span class="sorting#{customerListBean.sortField eq 'id' and customerListBean.sortOrder eq 'asc' ? '_asc' : ''}#{customerListBean.sortField eq 'id' and customerListBean.sortOrder eq 'desc' ? '_desc' : ''}">Nr.</span>
+		                                    	</h:commandLink>
+		                                    </th>
+		                                    <th >
+		                                    	<h:commandLink action="#{customerListBean.toggleSortField_name()}" value="" >
+		                                    		<f:ajax execute="@this" render="customerListPanel" />
+		                                    		<span class="sorting#{customerListBean.sortField eq 'name' and customerListBean.sortOrder eq 'asc' ? '_asc' : ''}#{customerListBean.sortField eq 'name' and customerListBean.sortOrder eq 'desc' ? '_desc' : ''}">Name</span>
+		                                    	</h:commandLink>
+		                                    </th>
+		                                    <th >
+		                                    	<h:commandLink action="#{customerListBean.toggleSortField_firstname()}" value="" >
+		                                    		<f:ajax execute="@this" render="customerListPanel" />
+		                                    		<span class="sorting#{customerListBean.sortField eq 'firstname' and customerListBean.sortOrder eq 'asc' ? '_asc' : ''}#{customerListBean.sortField eq 'firstname' and customerListBean.sortOrder eq 'desc' ? '_desc' : ''}">Vorname</span>
+		                                    	</h:commandLink>
+		                                    </th>
+		                                    <th >
+		                                    	<h:commandLink action="#{customerListBean.toggleSortField_address()}" value="" >
+		                                    		<f:ajax execute="@this" render="customerListPanel" />
+		                                    		<span class="sorting#{customerListBean.sortField eq 'address' and customerListBean.sortOrder eq 'asc' ? '_asc' : ''}#{customerListBean.sortField eq 'address' and customerListBean.sortOrder eq 'desc' ? '_desc' : ''}">Adresse</span>
+		                                    	</h:commandLink>
+		                                    </th>
+		                                </tr>
+	                                </thead>
+	                                            <tbody>
+	                                            <ui:repeat var="customer" value="#{customerListBean.customerListPart}">
+	                                             <tr>
+	                                             	<td>
+	                                             		<h:commandLink action="#{customerBean.setCurrentCustomer(customer)}">
+															    <f:ajax render="customerDetails" />
+															    ##{customer.id}
+															</h:commandLink>
+	                                             	</td>
+	                                                 <td>
+	                                                 	<h:panelGroup rendered="#{customer.company}">
+	                                                 		
+	                                                 		<h:commandLink action="#{customerBean.setCurrentCustomer(customer)}">
+															    <f:ajax render="customerDetails" />
+															    #{customer.companyName}
+															</h:commandLink>
+															                                                 	
+	                                                 	</h:panelGroup>
+	                                                 	<h:panelGroup rendered="#{not customer.company}">
+	                                                 		<h:commandLink action="#{customerBean.setCurrentCustomer(customer)}">
+															    <f:ajax render="customerDetails" />
+															    #{customer.lastname}
+															</h:commandLink>
+	                                                 	</h:panelGroup>
+	                                                 </td>
+	                                                 <td>
+	                                                 	<h:panelGroup rendered="#{not customer.company}">
+	                                                 		<h:commandLink action="#{customerBean.setCurrentCustomer(customer)}">
+															    <f:ajax render="customerDetails" />
+															    #{customer.firstname}
+															</h:commandLink>
+														</h:panelGroup>
+	                                                 </td>
+	                                                 <td>
+	                                                 #{customer.address.street} #{customer.address.streetNumber} , #{customer.address.country}-#{customer.address.zip} #{customer.address.city}</td>
+	                                             </tr>
+	                                            </ui:repeat>
+	                                           
+	                                            </tbody>
+	                                        </table>
+	                                        <div class="row">
+	                                        	<div class="col-sm-6">
+	                                        		<div class="dataTables_info" id="DataTables_Table_0_info" role="status" aria-live="polite">zeige Kunde #{customerListBean.firstCustomerNumber} bis #{customerListBean.lastCustomerNumber} von #{customerListBean.filteredCustomerCount}</div>
+	                                        	</div>
+	                                        	<div class="col-sm-6">
+	                                        		<div class="dataTables_paginate paging_simple_numbers" >
+	                                        			<ul class="pagination">
+	                                        				<li class="paginate_button previous #{customerListBean.currentPage eq 1 ? 'disabled' : ''}" >
+	                                        					<h:commandLink action="#{customerListBean.prevPage()}">
+							                                		<f:ajax execute="@this" render="customerListPanel" />
+							                                		zurück
+							                                	</h:commandLink>
+	                                        				</li>
+	                                        				
+	                                        				<ui:fragment rendered="#{customerListBean.currentPage gt 3}">
+		                                        				<li class="paginate_button" >
+		                                        					<h:commandLink action="#{customerListBean.setCurrentPage(1)}">
+								                                		<f:ajax execute="@this" render="customerListPanel" />
+								                                		1
+								                                	</h:commandLink>
+		                                        				</li>
+	                                        				</ui:fragment>
+	                                        				
+	                                        				<ui:fragment rendered="#{customerListBean.currentPage gt 4}">
+		                                        				<li class="paginate_button disabled" aria-controls="DataTables_Table_0" tabindex="0" id="DataTables_Table_0_ellipsis">
+		                                        					<a href="#">…</a>
+		                                        				</li>
+	                                        				</ui:fragment>
+	                                        				
+	                                        				<ui:fragment rendered="#{customerListBean.prevPrevPageNumber gt 0}">
+		                                        				<li class="paginate_button" >
+		                                        					<h:commandLink action="#{customerListBean.setCurrentPage(customerListBean.prevPrevPageNumber)}">
+								                                		<f:ajax execute="@this" render="customerListPanel" />
+								                                		#{customerListBean.prevPrevPageNumber}
+								                                	</h:commandLink>
+		                                        				</li>
+	                                        				</ui:fragment>
+	                                        				
+	                                        				<ui:fragment rendered="#{customerListBean.prevPageNumber gt 0}">
+		                                        				<li class="paginate_button" >
+		                                        					<h:commandLink action="#{customerListBean.setCurrentPage(customerListBean.prevPageNumber)}">
+								                                		<f:ajax execute="@this" render="customerListPanel" />
+								                                		#{customerListBean.prevPageNumber}
+								                                	</h:commandLink>
+		                                        				</li>
+	                                        				</ui:fragment>
+	                                        				
+	                                        				<li class="paginate_button active" ><a href="#">#{customerListBean.currentPage}</a></li>
+	                                        				
+	                                        				
+	                                        				
+	                                        				<ui:fragment rendered="#{customerListBean.nextPageNumber gt 0}">
+		                                        				<li class="paginate_button" >
+		                                        					<h:commandLink action="#{customerListBean.setCurrentPage(customerListBean.nextPageNumber)}">
+								                                		<f:ajax execute="@this" render="customerListPanel" />
+								                                		#{customerListBean.nextPageNumber}
+								                                	</h:commandLink>
+		                                        				</li>
+	                                        				</ui:fragment>
+	                                        				
+	                                        				
+	                                        				<ui:fragment rendered="#{customerListBean.nextNextPageNumber gt 0}">
+		                                        				<li class="paginate_button" >
+		                                        					<h:commandLink action="#{customerListBean.setCurrentPage(customerListBean.nextNextPageNumber)}">
+								                                		<f:ajax execute="@this" render="customerListPanel" />
+								                                		#{customerListBean.nextNextPageNumber}
+								                                	</h:commandLink>
+		                                        				</li>
+	                                        				</ui:fragment>
+	                                        				
+	                                        				
+	                                        				
+	                                        				<ui:fragment rendered="#{customerListBean.currentPage lt (customerListBean.pageCount -3)}">
+		                                        				<li class="paginate_button disabled" aria-controls="DataTables_Table_0" tabindex="0" id="DataTables_Table_0_ellipsis">
+		                                        					<a href="#">…</a>
+		                                        				</li>
+	                                        				</ui:fragment>
+	                                        				
+	                                        				<ui:fragment rendered="#{customerListBean.currentPage lt (customerListBean.pageCount -1) and customerListBean.pageCount gt 5}">
+		                                        				<li class="paginate_button" >
+		                                        					<h:commandLink action="#{customerListBean.setCurrentPage(customerListBean.pageCount)}">
+								                                		<f:ajax execute="@this" render="customerListPanel" />
+								                                		#{customerListBean.pageCount}
+								                                	</h:commandLink>
+		                                        				</li>
+	                                        				</ui:fragment>
+	                                        				
+	                                        				
+	                                        				<li class="paginate_button next #{customerListBean.currentPage eq customerListBean.pageCount ? 'disabled' : ''}" >
+	                                        					<h:commandLink action="#{customerListBean.nextPage()}">
+							                                		<f:ajax execute="@this" render="customerListPanel" />
+							                                		weiter
+							                                	</h:commandLink>
+	                                        				</li>
+	                                        			</ul>
+	                                        		</div>
+	                                        	</div>
+	                                        </div>
+	                                    </div>
+									</h:panelGroup>
+	                            </div>
+	                        </div>
+	                    </div>
+	                </div>
+                
+                </h:form>
+                
+                <div class="col-sm-4">
+                    <div class="ibox ">
+					<h:form id="customerDetails">
+                        <div class="ibox-content">
+                        <h:panelGroup rendered="#{empty customerBean.currentCustomer}">
+                        	<div class="row m-b-lg">
+                						<div class="col-sm-12">
+                                            <h2>Bitte Kunde wählen</h2>
+                                           </div>
+                                    </div>
+                        </h:panelGroup>
+                        
+                        <h:panelGroup rendered="#{not empty customerBean.currentCustomer}">
+                                    <div class="row m-b-lg">
+                						<div class="col-sm-12">
+                                            <h2>#{customerBean.currentCustomer.name}</h2>
+                                            <h:panelGroup rendered="#{customerBean.currentCustomer.company and not empty customerBean.currentCustomer.firstname}">
+                                            	<p>#{customerBean.currentCustomer.firstname} #{customerBean.currentCustomer.lastname}</p>
+                                            </h:panelGroup>
+                                            <h:panelGroup rendered="#{not empty customerBean.currentCustomer.contactPerson}">
+                                            	<strong>Kontaktperson</strong>
+                                                <p>#{customerBean.currentCustomer.contactPerson}</p>
+                                            </h:panelGroup>
+                                            <strong>Adresse</strong>
+                                            <p>
+                                                #{customerBean.currentCustomer.address.street} #{customerBean.currentCustomer.address.streetNumber}<br />
+                                                <h:panelGroup rendered="#{not empty customerBean.currentCustomer.address.addressline}">
+                                                #{customerBean.currentCustomer.address.addressline}<br />
+                                                </h:panelGroup>
+                                                #{customerBean.currentCustomer.address.country}-#{customerBean.currentCustomer.address.zip} #{customerBean.currentCustomer.address.city}<br />
+                                                
+                                                 <h:panelGroup rendered="#{not empty customerBean.currentCustomer.tel}">
+                                                <i class="fa fa-phone"> </i> #{customerBean.currentCustomer.tel}<br />
+                                                </h:panelGroup>
+                                                
+                                                 <h:panelGroup rendered="#{not empty customerBean.currentCustomer.fax}">
+                                                <i class="fa fa-fax"> </i> #{customerBean.currentCustomer.fax}<br />
+                                                </h:panelGroup>
+                                                
+                                                 <h:panelGroup rendered="#{not empty customerBean.currentCustomer.email}">
+                                                <i class="fa fa-envelope"> </i> #{customerBean.currentCustomer.email}
+                                                </h:panelGroup>
+                                            </p>
+                                            <h:panelGroup rendered="#{not empty customerBean.currentCustomer.bday}">
+                                            <strong>Geburtsdatum</strong>
+                                            	<p>
+                                            	<h:outputText value="#{customerBean.currentCustomer.bday}" >
+													<f:convertDateTime pattern="dd.MM.yyyy" timeZone="CET"/>
+												</h:outputText>
+                                             	</p>
+                                            </h:panelGroup>
+                                            
+                                            <strong>Kunde seit</strong>
+                                             <p>
+                                            	<h:outputText value="#{customerBean.currentCustomer.creationDate}" >
+													<f:convertDateTime pattern="dd.MM.yyyy" timeZone="CET"/>
+												</h:outputText>
+											</p>
+                                             
+                                            <h:panelGroup rendered="#{not empty customerBean.currentCustomer.commercialRegisterId}">
+                                            <strong>Handelsregister</strong>
+                                             <p><h:outputText value="#{customerBean.currentCustomer.commercialRegisterId}" /></p>
+                                             </h:panelGroup>
+                                             
+                                             	<h:commandButton action="/customer/profile" value="Details" class="btn btn-primary btn-sm btn-block" >
+													<f:setPropertyActionListener value="#{customerBean.currentCustomer}" target="#{customerBean.selectedCustomer}" />
+                                             	</h:commandButton>
+                                           </div>
+                                    </div>
+                                    <div class="client-detail">
+                                    <div class="slimScrollDiv" style="position: relative; overflow: hidden; width: auto; height: 100%;"><div class="full-height-scroll" style="overflow: hidden; width: auto; height: 100%;">
+
+                                        <strong>Aktive Verträge</strong>
+
+                                        <ul class="list-group clear-list">
+                                        	<ui:repeat var="contract" value="#{customerBean.getContractList(customerBean.currentCustomer)}">
+                                            <li class="list-group-item fist-item">
+                                                <span class="pull-right"> #{contract.callingNumber} </span>
+                                                #{contract.cachedTariff.productName}
+                                                <ui:repeat var="tariffOption" value="#{contract.cachedTariffOptionList}" >
+                                                , #{tariffOption.productName}
+                                                </ui:repeat>
+                                            </li>
+                                            </ui:repeat>
+                                        </ul>
+                                        <h:panelGroup rendered="#{not empty customerBean.currentCustomer.note and customerBean.currentCustomer.note.content.length() > 0}">
+                                        <strong>Notiz</strong>
+                                        <p>
+                                            <h:outputText value="#{customerBean.currentCustomer.note.content}" />
+                                        </p>
+                                        <hr />
+                                        </h:panelGroup>
+                                        <strong>letze Aktivitäten</strong>
+                                        <div id="vertical-timeline" class="vertical-container dark-timeline">
+                                        
+											<ui:repeat var="activity" value="#{customerBean.getTimeline(customerBean.currentCustomer)}">
+											
+												<div class="vertical-timeline-block">
+												
+								                    <h:panelGroup rendered="#{activity['class'].simpleName == 'PhoneContractEntity'}">
+								                    
+								                    	<div class="vertical-timeline-icon gray-bg">
+				                                               <i class="fa fa-file-text"></i>
+				                                        </div>
+				                                        <div class="vertical-timeline-content">
+				                                               <p>Vertrag #{activity.id}<br/>
+				                                                #{activity.cachedTariff.productName}
+				                                               	<br/>
+				                                               	<h:panelGroup rendered="#{not empty activity.info}">
+				                                                    <small><i class="fa fa-file-text-o"> </i> #{activity.info}
+				                                                    </small>
+				                                                </h:panelGroup>
+				                                               </p>
+				                                               <span class="vertical-date small text-muted">
+				                                               		<h:outputText value="#{activity.creationDate}" converter="#{NamedDateTimeConverter}" >
+																		<f:convertDateTime binding="#{helperBean.convertTime}"  timeZone="CET"/>
+																	</h:outputText>
+															   </span>
+				                                        </div>
+								                    </h:panelGroup>
+								                    <h:panelGroup rendered="#{activity['class'].simpleName == 'OrderEntity'}">
+								                    
+								                    	<div class="vertical-timeline-icon gray-bg">
+				                                               <i class="fa fa-bank"></i>
+				                                        </div>
+				                                        <div class="vertical-timeline-content">
+				                                               <p>Verkauf #{activity.id}<br/>
+				                                               	<h:panelGroup rendered="#{not empty activity.info}">
+				                                                    <small><i class="fa fa-file-text-o"> </i> #{activity.info}
+				                                                    </small>
+				                                                </h:panelGroup>
+				                                               </p>
+				                                               <span class="vertical-date small text-muted">
+				                                               		<h:outputText value="#{activity.creationDate}" converter="#{NamedDateTimeConverter}" >
+																		<f:convertDateTime binding="#{helperBean.convertTime}"  timeZone="CET"/>
+																	</h:outputText>
+															   </span>
+				                                        </div>
+								                    </h:panelGroup>
+								                    <h:panelGroup rendered="#{activity['class'].simpleName == 'EventEntity'}">
+													<div>EVENT: <h:outputText value="#{activity.id}" /></div>
+								                    </h:panelGroup>
+								                    <h:panelGroup rendered="#{activity['class'].simpleName == 'NoteEntity'}">
+													<div>NOTE: <h:outputText value="#{activity.id}" /></div>
+								                    </h:panelGroup>
+								                    
+					                            </div>
+											</ui:repeat>
+                                        </div>
+                                    </div><div class="slimScrollBar" style="background-color: rgb(0, 0, 0); width: 7px; position: absolute; top: 0px; opacity: 0.4; display: none; border-top-left-radius: 7px; border-top-right-radius: 7px; border-bottom-right-radius: 7px; border-bottom-left-radius: 7px; z-index: 99; right: 1px; height: 388.675429726997px; background-position: initial initial; background-repeat: initial initial;"></div><div class="slimScrollRail" style="width: 7px; height: 100%; position: absolute; top: 0px; display: none; border-top-left-radius: 7px; border-top-right-radius: 7px; border-bottom-right-radius: 7px; border-bottom-left-radius: 7px; background-color: rgb(51, 51, 51); opacity: 0.2; z-index: 90; right: 1px; background-position: initial initial; background-repeat: initial initial;"></div></div>
+                                
+                            </div>
+                            </h:panelGroup>
+                        </div>
+                        </h:form>
+                    </div>
+                </div>
+            </div>
+        </ui:define>
+    </ui:composition>
+</h:body>
+</html>

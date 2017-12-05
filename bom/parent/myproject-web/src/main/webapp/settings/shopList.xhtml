@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+	  xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+	<h:body>
+	
+	<f:metadata>
+		<f:event listener="#{FEPluginBean.includeFlot}" type="preRenderComponent"></f:event>
+		<f:event listener="#{FEPluginBean.includeColorpicker}" type="preRenderComponent"></f:event>
+	</f:metadata>
+	
+    	<ui:composition template="/WEB-INF/template/common/commonLayout.xhtml">
+    		<ui:param name="heading1" value="Filialen" />
+    		
+    		<ui:define name="content">
+    		
+    		
+    		<div class="row">
+				<div class="col-lg-12">
+					<h:form id="shopListForm">
+			            <div class="ibox float-e-margins">
+			                <div class="ibox-title">
+			                    <h5>Filial Liste</h5>
+			                    <div class="ibox-tools">
+		                    		<h:panelGroup  rendered="#{permissionBean.hasPermission('settings','edit')}">
+			                    
+										<h:commandLink action="shop" class="btn btn-xs btn-primary " rendered="#{shopBean.shopListEditable}">
+											<f:setPropertyActionListener value="" target="#{shopBean.selectedShop}" />
+											<i class="fa fa-plus"></i>
+									    </h:commandLink>
+									    
+									    <h:commandLink  class="btn btn-xs btn-primary "  action="#{shopBean.toggleShopListEditable}" rendered="#{shopBean.shopListEditable}">
+										   <f:ajax render="shopListForm"/>
+										   <i class="fa fa-times"></i>
+										</h:commandLink>
+									    <h:commandLink  class="btn btn-xs btn-primary " action="#{shopBean.toggleShopListEditable}"  rendered="#{not shopBean.shopListEditable}">
+										   <f:ajax render="shopListForm"/>
+										   <i class="fa fa-pencil"></i>
+										</h:commandLink>
+									</h:panelGroup>
+			                    </div>
+			                </div>
+			                <div class="ibox-content">
+					    		
+					    		
+					    		<h:dataTable value="#{shopBean.getShopList(true)}" var="shop" class="table table-hover">
+					
+                                    <h:column>
+										<h:panelGroup rendered="#{shop.enabled}"><i class="fa fa-check-square-o"></i></h:panelGroup>
+										<h:panelGroup rendered="#{not shop.enabled}"><i class="fa fa-square-o"></i></h:panelGroup>
+                                    </h:column>
+									<h:column>
+									
+										<ui:fragment rendered="#{not empty shop.shopImage.URI}">
+											<img alt="" src="#{shop.shopImage.URI}"  style="width: 50px;height: 50px;"/>
+										</ui:fragment>
+										
+									</h:column>
+									<h:column>
+										<span class="color-icon color-#{shop.color}"> </span>
+									</h:column>
+									<h:column>
+										#{shop.name}
+										<br/>
+										<span>Öffnungszeiten:</span>
+										<p class="text-right">
+										<span>Mo. #{shop.businessHours_start_0} bis #{shop.businessHours_end_0}</span><br/>
+										<span>Di. #{shop.businessHours_start_1} bis #{shop.businessHours_end_1}</span><br/>
+										<span>Mi. #{shop.businessHours_start_2} bis #{shop.businessHours_end_2}</span><br/>
+										<span>Do. #{shop.businessHours_start_3} bis #{shop.businessHours_end_3}</span><br/>
+										<span>Fr. #{shop.businessHours_start_4} bis #{shop.businessHours_end_4}</span><br/>
+										<span>Sa. #{shop.businessHours_start_5} bis #{shop.businessHours_end_5}</span><br/>
+										<span>So. #{shop.businessHours_start_6} bis #{shop.businessHours_end_6}</span>
+										</p>
+									</h:column>
+									<h:column>
+										Kontakt: <h:outputText value="#{shop.contactPerson}" />
+										<br/>
+										Tel.: <h:outputText value="#{shop.tel}" />
+										<br/>
+										Fax.: <h:outputText value="#{shop.fax}" />
+										<br/>
+										E-Mail: <h:outputText value="#{shop.email}" />
+									</h:column>
+								   
+									<h:column>
+										
+                                        
+	                                                <small>Ziel: 
+	                                                <h:outputText value="#{shop.pointGoal}" >
+														<f:convertNumber maxFractionDigits="2" minFractionDigits="0" />
+													</h:outputText>
+	                                                </small>
+				                        
+									</h:column>
+									<h:column>
+										<h:commandLink action="shop" class="btn btn-xs btn-primary " rendered="#{shopBean.shopListEditable}">
+											<f:setPropertyActionListener value="#{shop}" target="#{shopBean.selectedShop}" />
+											<i class="fa fa-pencil"></i>
+									    </h:commandLink>
+									</h:column>
+								</h:dataTable>
+					    		
+					    		
+			                </div>
+			            </div>
+		            </h:form>
+		        </div>
+	            
+	            
+	        </div>
+    		
+    		
+    		
+            
+    		</ui:define>
+    		
+    		
+    	</ui:composition>
+    </h:body>
+</html>

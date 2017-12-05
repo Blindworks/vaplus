@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" 
+    xmlns:f="http://java.sun.com/jsf/core">
+    
+<h:body>
+    
+	<f:metadata>
+		<f:event listener="#{FEPluginBean.includeChartJs}" type="preRenderComponent"></f:event>
+	</f:metadata>
+	
+	<ui:composition>
+	
+	<script>
+	$(function () {
+
+	    var lineData = {
+	        labels: [<ui:insert name="label"></ui:insert>],
+	        datasets: [
+	            {
+	                label: "<ui:insert name="dataLabel1"></ui:insert>",
+	                fillColor: "rgba(220,220,220,0.5)",
+	                strokeColor: "rgba(220,220,220,1)",
+	                pointColor: "rgba(220,220,220,1)",
+	                pointStrokeColor: "#fff",
+	                pointHighlightFill: "#fff",
+	                pointHighlightStroke: "rgba(220,220,220,1)",
+	                data: [<ui:insert name="data1"></ui:insert>]
+	            },
+	            {
+	                label: "<ui:insert name="dataLabel2"></ui:insert>",
+	                fillColor: "rgba(52,152,219,0.5)",
+	                strokeColor: "rgba(52,152,219,0.7)",
+	                pointColor: "rgba(52,152,219,1)",
+	                pointStrokeColor: "#fff",
+	                pointHighlightFill: "#fff",
+	                pointHighlightStroke: "rgba(52,152,219,1)",
+	                data: [<ui:insert name="data2"></ui:insert>]
+	            }
+	        ]
+	    };
+
+	    var lineOptions = {
+	        scaleShowGridLines: true,
+	        scaleGridLineColor: "rgba(0,0,0,.05)",
+	        scaleGridLineWidth: 1,
+	        bezierCurve: true,
+	        bezierCurveTension: 0.4,
+	        pointDot: true,
+	        pointDotRadius: 4,
+	        pointDotStrokeWidth: 1,
+	        pointHitDetectionRadius: 20,
+	        datasetStroke: true,
+	        datasetStrokeWidth: 2,
+	        datasetFill: true,
+	        responsive: true,
+	    };
+
+
+	    var ctx = document.getElementById("#{elementId}").getContext("2d");
+	    var myNewChart = new Chart(ctx).Line(lineData, lineOptions);
+
+	});
+	</script>
+	
+	</ui:composition>
+	</h:body>
+</html>

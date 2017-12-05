@@ -1,0 +1,471 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+	  xmlns:f="http://java.sun.com/jsf/core"
+	  xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:p="http://primefaces.org/ui">
+
+	<h:body>
+    	<ui:composition template="/WEB-INF/template/common/commonLayout.xhtml">
+			<ui:param name="heading1" value="PLATZHALTER !" />
+			
+			
+    		<ui:define name="headingContent">
+				<h:form class="form-horizontal" id="headerToolbar">
+		    		<div class="form-group">
+						<label class="col-sm-2">Filter:</label>
+						<div class="col-sm-2">
+							<h:selectOneMenu class="chosen-select form-control" >
+										<f:selectItem itemValue="" itemLabel="Dieses Jahr"/>
+							</h:selectOneMenu>
+						</div>
+						<div class="col-sm-2">
+							<h:selectOneMenu class="chosen-select form-control" >
+										<f:selectItem itemValue="" itemLabel="Alle Filialen"/>
+							</h:selectOneMenu>
+						</div>
+						<div class="col-sm-2">
+							<h:selectOneMenu class="chosen-select form-control" >
+										<f:selectItem itemValue="" itemLabel="Alle VOs"/>
+							</h:selectOneMenu>
+						</div>
+						<div class="col-sm-2">
+							<h:selectOneMenu class="chosen-select form-control" >
+										<f:selectItem itemValue="" itemLabel="Alle Mitarbeiter"/>
+							</h:selectOneMenu>
+						</div>
+					</div>
+				</h:form>
+    		</ui:define>
+ 
+    		<ui:define name="content">
+    		
+    			
+            
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="ibox float-e-margins">
+                            <div class="ibox-title">
+                                <h5>Verlauf</h5>
+                            </div>
+                            <div class="ibox-content">
+                            
+                        		<div class="flot-chart">
+                            		<div class="flot-chart-content" id="salesHistoryLineChart" style="padding: 0px; position: relative;">
+                            		</div>
+                            	</div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="ibox float-e-margins">
+                            <div class="ibox-title">
+                                <h5>Aufteilung</h5>
+                            </div>
+                            <div class="ibox-content">
+                            	<div class="row">
+                    				<div class="col-lg-8">
+                    					<div class="flot-chart">
+		                            		<div class="flot-chart-content" id="salesDistribution" style="padding: 0px; position: relative;">
+		                            		</div>
+		                            	</div>
+                    				</div>
+                    				<div class="col-lg-4">
+                    				
+                    				
+                    				
+                    				<div class="table-responsive">
+	                                    <table class="table table-striped">
+	                                        <tbody>
+		                                        <tr>
+		                                            <td>6</td>
+		                                            <td>Smart S</td>
+		                                        </tr>
+		                                        <tr>
+		                                            <td>5</td>
+		                                            <td>RED M</td>
+		                                        </tr>
+		                                        <tr>
+		                                            <td>6</td>
+		                                            <td>RED L</td>
+		                                        </tr>
+		                                        <tr>
+		                                            <td>2</td>
+		                                            <td>RED S</td>
+		                                        </tr>
+		                                        <tr>
+		                                            <td>5</td>
+		                                            <td>Smart L</td>
+		                                        </tr>
+	                                        
+	                                        </tbody>
+	                                    </table>
+                                	</div>
+                    				
+                    				
+                    				
+                    				
+                    				</div>
+		                        		
+                            	</div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="row">
+
+                    <div class="col-lg-12">
+                        <div class="ibox float-e-margins">
+                            <div class="ibox-title">
+                                <h5>Buchungen </h5>
+                            </div>
+                            <div class="ibox-content">
+                                <div class="table-responsive">
+                                    <table class="table table-striped">
+                                        <thead>
+                                        <tr>
+                                            <th>Kunde</th>
+                                            <th>Tarif</th>
+                                            <th>Optionen</th>
+                                            <th>Mitarbeiter</th>
+                                            <th>Filiale</th>
+                                            <th>VO</th>
+                                            <th>Provision</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr>
+                                            <td>Max Mustermann</td>
+                                            <td>Smart S</td>
+                                            <td>Sub 10, SoHo</td>
+                                            <td>M. Meister</td>
+                                            <td>Hauptfiliale</td>
+                                            <td>Vo 4</td>
+                                            <td>XXX.XX €</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Max Mustermann</td>
+                                            <td>Smart S</td>
+                                            <td>Sub 10, SoHo</td>
+                                            <td>M. Meister</td>
+                                            <td>Hauptfiliale</td>
+                                            <td>Vo 4</td>
+                                            <td>XXX.XX €</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Max Mustermann</td>
+                                            <td>Smart S</td>
+                                            <td>Sub 10, SoHo</td>
+                                            <td>M. Meister</td>
+                                            <td>Hauptfiliale</td>
+                                            <td>Vo 4</td>
+                                            <td>XXX.XX €</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Max Mustermann</td>
+                                            <td>Smart S</td>
+                                            <td>Sub 10, SoHo</td>
+                                            <td>M. Meister</td>
+                                            <td>Hauptfiliale</td>
+                                            <td>Vo 4</td>
+                                            <td>XXX.XX €</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Max Mustermann</td>
+                                            <td>Smart S</td>
+                                            <td>Sub 10, SoHo</td>
+                                            <td>M. Meister</td>
+                                            <td>Hauptfiliale</td>
+                                            <td>Vo 4</td>
+                                            <td>XXX.XX €</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Max Mustermann</td>
+                                            <td>Smart S</td>
+                                            <td>Sub 10, SoHo</td>
+                                            <td>M. Meister</td>
+                                            <td>Hauptfiliale</td>
+                                            <td>Vo 4</td>
+                                            <td>XXX.XX €</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Max Mustermann</td>
+                                            <td>Smart S</td>
+                                            <td>Sub 10, SoHo</td>
+                                            <td>M. Meister</td>
+                                            <td>Hauptfiliale</td>
+                                            <td>Vo 4</td>
+                                            <td>XXX.XX €</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Max Mustermann</td>
+                                            <td>Smart S</td>
+                                            <td>Sub 10, SoHo</td>
+                                            <td>M. Meister</td>
+                                            <td>Hauptfiliale</td>
+                                            <td>Vo 4</td>
+                                            <td>XXX.XX €</td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+    			
+    		<script type="text/javascript">
+	
+
+    $(document).ready(function() {
+    
+		// Punkte Ziel
+        var data1 = [
+        	
+            		 [ "Jan", 2], 
+            
+            		 [ "Feb", 4], 
+            
+            		 [ "Mrz", 8], 
+            
+            		 [ "Apr", 2], 
+            
+            		 [ "May", 3], 
+            
+            		 [ "Jun", 8], 
+            
+            		 [ "Jul", 4], 
+            
+            		 [ "Aug", 3], 
+            
+            		 [ "Sep", 9], 
+            
+            		 [ "Okt", 1], 
+            
+            		 [ "Nov", 4], 
+            
+            		 [ "Dez", 7], 
+            
+        ];
+        
+        // erreichte Punkte
+        var data2 = [
+					
+           		 	[ "Jan", 2], 
+           		
+           		 	[ "Feb", 4], 
+           		
+           		 	[ "Mrz", 2], 
+           		
+           		 	[ "Apr", 1], 
+           		
+           		 	[ "May", 4], 
+           		
+           		 	[ "Jun", 7], 
+           		
+           		 	[ "Jul", 5], 
+           		
+           		 	[ "Aug", 7], 
+           		
+           		 	[ "Sep", 3], 
+           		
+           		 	[ "Okt", 2], 
+           		
+           		 	[ "Nov", 4], 
+           		
+           		 	[ "Dez", 8], 
+            		
+        ];
+        
+        // erreichte Punkte
+        var data3 = [
+					
+           		 	[ "Jan", 5], 
+           		
+           		 	[ "Feb", 6], 
+           		
+           		 	[ "Mrz", 2], 
+           		
+           		 	[ "Apr", 1], 
+           		
+           		 	[ "May", 3], 
+           		
+           		 	[ "Jun", 7], 
+           		
+           		 	[ "Jul", 3], 
+           		
+           		 	[ "Aug", 2], 
+           		
+           		 	[ "Sep", 5], 
+           		
+           		 	[ "Okt", 1], 
+           		
+           		 	[ "Nov", 5], 
+           		
+           		 	[ "Dez", 8], 
+            		
+        ];
+        
+        // erreichte Punkte
+        var data4 = [
+					
+           		 	[ "Jan", 1], 
+           		 	[ "Feb", 5], 
+           		 	[ "Mrz", 3], 
+           		 	[ "Apr", 7], 
+           		 	[ "May", 8], 
+           		 	[ "Jun", 3], 
+           		 	[ "Jul", 4], 
+           		 	[ "Aug", 6], 
+           		 	[ "Sep", 3], 
+           		 	[ "Okt", 4], 
+           		 	[ "Nov", 6], 
+           		 	[ "Dez", 2], 
+            		
+        ];
+        
+        // erreichte Punkte
+        var data5 = [
+					
+           		 	[ "Jan", 5], 
+           		 	[ "Feb", 2], 
+           		 	[ "Mrz", 6], 
+           		 	[ "Apr", 8], 
+           		 	[ "May", 2], 
+           		 	[ "Jun", 1], 
+           		 	[ "Jul", 5], 
+           		 	[ "Aug", 3], 
+           		 	[ "Sep", 4], 
+           		 	[ "Okt", 8], 
+           		 	[ "Nov", 2], 
+           		 	[ "Dez", 3], 
+            		
+        ];
+        
+        // erreichte Punkte
+        var data6 = [
+					
+           		 	[ "Jan", 2], 
+           		 	[ "Feb", 5], 
+           		 	[ "Mrz", 4], 
+           		 	[ "Apr", 7], 
+           		 	[ "May", 2], 
+           		 	[ "Jun", 3], 
+           		 	[ "Jul", 5], 
+           		 	[ "Aug", 3], 
+           		 	[ "Sep", 8], 
+           		 	[ "Okt", 6], 
+           		 	[ "Nov", 9], 
+           		 	[ "Dez", 4], 
+            		
+        ];
+        
+        $.plot($("#salesHistoryLineChart"), [
+             data1, data2, data3, data4, data5, data6
+        ],
+                {
+                    series: {
+                        lines: {
+                            show: false,
+                            fill: true
+                        },
+                        splines: {
+                            show: true,
+                            tension: 0.4,
+                            lineWidth: 1.5,
+                            fill: 0.1
+                        },
+                        points: {
+                            radius: 0,
+                            show: true
+                        },
+                        shadowSize: 2
+                    },
+                    grid: {
+                        hoverable: true,
+                        clickable: true,
+                        tickColor: "#d5d5d5",
+                        borderWidth: 1,
+                        color: '#d5d5d5'
+                    },
+                    colors: ["#2980b9", "#27ae60", "#8e44ad", "#f39c12", "#d35400", "#c0392b"],
+                    xaxis:{
+						mode: "categories",
+                    },
+                    yaxis: {
+                    },
+                    tooltip: false
+                }
+        );
+
+    });
+
+
+  //Flot Pie Chart
+    $(function() {
+
+        var data = [{
+            label: "Datenkarten",
+            data: 21,
+            color: "#2980b9",
+        }, {
+            label: "Sprachtarife",
+            data: 3,
+            color: "#27ae60",
+        }, {
+            label: "DSL",
+            data: 3,
+            color: "#8e44ad",
+        }, {
+            label: "Callya",
+            data: 3,
+            color: "#f39c12",
+        }, {
+            label: "Rabatte",
+            data: 15,
+            color: "#d35400",
+        }, {
+            label: "Versicherungen",
+            data: 52,
+            color: "#c0392b",
+        }
+        ];
+
+        var plotObj = $.plot($("#salesDistribution"), data, {
+            series: {
+                pie: {
+                    show: true
+                }
+            },
+            grid: {
+                hoverable: true
+            },
+            tooltip: true,
+            tooltipOpts: {
+                content: "%p.0%, %s",
+                // show percentages, rounding to 2 decimal places
+                shifts: {
+                    x: 20,
+                    y: 0
+                },
+                defaultTheme: false
+            }
+        });
+
+    });
+	
+	</script>
+    			
+    		</ui:define>
+    		
+    		
+    	</ui:composition>
+    </h:body>
+</html>

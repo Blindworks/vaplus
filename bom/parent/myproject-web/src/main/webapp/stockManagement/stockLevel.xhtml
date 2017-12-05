@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:c="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+	  xmlns:f="http://java.sun.com/jsf/core"
+	  xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:p="http://primefaces.org/ui">
+
+	<h:body>
+	
+	
+    	<ui:composition template="/WEB-INF/template/common/commonLayout.xhtml">
+    		<ui:param name="heading1" value="Warenbestand" />
+    		
+    		
+    		<ui:define name="headingContent">
+   		
+				<h:form class="form-horizontal" id="headerToolbar">
+				
+							<h:selectOneMenu a:data-placeholder="Lager wählen ..."
+										value="#{stockBean.viewStock}"
+										class="chosen-select-no-single form-control" converter="#{stockConverter}" style="width:350px;">
+										<f:selectItem itemValue="" itemLabel="Alle Lager"/>
+										<f:selectItems value="#{stockBean.stockList}" var="stock"
+											itemValue="#{stock}" itemLabel="#{stock}" />
+								<f:ajax render="stockListForm" event="change" />
+							</h:selectOneMenu>
+							
+				</h:form>
+   			</ui:define>
+    		
+    		
+    		<ui:define name="content">
+    		
+    		
+    		<div class="row">
+				<div class="col-lg-12">
+					<h:form id="stockListForm">
+			            <div class="ibox float-e-margins">
+			                <div class="ibox-title">
+			                    <h5>Warenbestand</h5>
+			                </div>
+								
+			                <div class="ibox-content">
+			                
+			                <table class="table table-hover">
+								<thead>
+									<tr>
+										<th scope="col">Name</th>
+										<th scope="col">Listenpreis</th>
+										<th scope="col">Lagerbestand</th>
+										<th scope="col">Durchschnitts Netto EK</th>
+										<th scope="col">Min Netto EK</th>
+										<th scope="col">Max Netto EK</th>
+									</tr>
+								</thead>
+								<tbody>
+
+				                	<ui:repeat var="product" value="#{productBean.retailProductList}">
+				                	
+				                		<ui:fragment rendered="#{empty stockBean.viewStock || not (stockBean.getStockLevel(stockBean.viewStock, product) eq 0)}">
+				                	
+				                		<tr>
+	
+											<td>
+												<h:commandLink action="/stockManagement/productHistory" >
+														<f:setPropertyActionListener value="#{product}" target="#{stockBean.selectedProduct}" />
+														<h:outputText value="#{product.name}" />
+												</h:commandLink>
+											</td>
+											
+											<td>
+												<h:outputText value="#{product.commission.grossPrice}" >
+													<f:convertNumber maxFractionDigits="2" minFractionDigits="2" />	
+												</h:outputText> €
+											</td>
+											
+											<td>
+					                    		<h:outputText value="#{product.stockQuantity}" rendered="#{empty stockBean.viewStock}">
+													<f:convertNumber maxFractionDigits="4" minFractionDigits="0" />
+												</h:outputText>
+					                    		<h:outputText value="#{stockBean.getStockLevel(stockBean.viewStock, product)}" rendered="#{not empty stockBean.viewStock}">
+													<f:convertNumber maxFractionDigits="4" minFractionDigits="0" />
+												</h:outputText>
+											</td>
+											
+											<td>
+												<h:outputText value="#{product.avergePurchasePrice}" >
+													<f:convertNumber maxFractionDigits="2" minFractionDigits="2" />	
+												</h:outputText> €
+											</td>
+											
+											<td>
+												<h:outputText value="#{product.minPurchasePrice}" >
+													<f:convertNumber maxFractionDigits="2" minFractionDigits="2" />	
+												</h:outputText> €
+											</td>
+											
+											<td>
+												<h:outputText value="#{product.maxPurchasePrice}" >
+													<f:convertNumber maxFractionDigits="2" minFractionDigits="2" />	
+												</h:outputText> €
+											</td>
+										</tr>
+										</ui:fragment>
+									</ui:repeat>
+								
+									</tbody>
+								</table>
+			                </div>
+		                </div>
+	                </h:form>
+                </div>
+            </div>
+    		
+    		
+    		
+            
+    		</ui:define>
+    		
+    		
+    	</ui:composition>
+    </h:body>
+</html>

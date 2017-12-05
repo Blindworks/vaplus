@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:body>
+
+
+
+	<f:metadata>
+		<f:event type="preRenderView" listener="#{customerBean.checkIfCustomerLogged}" />
+	</f:metadata>
+
+		
+	<ui:composition template="/WEB-INF/template/common/commonLayout.xhtml">
+	
+	
+		<ui:param name="heading1" value="Vertrag Nr. #{contractBean.selectedContract.id}" />
+		
+
+		<ui:define name="content">
+
+
+    		<div class="row">
+				<div class="col-lg-12">
+				
+	                <h:form class="form-horizontal" id="contractForm">
+					
+			            <div class="ibox float-e-margins">
+			                <div class="ibox-title">
+			                    <h5>Vertrag #{contractBean.selectedContract.id} - #{contractBean.selectedContract.cachedTariff.productName} - #{contractBean.selectedContract.callingNumber}</h5>
+			                    <div class="ibox-tools">
+			                    
+								    <h:commandLink  class="btn btn-xs btn-primary " action="#{contractBean.saveNewContractStatus()}">
+									   <i class="fa fa-save"></i>
+									</h:commandLink>
+									<h:commandLink action="contractView" class="btn btn-xs btn-primary " immediate="true" >
+										<i class="fa fa-times"></i>
+								    </h:commandLink>
+			                    </div>
+			                </div>
+			                <div class="ibox-content">
+								
+			                
+								<div class="form-group">
+									<label class="col-sm-2 control-label">Aktueller Status</label>
+									<div class="col-sm-10">
+										<p class="form-control-static">
+											<h:outputText value="#{contractBean.selectedContract.status.name}" />
+										</p>
+									</div>
+								</div>
+								
+								<div class="hr-line-dashed"></div>
+								
+								<div class="form-group">
+									<label class="col-sm-2 control-label">Neuer Status</label>
+									<div class="col-sm-4">
+										<p class="form-control-static">
+											<h:selectOneMenu id="newStatus" a:data-placeholder="Neuen Status wählen ..."
+												value="#{contractBean.newContractStatus}"
+												class="chosen-select-no-single-class form-control #{ component.valid ? '' : 'select-error'}"
+												converter="#{contractStatusConverter}"
+												validatorMessage="Bitte Neuen Status wählen">
+												<f:selectItem itemValue="" itemLabel=""/>
+												<f:selectItems value="#{contractBean.contractStatusList}" var="status"
+													itemValue="#{status}" itemLabel="#{status.name}" />
+												<f:validateRequired />
+											</h:selectOneMenu>
+											<h:messages for="newStatus"  />
+										</p>
+									</div>
+								</div>
+								
+								<div class="form-group">
+									<label class="col-sm-2 control-label">Statuswechsel Information</label>
+									<div class="col-sm-10">
+										<p class="form-control-static">
+											<h:inputTextarea id="newContractStatusNote" rows="5" value="#{contractBean.newContractStatusNote}" validatorMessage="Bitte mind. 10 Zeichen angeben."
+												class="form-control" autocomplete="off" >
+												<f:validateLength minimum = "10" />
+											</h:inputTextarea>
+											<h:messages for="newContractStatusNote"  />
+										</p>
+									</div>
+								</div>
+		
+		
+			                </div>
+            			</div>
+            			
+	                </h:form>
+            			
+    			</div>
+    		</div>
+
+		</ui:define>
+
+
+	</ui:composition>
+</h:body>
+</html>

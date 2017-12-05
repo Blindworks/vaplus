@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:c="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+	  xmlns:f="http://java.sun.com/jsf/core"
+	  xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:p="http://primefaces.org/ui">
+
+	<h:body>
+	
+	
+    	<ui:composition template="/WEB-INF/template/common/commonLayout.xhtml">
+    		<ui:param name="heading1" value="Artikel Lager Verlauf" />
+    		
+    		<ui:define name="content">
+    		<h:form class="form-horizontal"  >
+    		
+    		<div class="row">
+				<div class="col-lg-6">
+		            <div class="ibox float-e-margins">
+		                <div class="ibox-title">
+		                    <h5>ArtikelDetails</h5>
+	                    </div>
+		                <div class="ibox-content">
+		                	
+		                	<div class="form-group">
+								<label class="col-sm-6 control-label">Name</label>
+								<div class="col-sm-6 form-control-static">
+									<h:outputText value="#{stockBean.selectedProduct.name}" />
+								</div>
+							</div>
+		                	
+		                	<div class="form-group">
+								<label class="col-sm-6 control-label">EAN</label>
+								<div class="col-sm-4 form-control-static">
+									<h:outputText value="#{stockBean.selectedProduct.ean}" />
+								</div>
+							</div>
+		                	
+		                	<div class="form-group">
+								<label class="col-sm-6 control-label">Listenpreis</label>
+								<div class="col-sm-4 form-control-static">
+									<h:outputText value="#{stockBean.selectedProduct.commission.grossPrice}" >
+										<f:convertNumber maxFractionDigits="2" minFractionDigits="2" />	
+									</h:outputText> €
+								</div>
+							</div>
+		                	
+		                	<div class="form-group">
+								<label class="col-sm-6 control-label">Durchschnitts Netto EK</label>
+								<div class="col-sm-4 form-control-static">
+									<h:outputText value="#{stockBean.selectedProduct.avergePurchasePrice}" >
+										<f:convertNumber maxFractionDigits="2" minFractionDigits="2" />	
+									</h:outputText> €
+								</div>
+							</div>
+		                	
+		                	<div class="form-group">
+								<label class="col-sm-6 control-label">Min Netto EK</label>
+								<div class="col-sm-4 form-control-static">
+									<h:outputText value="#{stockBean.selectedProduct.minPurchasePrice}" >
+										<f:convertNumber maxFractionDigits="2" minFractionDigits="2" />	
+									</h:outputText> €
+								</div>
+							</div>
+		                	
+		                	<div class="form-group">
+								<label class="col-sm-6 control-label">Max Netto EK</label>
+								<div class="col-sm-4 form-control-static">
+									<h:outputText value="#{stockBean.selectedProduct.maxPurchasePrice}" >
+										<f:convertNumber maxFractionDigits="2" minFractionDigits="2" />	
+									</h:outputText> €
+								</div>
+							</div>
+		                	
+	                    </div>
+                    </div>
+				</div>
+				<div class="col-lg-6">
+		            <div class="ibox float-e-margins">
+		                <div class="ibox-title">
+		                    <h5>Lagerbestand</h5>
+		                    <div class="ibox-tools">
+		                    </div>
+	                    </div>
+		                <div class="ibox-content">
+		                
+		                <table class="table table-hover">
+		                	<thead>
+		                		
+									<tr>
+										<th><h:outputText value="Alle Lager" /></th>
+										<th>
+											<h:outputText value="#{stockBean.selectedProduct.stockQuantity}" >
+												<f:convertNumber maxFractionDigits="4" minFractionDigits="0" />
+											</h:outputText>
+										</th>
+									</tr>
+		                	</thead>
+
+							<tbody>
+							
+		                
+			                	<ui:repeat var="productStockCache" value="#{stockBean.selectedProduct.productStockCacheList}">
+									<tr>
+										<td><h:outputText value="#{productStockCache.stock}" /></td>
+										<td>
+											<h:outputText value="#{productStockCache.quantity}" >
+												<f:convertNumber maxFractionDigits="4" minFractionDigits="0" />
+											</h:outputText>
+										</td>
+									</tr>
+			                	</ui:repeat>
+		                	
+							</tbody>
+						</table>
+	                    </div>
+                    </div>
+				</div>
+			</div> 
+			
+			<ui:fragment rendered="#{stockBean.selectedProduct.serialRequired}">
+			<div class="row">
+				<div class="col-lg-12">
+					<h:form id="singleProductStockLevel">
+			            <div class="ibox float-e-margins">
+			                <div class="ibox-title">
+			                    <h5>Lager-Einzelbestand</h5>
+			                </div>
+			                <div class="ibox-content">
+			                
+								<h:dataTable value="#{stockBean.selectedSingleProductStockLevel}" var="stockLevel" class="table table-hover" rendered="#{stockBean.selectedSingleProductStockLevel.size() > 0}">
+
+
+								<h:column>
+									<f:facet name="header">Lager</f:facet>
+									<h:outputText value="#{stockLevel.stockName}">
+									</h:outputText>
+								</h:column>
+
+								<h:column>
+									<f:facet name="header">Seriennummer</f:facet>
+									<h:outputText value="#{stockLevel.serial}" />
+								</h:column>
+								<h:column>
+									<f:facet name="header">Einkaufssumme</f:facet>
+									<h:outputText value="#{stockLevel.purchasePrice}" >
+											<f:convertNumber maxFractionDigits="2" minFractionDigits="2" /> €
+									</h:outputText>
+								</h:column>
+								
+							</h:dataTable>
+			                
+			                </div>
+		                </div>
+	                </h:form>
+                </div>
+            </div>
+	   		</ui:fragment>
+	   		
+    		<div class="row">
+				<div class="col-lg-12">
+					<h:form id="pickslipList">
+			            <div class="ibox float-e-margins">
+			                <div class="ibox-title">
+			                    <h5>Lagerverlauf</h5>
+			                </div>
+			                <div class="ibox-content">
+			                
+								<h:dataTable value="#{stockBean.selectedProductStockMovementList}" var="movement" class="table table-hover" rendered="#{stockBean.selectedProductStockMovementList.size() > 0}"			                	
+columnClasses_="text-left, text-left, text-left, text-left, text-left, text-right, text-right, text-right, text-right, text-right">
+
+
+								<h:column>
+									<f:facet name="header">Lieferschein</f:facet>
+									<h:outputText value="#{movement.stockPickslip.number}">
+									</h:outputText>
+								</h:column>
+
+								<h:column>
+									<f:facet name="header">Datum</f:facet>
+									<h:outputText value="#{movement.stockPickslip.effectiveDate}">
+									  <f:convertDateTime type="date" pattern="dd.MM.yyyy" timeZone="CET"/>
+									</h:outputText>
+								</h:column>
+
+								<h:column>
+									<f:facet name="header">Lieferant</f:facet>
+									<h:outputText value="#{movement.stockPickslip.supplier.name}" rendered="#{not empty movement.stockPickslip.supplier}" />
+								</h:column>
+								<h:column>
+									<f:facet name="header">Quell Lager</f:facet>
+									<h:outputText value="#{movement.stockPickslip.src_stock.name}" rendered="#{not empty movement.stockPickslip.src_stock}" />
+								</h:column>
+								<h:column>
+									<f:facet name="header">Ziel Lager</f:facet>
+									<h:outputText value="#{movement.stockPickslip.dst_stock.name}" rendered="#{not empty movement.stockPickslip.dst_stock}"/>
+								</h:column>
+								<h:column>
+									<f:facet name="header">Artikel Anzahl</f:facet>
+									<h:outputText value="#{movement.quantity}" >
+											<f:convertNumber maxFractionDigits="2" minFractionDigits="0" />
+									</h:outputText>
+								</h:column>
+								<h:column>
+									<f:facet name="header">Seriennummer </f:facet>
+									<h:outputText value="#{movement.serial}" rendered="#{not empty movement.serial}" >
+									</h:outputText>
+								</h:column>
+								<h:column>
+									<f:facet name="header">Einkaufssumme</f:facet>
+									<h:outputText value="#{movement.purchasePrice}" >
+											<f:convertNumber maxFractionDigits="2" minFractionDigits="2" /> €
+									</h:outputText>
+								</h:column>
+							</h:dataTable>
+			                
+			                </div>
+		                </div>
+	                </h:form>
+                </div>
+            </div>
+    		
+    		
+    		</h:form>
+            
+    		</ui:define>
+    		
+    		
+    	</ui:composition>
+    </h:body>
+</html>

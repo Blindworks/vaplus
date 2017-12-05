@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:body>
+
+
+	<ui:composition >
+		
+		
+		    
+            
+            <h:outputScript>
+			
+			$(document).ready(function () {
+				renderImageUploadButton();
+			});
+			
+			
+			function renderImageUploadButtonEvent(data){
+				if(data.status == "success"){
+					renderImageUploadButton();
+				}
+			}
+			
+			
+			function renderImageUploadButton(){
+				$('#fileForm\\:file').before('<a type="button" class="btn btn-xs btn-primary" id="fileUploadButton" ><i class="fa fa-cloud-upload" aria-hidden="true"></i></a>');
+				$('#fileForm\\:file').hide();
+				$('body').on('click', '#fileUploadButton', function() { 
+				
+				    $('#fileForm\\:file').trigger('click');    
+				});
+				$('body').on('change','#fileForm\\:file' , function(){ 
+				
+					$('#fileForm\\:fileUpload').trigger('click');
+				});
+			}
+			
+		    </h:outputScript>
+
+
+    		<div class="row">
+				<div class="col-lg-12">
+					<h:panelGroup id="fileListPanel">
+					
+						<h:form id="fileForm" enctype="multipart/form-data" class="form-horizontal">
+						
+			            <div class="ibox float-e-margins">
+			                <div class="ibox-title">
+			                    <h5>angehängte Dateien</h5>
+			                    <div class="ibox-tools">
+			                    			                    
+						                <h:inputFile id="file" class="hide" value="#{fileBean.importFiles}" pt:multiple="multiple" />
+						                
+										<h:commandButton id="fileUpload" action="#{fileBean.proceedImport}" value="commit" class="hide">
+										</h:commandButton>
+						            
+				                    <ui:fragment rendered="#{fileBean.isStorageLimitExceeded()}">
+				                    	<span class="label label-danger">Speicher-Limit überschritten</span>
+				                    </ui:fragment>
+			                    </div>
+			                </div>
+			                <div class="ibox-content">
+		        				
+		        				<h:dataTable id="fileList" value="#{fileBean.getOwnerFileList(fileBean.selectedFileOwner, fileBean.selectedFileRelation)}" var="fileActivity" class="table table-hover">
+									
+									<h:column>
+										<h:outputLink value="#{fileActivity.file.URI}" target="_blank" >
+											<ui:fragment rendered="#{not empty fileActivity.file.thumbnail.URI}">
+												<img alt="" src="#{fileActivity.file.thumbnail.URI}"/>
+											</ui:fragment>
+										</h:outputLink>
+									</h:column>
+						
+									<h:column>
+										<h:panelGroup rendered="#{fileActivity.invisible and not fileListBean.showForm(fileActivity)}"><i class="fa fa-eye-slash"></i></h:panelGroup>
+										
+										<h:selectBooleanCheckbox class="i-checks-eye-inverted" value="#{fileListBean.selectedFileActivity.invisible}" rendered="#{fileListBean.showForm(fileActivity)}" />
+									</h:column>
+									
+									<h:column>
+										<h:outputText value="#{fileActivity.file.title}" rendered="#{not fileListBean.showForm(fileActivity)}" />
+										<h:inputText class="form-control" value="#{fileListBean.selectedFileActivity.file.title}" rendered="#{fileListBean.showForm(fileActivity)}" />
+									</h:column>
+									
+									
+									<h:column>
+										<h:outputText value="#{helperBean.getFileSize(fileActivity.file.size)}" />
+									</h:column>
+									
+									<h:column>
+										<h:outputText value="#{fileActivity.creationDate}" >
+											<f:convertDateTime pattern="dd.MM.yyyy HH:mm" timeZone="CET" />
+										</h:outputText>
+									</h:column>
+									
+									<h:column>
+					                	<h:commandLink action="#{fileListBean.saveSelectedFileActivity}" class="btn btn-xs btn-primary" rendered="#{fileListBean.showSaveButton(fileActivity)}">
+					                		<i class="fa fa-save"></i>
+					                	</h:commandLink>
+					                	
+					                	<h:commandLink action="#{fileListBean.setSelectedFileActivity(fileActivity)}" class="btn btn-xs btn-primary" rendered="#{fileListBean.showEditButton(fileActivity)}" >
+					                		<i class="fa fa-edit"></i>
+					                	</h:commandLink>
+					                	
+					                	<h:commandLink action="#{fileBean.deleteFileActivity(fileActivity)}" class="btn btn-xs btn-danger" >
+					                		<i class="fa fa-trash"></i>
+					                	</h:commandLink>
+									</h:column>
+						
+									</h:dataTable>
+			                
+			                </div>
+            			</div>
+            			
+            			</h:form>
+            			
+            		</h:panelGroup>
+    			</div>
+    		</div>
+
+
+
+	</ui:composition>
+</h:body>
+</html>

@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:body>
+
+
+
+	<f:metadata>
+		<f:event type="preRenderView" listener="#{customerBean.checkIfCustomerLogged}" />
+	</f:metadata>
+
+	<ui:composition template="/WEB-INF/template/common/commonLayout.xhtml">
+
+		<ui:param name="heading1" value="#{orderBean.selectedOrder.id == 0 ? 'Neue Bestellung' : 'Verkauf Nr. '.concat(orderBean.selectedOrder.id)}" />
+
+		<ui:define name="content">
+
+			<ui:fragment rendered="#{not paymentBean.cashRegisterStatus}">
+				<div class="alert alert-danger" role="alert"><strong>Kasse geschlossen</strong></div>
+			</ui:fragment>
+			
+			<ui:fragment rendered="#{paymentBean.cashRegisterStatus}">
+    		<div class="row">
+				<div class="col-lg-12">
+				
+	                <h:form class="form-horizontal" id="orderForm">
+					
+			            <div class="ibox float-e-margins">
+			                <div class="ibox-title">
+			                    <h5>Verkaufs Details</h5>
+			                    <div class="ibox-tools">
+			                    </div>
+			                </div>
+			                <div class="ibox-content">
+			                
+			                
+								
+								<div class="form-group">
+									<div class="col-sm-5">
+										<h:commandButton class="btn btn-primary form-control" value="Lager Artikel zubuchen" >
+											<f:setPropertyActionListener target="#{retailProductBean.foreignWare}" value="false" />
+											<f:ajax render="retailProductModalForm" onevent="openRetailProductModal"  />
+										</h:commandButton>
+									</div>
+								</div>
+								
+								
+								<h:panelGroup rendered="#{orderBean.selectedOrder.orderItemList.size() gt 0}">
+								<div class="hr-line-dashed"></div>
+									<div class="form-group productList">
+										<label class="col-sm-2 control-label">Lager Ware</label>
+										<div class="col-sm-10">
+										
+										<ui:repeat var="orderItem" value="#{orderBean.selectedOrder.orderItemList}">
+												<div class="retailProduct">
+													<div class="group-item">
+														<div class="col-sm-1">
+															#{orderItem.quantity}
+														</div>
+														<div class="col-sm-3">
+															#{orderItem.title}
+														</div>
+														<div class="col-sm-2">
+															#{orderItem.serial}
+														</div>
+														<div class="col-sm-2 text-right">
+					                        				<h:commandLink rendered="#{not orderItem.blockedItem}" action="#{orderBean.setSelectedOrderItem(orderItem)}">
+																<f:ajax render="retailProductPriceModalForm" onevent="openRetailProductPriceModal"  />
+																<h:outputText value="#{orderItem.unitGrossPrice}" >
+					                        					<f:convertNumber maxFractionDigits="2" minFractionDigits="2" />
+					                        				</h:outputText> <i class="fa fa-euro"></i>
+															</h:commandLink>
+															<h:panelGroup rendered="#{orderItem.blockedItem}">
+																<h:outputText value="#{orderItem.unitGrossPrice}" >
+						                        					<f:convertNumber maxFractionDigits="2" minFractionDigits="2" />
+						                        				</h:outputText> <i class="fa fa-euro"></i>
+															</h:panelGroup>
+														</div>
+														<div class="col-sm-2 text-right">
+															<h:outputText value="#{orderItem.commission.grossPrice}" >
+					                        					<f:convertNumber maxFractionDigits="2" minFractionDigits="2" />
+					                        				</h:outputText> <i class="fa fa-euro"></i>
+														</div>
+														<div class="col-sm-2 text-right text-navy">
+															<h:outputText value="#{orderItem.commission.points}" >
+					                        					<f:convertNumber maxFractionDigits="4" minFractionDigits="0" />
+					                        				</h:outputText> <i class="fa fa-star"></i>
+														</div>
+														
+													</div>
+													<div class="group-button">
+														<h:commandLink disabled="#{orderItem.blockedItem}" class="btn btn-white pull-right" action="#{orderBean.removeRetailItemFromOrder(orderBean.selectedOrder, orderItem)}" >
+																<f:ajax render="orderForm" onevent="updatePluginsEvent"  />
+																<i class="fa fa-trash"></i>
+														</h:commandLink>
+													</div>
+												</div>
+										</ui:repeat>
+										
+										</div>
+									</div>
+								<div class="form-group">
+									<div class="col-sm-2">
+									</div>
+									<div class="col-sm-10 text-right" >
+										<div style="padding-right: 33px;">
+										<label class="col-sm-6 control-label">Retail Summe:</label>
+										<div class="col-sm-2">
+										
+										</div>
+										<div class="col-sm-2">
+											<p class="form-control-static">
+												<h:outputText value="#{orderBean.selectedOrder.commission.grossPrice}">
+													<f:convertNumber maxFractionDigits="2" minFractionDigits="2" />
+												</h:outputText>
+												 <i class="fa fa-euro"></i>
+											</p>
+										</div>
+										<div class="col-sm-2">
+											<p class="form-control-static text-navy">
+												<h:outputText value="#{orderBean.selectedOrder.commission.points}">
+													<f:convertNumber maxFractionDigits="4" minFractionDigits="0" />
+												</h:outputText>
+												 <i class="fa fa-star"></i>
+											</p>
+										</div>
+										</div>
+									
+									
+										
+									</div>
+								
+								</div>
+								</h:panelGroup>
+								
+								
+								
+								
+								
+								<div class="form-group">
+									<label class="col-sm-2 control-label">Interne Info</label>
+									<div class="col-sm-10">
+										<h:inputTextarea rows="5"  disabled="#{orderBean.selectedOrder.id gt 0 and not permissionBean.isAllowedToChangeOrder(orderBean.selectedOrder)}"
+											value="#{orderBean.selectedOrder.info}"
+											class="form-control" autocomplete="off" />
+									</div>
+								</div>
+		
+								<div class="form-group">
+		
+									<label class="col-sm-2 control-label">Mitarbeiter</label>
+									<div class="col-sm-2">
+										<h:selectOneMenu  disabled="#{orderBean.selectedOrder.id gt 0 and not permissionBean.isAllowedToChangeOrder(orderBean.selectedOrder)}" a:data-placeholder="Mitarbeiter wählen ..."
+											value="#{orderBean.selectedOrder.user}"
+											class="chosen-select-no-single form-control" converter="#{userConverter}">
+											<f:selectItem itemValue="" itemLabel=""/>
+											<f:selectItems value="#{userBean.userList}" var="user"
+												itemValue="#{user}" itemLabel="#{user.name}" />
+											<f:ajax event="change" listener="#{orderBean.calculateCommission}" render="orderForm" onevent="updatePluginsEvent" />
+										</h:selectOneMenu>
+									</div>
+		
+								</div>
+		
+		
+		
+								<div class="hr-line-dashed"></div>
+		
+		
+		
+		
+								<div class="form-group">
+									<div class="col-sm-12">
+												
+										<h:commandButton value="speichern"
+											action="#{orderBean.saveOrder}" class="btn btn-primary pull-right" rendered="#{orderBean.selectedOrder.id == 0 || permissionBean.isAllowedToChangeOrder(orderBean.selectedOrder)}" />
+									</div>
+								</div>
+					                
+			                
+			                </div>
+            			</div>
+            			
+	                </h:form>
+            			
+    			</div>
+    		</div>
+		  
+		  
+			<ui:decorate template="/WEB-INF/include/order/retailProductForm.xhtml">
+				<ui:define name="submitButton">
+					<h:commandButton id="submitButton" class="btn btn-primary form-control" value="Hinzufügen" action="#{orderBean.addRetailProduct}" >
+						<f:ajax onevent="closeRetailProductModal " render="retailProductModalForm orderForm messages" />
+					</h:commandButton>
+				</ui:define>
+			</ui:decorate>
+			
+			<ui:decorate template="/WEB-INF/include/order/retailProductPriceForm.xhtml">
+				<ui:define name="submitButton">
+					<h:commandButton id="submitButton" class="btn btn-primary" value="anwenden" action="#{orderBean.calculateCommission()}" >
+						<f:ajax onevent="closeRetailProductPriceModal" render="retailProductModalPriceForm orderForm messages" />
+					</h:commandButton>
+				</ui:define>
+			</ui:decorate>
+
+			</ui:fragment>
+
+		</ui:define>
+
+
+	</ui:composition>
+</h:body>
+</html>

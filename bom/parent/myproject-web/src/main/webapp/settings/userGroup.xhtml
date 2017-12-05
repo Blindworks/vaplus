@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:body>
+
+
+	<ui:composition template="/WEB-INF/template/common/commonLayout.xhtml">
+	
+
+
+		<ui:param name="heading1" value="#{userGroupBean.userGroup.id == null ? 'Neue Mitarbeiter-Gruppe' : userGroupBean.userGroup.name}" />
+		
+		<ui:define name="content">
+		
+			<div class="row">
+				<div class="col-lg-12">
+		            <div class="ibox float-e-margins">
+						<h:form class="form-horizontal">
+			                <div class="ibox-title">
+			                    <h5>Mitarbeiter-Gruppen Details</h5>
+			                </div>
+			                <div class="ibox-content">
+					                
+								<div class="form-group">
+									<label class="col-sm-2 control-label">Name</label>
+									<div class="col-sm-10">
+										<h:inputText value="#{userGroupBean.userGroup.name}"
+											class="form-control #{ component.valid ? '' : 'error'}" id="name" validatorMessage="Bitte Name angeben" >
+											<f:validateLength minimum="2" maximum="255" />
+										</h:inputText>
+										<h:messages for="name"  />
+									</div>
+								</div>
+								<div class="form-group">
+									<div class="col-sm-4 col-sm-offset-2">
+									
+										<h:commandButton id="saveUserButton" value="speichern" action="#{userGroupBean.saveUserGroup}"
+											class="btn btn-primary " />
+									</div>
+									<div class="col-sm-4">
+									
+										<h:commandLink class="btn btn-danger confirm-btn" value="löschen"  action="#{userGroupBean.deleteUserGroup}" immediate="true" rendered="#{userGroupBean.userGroup.id gt 0}">
+									    </h:commandLink>
+									</div>
+								</div>
+							</div>
+						</h:form>
+					</div>
+				</div>
+			</div>
+
+			<h:panelGroup rendered="#{userGroupBean.userGroup.id gt 0}">
+				
+				
+				<div class="row">
+					<div class="col-lg-12">
+			            <div class="ibox float-e-margins">
+							<h:form class="form-horizontal">
+				                <div class="ibox-title">
+				                    <h5>Rechte</h5>
+				                </div>
+				                <div class="ibox-content">
+				
+				
+					<div class="form-group">
+						<label class="col-sm-2 control-label">Kunde</label>
+						<div class="col-sm-10">
+							<div class="row">
+	                            <div class="col-md-2">
+	                            	<div class="checkbox">
+						      			<label>
+						      				<h:selectBooleanCheckbox value="#{userGroupBean.permissionCustomerRead}" class="i-checks" >
+											<f:ajax event="change" render="@form" onevent="updatePluginsEvent"/>
+						      				</h:selectBooleanCheckbox> lesen</label>
+						    		</div>
+						    	</div>
+	                            <div class="col-md-2">
+	                            	<div class="checkbox">
+						      			<label><h:selectBooleanCheckbox value="#{userGroupBean.permissionCustomerEdit}" class="i-checks" >
+											<f:ajax event="change" render="@form" onevent="updatePluginsEvent"/>
+						      				</h:selectBooleanCheckbox> bearbeiten</label>
+						    		</div>
+						    	</div>
+	                            <div class="col-md-2">
+	                            	<div class="checkbox">
+						      			<label><h:selectBooleanCheckbox value="#{userGroupBean.permissionCustomerCreate}" class="i-checks" >
+											<f:ajax event="change" render="@form" onevent="updatePluginsEvent"/>
+						      				</h:selectBooleanCheckbox> anlegen</label>
+						    		</div>
+						    	</div>
+	                            <div class="col-md-2">
+	                            	<div class="checkbox">
+						      			<label><h:selectBooleanCheckbox value="#{userGroupBean.permissionCustomerDelete}" class="i-checks" >
+											<f:ajax event="change" render="@form" onevent="updatePluginsEvent"/>
+						      				</h:selectBooleanCheckbox> löschen</label>
+						    		</div>
+						    	</div>
+						    	
+	                        </div>
+	                    </div>
+	                </div>
+	                
+	                
+	                
+					<div class="form-group">
+						<label class="col-sm-2 control-label">Verträge</label>
+						<div class="col-sm-10">
+							<div class="row">
+	                            <div class="col-md-2">
+	                            	<div class="checkbox">
+						      			<label>
+						      				<h:selectBooleanCheckbox value="#{userGroupBean.permissionContractRead}" class="i-checks" >
+											<f:ajax event="change" render="@form" onevent="updatePluginsEvent"/>
+						      				</h:selectBooleanCheckbox> lesen</label>
+						    		</div>
+						    	</div>
+	                            <div class="col-md-2">
+	                            	<div class="checkbox">
+						      			<label><h:selectBooleanCheckbox value="#{userGroupBean.permissionContractEditOwn}" class="i-checks" >
+											<f:ajax event="change" render="@form" onevent="updatePluginsEvent"/>
+						      				</h:selectBooleanCheckbox> eigene bearbeiten</label>
+						    		</div>
+						    	</div>
+	                            <div class="col-md-2">
+	                            	<div class="checkbox">
+						      			<label><h:selectBooleanCheckbox value="#{userGroupBean.permissionContractEdit}" class="i-checks" >
+											<f:ajax event="change" render="@form" onevent="updatePluginsEvent"/>
+						      				</h:selectBooleanCheckbox> bearbeiten</label>
+						    		</div>
+						    	</div>
+	                            <div class="col-md-2">
+	                            	<div class="checkbox">
+						      			<label><h:selectBooleanCheckbox value="#{userGroupBean.permissionContractCreate}" class="i-checks" >
+											<f:ajax event="change" render="@form" onevent="updatePluginsEvent"/>
+						      				</h:selectBooleanCheckbox> anlegen</label>
+						    		</div>
+						    	</div>
+	                            <div class="col-md-2">
+	                            	<div class="checkbox">
+						      			<label><h:selectBooleanCheckbox value="#{userGroupBean.permissionContractDelete}" class="i-checks" >
+											<f:ajax event="change" render="@form" onevent="updatePluginsEvent"/>
+						      				</h:selectBooleanCheckbox> stornieren</label>
+						    		</div>
+						    	</div>
+						    	
+	                        </div>
+	                    </div>
+	                </div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">Vertragslisten</label>
+						<div class="col-sm-10">
+							<div class="row">
+	                            <div class="col-md-2">
+	                            	<div class="checkbox">
+						      			<label>
+						      				<h:selectBooleanCheckbox value="#{userGroupBean.permissionContractListRead}" class="i-checks" >
+											<f:ajax event="change" render="@form" onevent="updatePluginsEvent"/>
+						      				</h:selectBooleanCheckbox> lesen</label>
+						    		</div>
+						    	</div>
+	                            <div class="col-md-2">
+	                            	<div class="checkbox">
+						      			<label><h:selectBooleanCheckbox value="#{userGroupBean.permissionContractListReadOwn}" class="i-checks" >
+											<f:ajax event="change" render="@form" onevent="updatePluginsEvent"/>
+						      				</h:selectBooleanCheckbox> eigene lesen</label>
+						    		</div>
+						    	</div>
+	                        </div>
+	                    </div>
+	                </div>
+	                
+					<div class="form-group">
+						<label class="col-sm-2 control-label">Bestellungen</label>
+						<div class="col-sm-10">
+							<div class="row">
+	                            <div class="col-md-2">
+	                            	<div class="checkbox">
+						      			<label>
+						      				<h:selectBooleanCheckbox value="#{userGroupBean.permissionOrderRead}" class="i-checks" >
+											<f:ajax event="change" render="@form" onevent="updatePluginsEvent"/>
+						      				</h:selectBooleanCheckbox> lesen</label>
+						    		</div>
+						    	</div>
+	                            <div class="col-md-2">
+	                            	<div class="checkbox">
+						      			<label><h:selectBooleanCheckbox value="#{userGroupBean.permissionOrderEditOwn}" class="i-checks" >
+											<f:ajax event="change" render="@form" onevent="updatePluginsEvent"/>
+						      				</h:selectBooleanCheckbox> eigene bearbeiten</label>
+						    		</div>
+						    	</div>
+	                            <div class="col-md-2">
+	                            	<div class="checkbox">
+						      			<label><h:selectBooleanCheckbox value="#{userGroupBean.permissionOrderEdit}" class="i-checks" >
+											<f:ajax event="change" render="@form" onevent="updatePluginsEvent"/>
+						      				</h:selectBooleanCheckbox> bearbeiten</label>
+						    		</div>
+						    	</div>
+	                            <div class="col-md-2">
+	                            	<div class="checkbox">
+						      			<label><h:selectBooleanCheckbox value="#{userGroupBean.permissionOrderCreate}" class="i-checks" >
+											<f:ajax event="change" render="@form" onevent="updatePluginsEvent"/>
+						      				</h:selectBooleanCheckbox> anlegen</label>
+						    		</div>
+						    	</div>
+	                            <div class="col-md-2">
+	                            	<div class="checkbox">
+						      			<label><h:selectBooleanCheckbox value="#{userGroupBean.permissionOrderDelete}" class="i-checks" >
+											<f:ajax event="change" render="@form" onevent="updatePluginsEvent"/>
+						      				</h:selectBooleanCheckbox> stornieren</label>
+						    		</div>
+						    	</div>
+						    	
+	                        </div>
+	                    </div>
+	                </div>
+	                
+					<div class="form-group">
+						<label class="col-sm-2 control-label">Verkauf</label>
+						<div class="col-sm-10">
+							<div class="row">
+	                            <div class="col-md-2">
+	                            	<div class="checkbox">
+						      			<label>
+						      				<h:selectBooleanCheckbox value="#{userGroupBean.permissionSaleRead}" class="i-checks" >
+											<f:ajax event="change" render="@form" onevent="updatePluginsEvent"/>
+						      				</h:selectBooleanCheckbox> lesen</label>
+						    		</div>
+						    	</div>
+	                            <div class="col-md-2">
+	                            	<div class="checkbox">
+						      			<label><h:selectBooleanCheckbox value="#{userGroupBean.permissionSaleCreate}" class="i-checks" >
+											<f:ajax event="change" render="@form" onevent="updatePluginsEvent"/>
+						      				</h:selectBooleanCheckbox> anlegen</label>
+						    		</div>
+						    	</div>
+	                            <div class="col-md-2">
+	                            	<div class="checkbox">
+						      			<label><h:selectBooleanCheckbox value="#{userGroupBean.permissionSaleCancel}" class="i-checks" >
+											<f:ajax event="change" render="@form" onevent="updatePluginsEvent"/>
+						      				</h:selectBooleanCheckbox> stornieren</label>
+						    		</div>
+						    	</div>
+						    	
+	                        </div>
+	                    </div>
+	                </div>
+	                
+					<div class="form-group">
+						<label class="col-sm-2 control-label">Kasse</label>
+						<div class="col-sm-10">
+							<div class="row">
+	                            <div class="col-md-2">
+	                            	<div class="checkbox">
+						      			<label><h:selectBooleanCheckbox value="#{userGroupBean.permissionCashRegisterRead}" class="i-checks" >
+											<f:ajax event="change" render="@form" onevent="updatePluginsEvent"/>
+						      				</h:selectBooleanCheckbox> lesen</label>
+						    		</div>
+						    	</div>
+	                            <div class="col-md-2">
+	                            	<div class="checkbox">
+						      			<label><h:selectBooleanCheckbox value="#{userGroupBean.permissionCashRegisterOpen}" class="i-checks" >
+											<f:ajax event="change" render="@form" onevent="updatePluginsEvent"/>
+						      				</h:selectBooleanCheckbox> öffnen</label>
+						    		</div>
+						    	</div>
+	                            <div class="col-md-2">
+	                            	<div class="checkbox">
+						      			<label><h:selectBooleanCheckbox value="#{userGroupBean.permissionCashRegisterClose}" class="i-checks" >
+											<f:ajax event="change" render="@form" onevent="updatePluginsEvent"/>
+						      				</h:selectBooleanCheckbox> schliessen</label>
+						    		</div>
+						    	</div>
+	                        </div>
+	                    </div>
+	                </div>
+	                
+					<div class="form-group">
+						<label class="col-sm-2 control-label">WaWi</label>
+						<div class="col-sm-10">
+							<div class="row">
+	                            <div class="col-md-2">
+	                            	<div class="checkbox">
+						      			<label><h:selectBooleanCheckbox value="#{userGroupBean.permissionStockManagementWrite}" class="i-checks" >
+											<f:ajax event="change" render="@form" onevent="updatePluginsEvent"/>
+						      				</h:selectBooleanCheckbox> buchen</label>
+						    		</div>
+						    	</div>
+	                        </div>
+	                    </div>
+	                </div>
+	                
+					<div class="form-group">
+						<label class="col-sm-2 control-label">Leistungsziele</label>
+						<div class="col-sm-10">
+							<div class="row">
+	                            <div class="col-md-2">
+	                            	<div class="checkbox">
+						      			<label>
+						      				<h:selectBooleanCheckbox value="#{userGroupBean.permissionAchievementReadInvisible}" class="i-checks" >
+											<f:ajax event="change" render="@form" onevent="updatePluginsEvent"/>
+						      				</h:selectBooleanCheckbox> unsichtbare lesen</label>
+						    		</div>
+						    	</div>
+	                            <div class="col-md-2">
+						    	</div>
+	                            <div class="col-md-2">
+						    	</div>
+	                            <div class="col-md-2">
+						    	</div>
+						    	
+	                        </div>
+	                    </div>
+	                </div>
+	                
+					<div class="form-group">
+						<label class="col-sm-2 control-label">Controlling</label>
+						<div class="col-sm-10">
+							<div class="row">
+	                            <div class="col-md-2">
+	                            	<div class="checkbox">
+						      			<label>
+						      				<h:selectBooleanCheckbox value="#{userGroupBean.permissionControllingRead}" class="i-checks" >
+											<f:ajax event="change" render="@form" onevent="updatePluginsEvent"/>
+						      				</h:selectBooleanCheckbox> lesen</label>
+						    		</div>
+						    	</div>
+	                            <div class="col-md-2">
+						    	</div>
+	                            <div class="col-md-2">
+						    	</div>
+	                            <div class="col-md-2">
+						    	</div>
+						    	
+	                        </div>
+	                    </div>
+	                </div>
+	                
+					<div class="form-group">
+						<label class="col-sm-2 control-label">Kalender</label>
+						<div class="col-sm-10">
+							<div class="row">
+	                            <div class="col-md-2">
+	                            	<div class="checkbox">
+						      			<label>
+						      				<h:selectBooleanCheckbox value="#{userGroupBean.permissionCalendarRead}" class="i-checks" >
+											<f:ajax event="change" render="@form" onevent="updatePluginsEvent"/>
+						      				</h:selectBooleanCheckbox> lesen</label>
+						    		</div>
+						    	</div>
+	                            <div class="col-md-2">
+	                            	<div class="checkbox">
+						      			<label>
+						      				<h:selectBooleanCheckbox value="#{userGroupBean.permissionCalendarWrite}" class="i-checks" >
+											<f:ajax event="change" render="@form" onevent="updatePluginsEvent"/>
+						      				</h:selectBooleanCheckbox> bearbeiten</label>
+						    		</div>
+						    	</div>
+	                            <div class="col-md-2">
+						    	</div>
+	                            <div class="col-md-2">
+						    	</div>
+						    	
+	                        </div>
+	                    </div>
+	                </div>
+	                
+					<div class="form-group">
+						<label class="col-sm-2 control-label">Verwaltung</label>
+						<div class="col-sm-10">
+							<div class="row">
+	                            <div class="col-md-2">
+	                            	<div class="checkbox">
+						      			<label>
+						      				<h:selectBooleanCheckbox value="#{userGroupBean.permissionManagementRead}" class="i-checks" >
+											<f:ajax event="change" render="@form" onevent="updatePluginsEvent"/>
+						      				</h:selectBooleanCheckbox> lesen</label>
+						    		</div>
+						    	</div>
+	                            <div class="col-md-2">
+						    	</div>
+	                            <div class="col-md-2">
+						    	</div>
+	                            <div class="col-md-2">
+						    	</div>
+						    	
+	                        </div>
+	                    </div>
+	                </div>
+	                
+					<div class="form-group">
+						<label class="col-sm-2 control-label">Einstellungen</label>
+						<div class="col-sm-10">
+							<div class="row">
+	                            <div class="col-md-2">
+	                            	<div class="checkbox">
+						      			<label>
+						      				<h:selectBooleanCheckbox value="#{userGroupBean.permissionSettingsRead}" class="i-checks" >
+											<f:ajax event="change" render="@form" onevent="updatePluginsEvent"/>
+						      				</h:selectBooleanCheckbox> lesen</label>
+						    		</div>
+						    	</div>
+	                            <div class="col-md-2">
+	                            	<div class="checkbox">
+						      			<label>
+						      				<h:selectBooleanCheckbox value="#{userGroupBean.permissionSettingsEdit}" class="i-checks" >
+											<f:ajax event="change" render="@form" onevent="updatePluginsEvent"/>
+						      				</h:selectBooleanCheckbox> bearbeiten</label>
+						    		</div>
+						    	</div>
+	                            <div class="col-md-2">
+						    	</div>
+	                            <div class="col-md-2">
+						    	</div>
+						    	
+	                        </div>
+	                    </div>
+	                </div>
+	                
+					<div class="form-group">
+						<label class="col-sm-2 control-label">Daten Import</label>
+						<div class="col-sm-10">
+							<div class="row">
+	                            <div class="col-md-2">
+						    	</div>
+	                            <div class="col-md-2">
+	                            	<div class="checkbox">
+						      			<label>
+						      				<h:selectBooleanCheckbox value="#{userGroupBean.permissionImportEdit}" class="i-checks" >
+											<f:ajax event="change" render="@form" onevent="updatePluginsEvent"/>
+						      				</h:selectBooleanCheckbox> importieren</label>
+						    		</div>
+						    	</div>
+	                            <div class="col-md-2">
+						    	</div>
+	                            <div class="col-md-2">
+						    	</div>
+						    	
+	                        </div>
+	                    </div>
+	                </div>
+	                
+					<div class="form-group">
+						<label class="col-sm-2 control-label">Dateien</label>
+						<div class="col-sm-10">
+							<div class="row">
+	                            <div class="col-md-2">
+	                            	<div class="checkbox">
+						      			<label>
+						      				<h:selectBooleanCheckbox value="#{userGroupBean.permissionReadFiles}" class="i-checks" >
+											<f:ajax event="change" render="@form" onevent="updatePluginsEvent"/>
+						      				</h:selectBooleanCheckbox> lesen</label>
+						    		</div>
+						    	</div>
+	                            <div class="col-md-2">
+	                            	<div class="checkbox">
+						      			<label>
+						      				<h:selectBooleanCheckbox value="#{userGroupBean.permissionReadAllFiles}" class="i-checks" >
+											<f:ajax event="change" render="@form" onevent="updatePluginsEvent"/>
+						      				</h:selectBooleanCheckbox> alle lesen</label>
+						    		</div>
+						    	</div>
+	                            <div class="col-md-2">
+						    	</div>
+	                            <div class="col-md-2">
+						    	</div>
+						    	
+	                        </div>
+	                    </div>
+	                </div>
+	                
+					<div class="form-group">
+						<label class="col-sm-2 control-label">Support</label>
+						<div class="col-sm-10">
+							<div class="row">
+	                            <div class="col-md-2">
+	                            	<div class="checkbox">
+						      			<label>
+						      				<h:selectBooleanCheckbox value="#{userGroupBean.permissionSupportRead}" class="i-checks" >
+											<f:ajax event="change" render="@form" onevent="updatePluginsEvent"/>
+						      				</h:selectBooleanCheckbox> lesen</label>
+						    		</div>
+						    	</div>
+	                            <div class="col-md-2">
+						    	</div>
+	                            <div class="col-md-2">
+						    	</div>
+	                            <div class="col-md-2">
+						    	</div>
+						    	
+	                        </div>
+	                    </div>
+	                </div>
+	                
+	                
+				
+							</div>
+						</h:form>
+					</div>
+				</div>
+			</div>
+				
+				</h:panelGroup>
+
+
+		</ui:define>
+
+
+	</ui:composition>
+</h:body>
+</html>

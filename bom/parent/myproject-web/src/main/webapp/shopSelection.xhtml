@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core">
+
+<h:body>
+
+	<f:metadata>
+	</f:metadata>
+	
+	<ui:composition template="/WEB-INF/template/common/commonLayoutMinimal.xhtml">
+		<ui:param name="bodyClass" value="gray-bg" />
+		<ui:param name="logoName" value="Filialen" />
+
+
+		<ui:define name="wrapper">
+
+
+			<ui:decorate
+				template="/WEB-INF/template/common/commonCenterBox.xhtml">
+
+				<ui:define name="logoName">
+					VA+
+				</ui:define>
+				<ui:define name="slogan">
+				</ui:define>
+
+				<ui:define name="content">
+
+
+
+
+					<h:form>
+							<div class="container">
+								<div class="shop-selector">
+									<div class="row">
+									<ui:repeat value="#{shopBean.shopList}" var="shop">
+										<div class="col-sm-6 shop-wrapper" >
+											<h:commandLink action="#{propertyBean.getDashboardId}">
+											<f:setPropertyActionListener value="#{shop}"
+												target="#{shopBean.activeShop}" />
+												<div class="shop ibox">
+												
+													<div class="ibox-content text-left">
+														<ui:fragment rendered="#{not empty shop.shopImage.URI}">
+															<img alt="" src="#{shop.shopImage.URI}"/>
+														</ui:fragment>
+														<ui:fragment rendered="#{empty shop.shopImage.URI}">
+															<i class="fa fa-building-o"></i>
+														</ui:fragment>
+														<div class="name">#{shop.name}</div>
+													</div>
+													
+												</div>
+												</h:commandLink>
+										</div>
+									</ui:repeat>
+									</div>
+								</div>
+							</div>
+
+					</h:form>
+					
+					<h:outputScript>
+                
+                
+					$( document ).ready(function() {
+						if($('.shop-selector a').length){
+	   						setTimeout(function (){
+								$('.shop-selector a').first().focus();
+							}, 300);
+						}
+					});
+		
+					$(window).keydown(function(e){
+					
+						var shops =  $('.shop-selector a');
+					
+						var focusLink = $(shops).filter(':focus');
+						
+					
+					    if(e.which === 39 || e.which === 40 || e.which === 9){
+					    
+					    console.log(focusLink.parent().html());
+					    	
+					    	if(focusLink.parent().next().length){
+								focusLink.parent().next().find('a').focus();
+							}
+							else{
+								shops.first().focus();
+							}
+					    	
+					    	return false;
+					    }else if(e.which === 37 || e.which === 38){
+					    	
+					    	if(focusLink.parent().prev().length){
+								focusLink.parent().prev().find('a').focus();
+							}
+							else{
+								shops.last().focus();
+							}
+					    	
+					    	return false;
+					    }
+					    
+					    return true;
+					});
+					
+					
+		</h:outputScript>
+					
+
+				</ui:define>
+
+			</ui:decorate>
+
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

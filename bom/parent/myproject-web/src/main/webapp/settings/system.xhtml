@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+	  xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:p="http://primefaces.org/ui">
+
+	<h:body>
+	
+    	<ui:composition template="/WEB-INF/template/common/commonLayout.xhtml">
+ 
+			<ui:param name="heading1" value="Systemeinstellungen" />
+		
+    		<ui:define name="content">
+    		
+    		
+			
+    		<div class="row">
+				<div class="col-lg-12">
+		            <div class="ibox float-e-margins">
+		            	<h:form class="form-horizontal" id="systemProperties">
+		                <div class="ibox-title">
+		                    <div class="ibox-tools">
+		                    	<h:panelGroup  rendered="#{permissionBean.hasPermission('settings','edit')}">
+								    <h:commandLink id="saveButton" class="btn btn-xs btn-primary " action="#{propertyBean.toggleSystemPropertiesEditable}"  rendered="#{propertyBean.systemPropertiesEditable}">
+									   <f:ajax execute="@form" render="systemProperties"/>
+									   <i class="fa fa-save"></i>
+									</h:commandLink>
+								    <h:commandLink  class="btn btn-xs btn-primary "  action="#{propertyBean.toggleSystemPropertiesEditable}" rendered="#{propertyBean.systemPropertiesEditable}">
+									   <f:ajax render="systemProperties"/>
+									   <i class="fa fa-times"></i>
+									</h:commandLink>
+								    <h:commandLink  class="btn btn-xs btn-primary " action="#{propertyBean.toggleSystemPropertiesEditable}"  rendered="#{not propertyBean.systemPropertiesEditable}">
+									   <f:ajax render="systemProperties" onevent="updatePluginsEvent"/>
+									   <i class="fa fa-pencil"></i>
+									</h:commandLink>
+								</h:panelGroup>
+		                    </div>
+		                </div>
+		                <div class="ibox-content">
+		                
+		                	<div class="form-group">
+									<label class="col-sm-6 control-label">VVL Tage</label>				 
+									<div class="col-sm-6">
+									 <h:panelGroup rendered="#{not propertyBean.systemPropertiesEditable}">
+									 	<p class="form-control-static">#{propertyBean.extensionOfTermLimit} Tage</p>
+									 </h:panelGroup>				
+										<h:inputText value="#{propertyBean.extensionOfTermLimit}"  rendered="#{propertyBean.systemPropertiesEditable}"
+											class="form-control ">
+											<f:convertNumber maxFractionDigits="0" minFractionDigits="0" />
+										</h:inputText>
+									</div>
+								</div>
+		                
+		                	<div class="form-group">
+									<label class="col-sm-6 control-label">Punkte pro Euro Marge (Retail)</label>				 
+									<div class="col-sm-6">
+									 <h:panelGroup rendered="#{not propertyBean.systemPropertiesEditable}">
+									 	<p class="form-control-static">
+									 		<h:outputText value="#{propertyBean.pointsPerProfit}" >
+									 		<f:convertNumber maxFractionDigits="4" minFractionDigits="0" />
+									 		</h:outputText>
+									 	</p>
+									 </h:panelGroup>				
+										<h:inputText value="#{propertyBean.pointsPerProfit}"  rendered="#{propertyBean.systemPropertiesEditable}"
+											class="form-control">
+											<f:convertNumber maxFractionDigits="4" minFractionDigits="0" />
+										</h:inputText>
+									</div>
+								</div>
+		                
+		                	<div class="form-group">
+									<label class="col-sm-6 control-label">Mindest EK-Aufschlag in % (Retail)</label>				 
+									<div class="col-sm-6">
+									 <h:panelGroup rendered="#{not propertyBean.systemPropertiesEditable}">
+									 	<p class="form-control-static">
+									 		<h:outputText value="#{propertyBean.minimumPricePremium}" >
+									 		<f:convertNumber maxFractionDigits="2" minFractionDigits="0" />
+									 		</h:outputText>
+									 	</p>
+									 </h:panelGroup>				
+										<h:inputText value="#{propertyBean.minimumPricePremium}"  rendered="#{propertyBean.systemPropertiesEditable}"
+											class="form-control">
+											<f:convertNumber maxFractionDigits="2" minFractionDigits="0" />
+										</h:inputText>
+									</div>
+								</div>
+		                
+		                	<div class="form-group">
+									<label class="col-sm-6 control-label">Standard Kunden Nr.</label>				 
+									<div class="col-sm-3">
+									
+									 <h:panelGroup rendered="#{not propertyBean.systemPropertiesEditable}">
+									 	<p class="form-control-static">
+									 		<h:outputText value="#{propertyBean.defaultCustomer.id}" >
+									 		</h:outputText>
+									 	</p>
+									 </h:panelGroup>
+									 	<h:inputText value="#{propertyBean.defaultCustomerId}" rendered="#{propertyBean.systemPropertiesEditable}"
+											class="form-control">
+											<f:convertNumber maxFractionDigits="0" minFractionDigits="0" />
+										</h:inputText>
+									</div>
+									<div class="col-sm-3">
+										<ui:fragment rendered="#{not empty propertyBean.defaultCustomer}">
+											<h:outputText value="#{propertyBean.defaultCustomer.name}" >
+									 		</h:outputText>
+										</ui:fragment>
+									</div>
+								</div>
+		                
+		                	<div class="form-group">
+									<label class="col-sm-6 control-label">Tageszeitenwechsel Vor-/Nachmittag</label>				 
+									<div class="col-sm-6">
+									
+									 <h:panelGroup rendered="#{not propertyBean.systemPropertiesEditable}">
+									 	<p class="form-control-static">
+									 		<h:outputText value="#{propertyBean.calendarChangingTime}" >
+									 		</h:outputText>
+									 	</p>
+									 </h:panelGroup>	
+									 	<h:inputText type="text" class="form-control" value="#{propertyBean.calendarChangingTime}" a:data-mask="99:99" rendered="#{propertyBean.systemPropertiesEditable}"/>
+									</div>
+								</div>
+								
+								
+		                
+		                	<div class="form-group">
+								<label class="col-sm-6 control-label">Pausenlänge bei 6h+ Arbeitszeit (in Min.)</label>				 
+								<div class="col-sm-6">
+								 <h:panelGroup rendered="#{not propertyBean.systemPropertiesEditable}">
+								 	<p class="form-control-static">
+								 		<h:outputText value="#{propertyBean.pauseLength6h}" >
+								 		</h:outputText>
+								 		 Min.
+								 	</p>
+								 </h:panelGroup>				
+									<h:inputText value="#{propertyBean.pauseLength6h}"  rendered="#{propertyBean.systemPropertiesEditable}"
+										class="form-control">
+									</h:inputText>
+								</div>
+							</div>
+		                
+		                	<div class="form-group">
+								<label class="col-sm-6 control-label">Pausenlänge bei 9h+ Arbeitszeit (in Min.)</label>				 
+								<div class="col-sm-6">
+								 <h:panelGroup rendered="#{not propertyBean.systemPropertiesEditable}">
+								 	<p class="form-control-static">
+								 		<h:outputText value="#{propertyBean.pauseLength9h}" >
+								 		</h:outputText>
+								 		 Min.
+								 	</p>
+								 </h:panelGroup>				
+									<h:inputText value="#{propertyBean.pauseLength9h}"  rendered="#{propertyBean.systemPropertiesEditable}"
+										class="form-control">
+									</h:inputText>
+								</div>
+							</div>
+		                
+		                </div>
+		                
+		            <p:defaultCommand target="saveButton" />
+		    		</h:form>
+	                </div>
+	                
+	                
+	                
+		            <h:panelGroup  rendered="#{permissionBean.hasPermission('settings','edit')}">
+			            <div class="ibox float-e-margins">
+			                <div class="ibox-title">
+			                    Sonderfunktionen
+			                </div>
+			                <div class="ibox-content">
+			                
+			            	<h:form class="form-horizontal" >
+			            		<h:commandLink  class="btn btn-xs btn-primary " action="#{contractBean.recalculateCommission}" >
+									Punkte neu berechnen.
+								</h:commandLink>
+			            	</h:form>
+			                
+			            	<h:form class="form-horizontal" >
+			            		<h:commandLink  class="btn btn-xs btn-primary " action="#{eventBean.updateAllEvents}" >
+									Kalender Termine Pausenzeiten neu berechnen.
+								</h:commandLink>
+			            	</h:form>
+			                
+			            	<h:form class="form-horizontal" >
+			            		<h:commandLink  class="btn btn-xs btn-primary " action="#{userBean.updateAllUserAllStats}" >
+									Überstunden aller Mitarbeiter neu berechnen.
+								</h:commandLink>
+			            	</h:form>
+			                
+			            	<h:form class="form-horizontal" >
+			            		<h:commandLink  class="btn btn-xs btn-primary " action="#{productStatisticBean.recalculateAllProductStatisticCaches}" >
+									Alle Produkt Statistiken neu berechnen.
+								</h:commandLink>
+			            	</h:form>
+			                
+			            	<h:form class="form-horizontal" >
+			            		<h:commandLink  class="btn btn-xs btn-primary " action="#{salesBean.updateAllSalesCache()}" >
+									Kategorie Sales Cache neu berechnen.
+								</h:commandLink>
+			            	</h:form>
+			            	
+			                </div>
+			            </div>
+			        </h:panelGroup>
+		                
+	                
+               </div>
+            </div>
+    			
+    		</ui:define>
+    		
+    		
+    	</ui:composition>
+    </h:body>
+</html>

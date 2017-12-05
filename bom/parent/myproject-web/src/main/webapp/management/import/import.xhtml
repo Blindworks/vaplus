@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:body>
+
+
+	<ui:composition template="/WEB-INF/template/common/commonLayout.xhtml">
+		<ui:param name="heading1" value="Daten Import" />
+		
+		<ui:define name="script">
+			<h:outputStylesheet library="plugins" name="dropzone/dropzone.css"  />
+			<h:outputScript library="plugins" name="dropzone/dropzone.js"  />
+		</ui:define>
+		
+		
+		<ui:define name="headingContent">
+			<h:form class="form-horizontal hidden-print" id="headerToolbar">
+				<div class="form-group">
+					
+					<div class="col-sm-2">
+						<h:selectOneMenu value="#{importBean.importingType}" class="chosen-select-no-single form-control" >
+									<f:selectItem itemValue="0" itemLabel="Format wählen ..." />
+									<f:selectItems value="#{importBean.importingTypes.entrySet()}" var="importingType" itemValue="#{importingType.key}" itemLabel="#{importingType.value}" />
+							<f:ajax render="" event="change" />
+						</h:selectOneMenu>
+					</div>
+				</div>
+			</h:form>
+   		</ui:define>
+		
+		<ui:define name="content">	
+		
+		<h:panelGroup id="importModalWrapper">
+			<div class="modal inmodal" id="importModal" tabindex="-1"
+				role="dialog" aria-hidden="true" style="display: none;"
+				data-keyboard="true" data-backdrop="static">
+					<div class="modal-dialog">
+						<div class="modal-content animated bounceInRight">
+							<h:panelGroup id="importModalBodyWrapper">
+								<h:panelGroup rendered="#{not empty importBean.unknownUserAlias}">
+						
+									<h:form class="form-horizontal" id="userAliasModalForm">
+											<div class="modal-header">
+												<button type="button" class="close" data-dismiss="modal">
+													<span aria-hidden="true">×</span><span class="sr-only">Close</span>
+												</button>
+												<i class="fa fa-user modal-icon"></i>
+												<h4 class="modal-title">Mitarbeiter zuweisen</h4>
+											</div>
+											<div class="modal-body">
+												<div class="form-group">
+													<label class="col-sm-4 control-label">#{importBean.unknownUserAlias.alias}</label>
+													<div class="col-sm-4">
+														<h:selectOneMenu 
+																	value="#{importBean.unknownUserAlias.user}"
+																	pt:data-placeholder="Mitarbeiter wählen ..."
+																	class="chosen-select-full-width form-control" converter="#{userConverter}" >
+																	<f:selectItem itemValue="" itemLabel="" />
+																	<f:selectItems value="#{userBean.getUserList(true)}" var="user"
+																		itemValue="#{user}" itemLabel="#{user.name}" />
+														</h:selectOneMenu>
+													</div>
+													<div class="col-sm-4">
+														<h:commandButton class="btn btn-primary"  action="#{importBean.saveUnknownUserAlias}" value="zuweisen" >
+															<f:ajax execute="@form" render="importModalBodyWrapper resultPanel" onevent="submitImportModal"/>
+														</h:commandButton>
+													</div>
+												</div>
+												
+												
+											</div>
+									
+									</h:form>
+								</h:panelGroup>
+							
+								<h:panelGroup rendered="#{empty importBean.unknownUserAlias and not empty importBean.unknownShopAlias}">
+						
+									<h:form class="form-horizontal" id="shopAliasModalForm">
+											<div class="modal-header">
+												<button type="button" class="close" data-dismiss="modal">
+													<span aria-hidden="true">×</span><span class="sr-only">Close</span>
+												</button>
+												<i class="fa fa-user modal-icon"></i>
+												<h4 class="modal-title">Filiale zuweisen</h4>
+											</div>
+											<div class="modal-body">
+												<div class="form-group">
+													<label class="col-sm-4 control-label">#{importBean.unknownShopAlias.alias}</label>
+													<div class="col-sm-4">
+														<h:selectOneMenu 
+																	value="#{importBean.unknownShopAlias.shop}"
+																	pt:data-placeholder="Filiale wählen ..."
+																	class="chosen-select-full-width form-control" converter="#{shopConverter}" >
+																	<f:selectItem itemValue="" itemLabel="" />
+																	<f:selectItems value="#{shopBean.getShopList(true)}" var="shop"
+																		itemValue="#{shop}" itemLabel="#{shop.name}" />
+														</h:selectOneMenu>
+													</div>
+													<div class="col-sm-4">
+														<h:commandButton class="btn btn-primary"  action="#{importBean.saveUnknownShopAlias}" value="zuweisen" >
+															<f:ajax execute="@form" render="importModalBodyWrapper resultPanel" onevent="submitImportModal"/>
+														</h:commandButton>
+													</div>
+												</div>
+												
+												
+											</div>
+									
+									</h:form>
+								</h:panelGroup>
+							</h:panelGroup>
+								
+							
+							
+						</div>
+					</div>
+			</div>
+		</h:panelGroup>
+		
+		<script>
+
+
+		$(document).ready(function () {
+			checkImportModalVisibility();
+		});
+
+		function checkImportModalVisibility(){
+
+			console.log("checkImportModalVisibility");
+			
+			if($('#importModal .modal-body').length)
+					$('#importModal').modal('show');
+			else
+				$('#importModal').modal('hide');
+		}
+
+		function submitImportModal(data){
+			
+			if(data.status == "success"){
+				updatePlugins();
+				checkImportModalVisibility();
+			}
+		}
+
+
+		function ajaxLoadWrapper(data){+
+
+			console.log("ajaxLoadWrapper "+data.status);
+			
+			ajaxLoad(data,checkImportModalVisibility);
+		}
+		
+		</script>
+		
+		
+		
+		<h:panelGroup id="localMessages">
+			<h:panelGroup rendered="#{importBean.importLog.length() > 0}">
+				<div class="alert alert-info" role="alert">
+					<strong>
+						<h:outputText escape="false" value="#{importBean.importLog}"/>
+					</strong>
+				</div>
+			</h:panelGroup>
+			<h:panelGroup rendered="#{importBean.importError.length() > 0}">
+				<div class="alert alert-danger" role="alert">
+					<strong>
+						<h:outputText escape="false" value="#{importBean.importError}"/>
+					</strong>
+				</div>
+			</h:panelGroup>
+		</h:panelGroup>
+		
+		<h:form id="localMessagesForm" >
+			<h:commandButton id="reload" class="hide" value="">
+				<f:ajax render="localMessages importDataForm importModalBodyWrapper" onevent="submitImportModal" />
+			</h:commandButton>
+	    </h:form>
+
+		<ui:fragment rendered="#{not importBean.importRunning}">
+			<div class="row">
+                <div class="col-lg-12">
+                    <div class="ibox">
+                        <div class="ibox-title">
+							Import von Altdaten
+                        </div>
+                        <div class="ibox-content">
+                        
+							<div class="row">
+				                <div class="col-lg-6">
+		                        	<p>Import Dateien hier hinziehen und auf Resultat warten.</p>
+			                        <h:form id="importDataUploadForm" class="dropzone form-horizontal" enctype="multipart/form-data">
+			                        	<h:inputFile id="file" value="#{importBean.importFiles}" class="hide" pt:multiple="multiple"/>
+										<h:commandButton action="#{importBean.proceedImport}" value="commit" class="hide" />
+			                        </h:form>
+				                </div>
+				                <div class="col-lg-6">
+					                	<h:form id="importDataForm">
+					                        	<p><span><h:panelGroup rendered="#{importBean.importLines.size() gt 0}"><i class="fa fa-fw fa-check text-green"></i></h:panelGroup><h:panelGroup rendered="#{importBean.importLines.size() eq 0}"><i class="fa fa-fw fa-times text-red"></i></h:panelGroup></span> Vorgemerkte Datenzeilen: #{importBean.importLines.size()}</p>
+					                        	<h:panelGroup rendered="#{importBean.importLines.size() gt 0}">
+						                        	<p><span><h:panelGroup rendered="#{empty importBean.unknownUserAlias}"><i class="fa fa-fw fa-check text-green"></i></h:panelGroup><h:panelGroup rendered="#{not empty importBean.unknownUserAlias}"><i class="fa fa-fw fa-times text-red"></i></h:panelGroup></span> Alle Benutzer zugewiesen</p>
+						                        	<p><span><h:panelGroup rendered="#{empty importBean.unknownShopAlias}"><i class="fa fa-fw fa-check text-green"></i></h:panelGroup><h:panelGroup rendered="#{not empty importBean.unknownShopAlias}"><i class="fa fa-fw fa-times text-red"></i></h:panelGroup></span> Alle Filialen zugewiesen</p>
+					                        	</h:panelGroup>
+					                        	<h:panelGroup rendered="#{importBean.importLines.size() gt 0 and empty importBean.unknownUserAlias and empty importBean.unknownShopAlias}">
+													<h:commandButton class="btn btn-primary"  action="#{importBean.importData}" value="jetzt importieren" >
+													</h:commandButton>
+					                        	</h:panelGroup> 
+					                        	<h:panelGroup rendered="#{importBean.importLines.size() gt 0}">
+													<h:commandButton class="btn btn-danger"  action="#{importBean.clear}" value="Import Daten leeren" >
+													</h:commandButton>
+					                        	</h:panelGroup>
+				                        </h:form>
+		                        	
+			                        	<ui:fragment rendered="#{importBean.importResult.processedDataSets > 0}">
+			                        		<br/>
+			                        		<br/>
+			                        		<h2>Ergebniss des letzen Imports</h2>
+			                        		<div class="row">
+				                        		<div class="col-lg-6">
+				                        			verarbeitete Datenzeilen:
+				                        		</div>
+				                        		<div class="col-lg-6">
+				                        			<h:outputText value="#{importBean.importResult.processedDataSets}" />
+				                        		</div>
+			                        		</div>
+			                        		<div class="row">
+				                        		<div class="col-lg-6">
+				                        			importierte Kunden:
+				                        		</div>
+				                        		<div class="col-lg-6">
+				                        			<h:outputText value="#{importBean.importResult.importetCustomer}" />
+				                        		</div>
+			                        		</div>
+			                        		<div class="row">
+				                        		<div class="col-lg-6">
+				                        			importierte Verträge:
+				                        		</div>
+				                        		<div class="col-lg-6">
+				                        			<h:outputText value="#{importBean.importResult.importetContracts}" />
+				                        		</div>
+			                        		</div>
+			                        		<div class="row">
+				                        		<div class="col-lg-6">
+				                        			Start:
+				                        		</div>
+				                        		<div class="col-lg-6">
+				                        			<h:outputText value="#{importBean.importResult.startDate}" >
+									  		<f:convertDateTime type="date" pattern="dd.MM.yy HH:mm:ss" timeZone="CET"/>
+									  	</h:outputText>
+				                        		</div>
+			                        		</div>
+			                        		<div class="row">
+				                        		<div class="col-lg-6">
+				                        			Ende:
+				                        		</div>
+				                        		<div class="col-lg-6">
+				                        			<h:outputText value="#{importBean.importResult.endDate}" >
+									  		<f:convertDateTime type="date" pattern="dd.MM.yy HH:mm:ss" timeZone="CET"/>
+									  	</h:outputText>
+				                        		</div>
+			                        		</div>
+			                        	</ui:fragment>
+				                </div>
+				            </div>
+                        
+                    	</div>
+                    </div>
+                </div>
+            </div>
+           	</ui:fragment>
+           	<ui:fragment rendered="#{importBean.importRunning}">
+           		<div class="row">
+                <div class="col-lg-12">
+                    <div class="widget style1 navy-bg text-center">
+                                <h2 class="font-bold">Import läuft</h2>
+                    </div>
+               	</div>
+               	</div>
+           		
+           	</ui:fragment>
+            
+            <script>
+            Dropzone.options.importDataUploadForm = {
+            		init: function() {
+        			    this.on("success", function(file) { $("#localMessagesForm\\:reload").click(); });
+        		 	 },
+            		  paramName: "importDataUploadForm:file",
+            		  uploadMultiple: true,
+            		  dictDefaultMessage : "Import Dateien hier hinziehen, oder klicken.",
+            };
+            </script>
+            
+            
+        </ui:define>
+    </ui:composition>
+</h:body>
+</html>

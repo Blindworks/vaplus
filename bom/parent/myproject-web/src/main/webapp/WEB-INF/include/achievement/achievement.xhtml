@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+		xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:f="http://java.sun.com/jsf/core"	
+	xmlns:p="http://primefaces.org/ui">
+
+<h:body>
+	<ui:composition >
+		<div class="ibox">
+                     <div class="ibox-title">
+                         <h5>#{achievement.name}</h5>
+                         <div class="ibox-tools">
+                         	<span class="label label-success pull-right #{achievement.daysTillExpiration gt 14 ? 'label-success' : ''} #{achievement.daysTillExpiration lt 15 and achievement.daysTillExpiration gt 3 ? 'label-warning' : ''} #{achievement.daysTillExpiration lt 4 ? 'label-danger' : ''}">noch #{achievement.daysTillExpiration} Tag<h:panelGroup rendered="#{not (achievement.daysTillExpiration eq 1)}">e</h:panelGroup></span>
+                         
+                            	<span class="label label-success pull-right"><h:outputText value="#{achievement.getPayout(userBean.activeUser)}" ><f:convertNumber maxFractionDigits="2" minFractionDigits="0" /></h:outputText> €</span>
+                            </div>
+                     </div>
+              <div class="ibox-content">
+              
+              <ui:fragment rendered="#{not empty achievement.totalPieceTarget}">
+               <ui:include src="/WEB-INF/include/achievement/progress.xhtml" >
+        		<ui:param name="name" value="gesamt Stücke Ziel" />
+        		<ui:param name="unit" value="Stk." />
+        		<ui:param name="goalAttainment" value="#{achievement.pieceGoalAttainment}" />
+        		<ui:param name="ownGoalAttainment" value="#{achievementBean.getUserPieceGoalAttainment(achievement, userBean.activeUser)}" />
+        		<ui:param name="singleTarget" value="#{achievement.totalPieceTarget}" />
+        		<ui:param name="maxTarget" value="#{achievement.totalPieceTarget.target}" />
+        	</ui:include>
+        </ui:fragment>
+              
+              <ui:fragment rendered="#{not empty achievement.totalSumTarget}">
+               <ui:include src="/WEB-INF/include/achievement/progress.xhtml" >
+        		<ui:param name="name" value="gesamt Summen Ziel" />
+        		<ui:param name="unit" value="€" />
+        		<ui:param name="goalAttainment" value="#{achievement.sumGoalAttainment}" />
+        		<ui:param name="ownGoalAttainment" value="#{achievementBean.getUserSumGoalAttainment(achievement, userBean.activeUser)}" />
+        		<ui:param name="singleTarget" value="#{achievement.totalSumTarget}" />
+        		<ui:param name="maxTarget" value="#{achievement.totalSumTarget.target}" />
+        	</ui:include>
+        </ui:fragment>
+              
+              <ui:fragment rendered="#{not empty achievement.totalAquiredRevenueTarget}">
+               <ui:include src="/WEB-INF/include/achievement/progress.xhtml" >
+        		<ui:param name="name" value="gesamt AU Ziel" />
+        		<ui:param name="unit" value="€" />
+        		<ui:param name="goalAttainment" value="#{achievement.aquiredRevenueGoalAttainment}" />
+        		<ui:param name="ownGoalAttainment" value="#{achievementBean.getUserAquiredRevenueGoalAttainment(achievement, userBean.activeUser)}" />
+        		<ui:param name="singleTarget" value="#{achievement.totalAquiredRevenueTarget}" />
+        		<ui:param name="maxTarget" value="#{achievement.totalAquiredRevenueTarget.target}" />
+        	</ui:include>
+        </ui:fragment>
+              
+              <ui:fragment rendered="#{not empty achievement.totalContractedRevenueTarget}">
+               <ui:include src="/WEB-INF/include/achievement/progress.xhtml" >
+        		<ui:param name="name" value="gesamt GU Ziel" />
+        		<ui:param name="unit" value="€" />
+        		<ui:param name="goalAttainment" value="#{achievement.contractedRevenueGoalAttainment}" />
+        		<ui:param name="ownGoalAttainment" value="#{achievementBean.getUserContractedRevenueGoalAttainment(achievement, userBean.activeUser)}" />
+        		<ui:param name="singleTarget" value="#{achievement.totalContractedRevenueTarget}" />
+        		<ui:param name="maxTarget" value="#{achievement.totalContractedRevenueTarget.target}" />
+        	</ui:include>
+        </ui:fragment>
+              
+              
+              <ui:fragment rendered="#{achievement.pieceTargetList.size() gt 0}">
+               <ui:include src="/WEB-INF/include/achievement/progress.xhtml" >
+        		<ui:param name="name" value="Stücke Ziel" />
+        		<ui:param name="unit" value="Stk." />
+        		<ui:param name="goalAttainment" value="#{achievement.pieceGoalAttainment}" />
+        		<ui:param name="ownGoalAttainment" value="#{achievementBean.getUserPieceGoalAttainment(achievement, userBean.activeUser)}" />
+        		<ui:param name="targetList" value="#{achievement.pieceTargetList}" />
+        		<ui:param name="maxTarget" value="#{achievement.maxPieceTarget}" />
+        	</ui:include>
+        </ui:fragment>
+              
+              <ui:fragment rendered="#{achievement.sumTargetList.size() gt 0}">
+               <ui:include src="/WEB-INF/include/achievement/progress.xhtml" >
+        		<ui:param name="name" value="Summen Ziel" />
+        		<ui:param name="unit" value="€" />
+        		<ui:param name="goalAttainment" value="#{achievement.sumGoalAttainment}" />
+        		<ui:param name="ownGoalAttainment" value="#{achievementBean.getUserSumGoalAttainment(achievement, userBean.activeUser)}" />
+        		<ui:param name="targetList" value="#{achievement.sumTargetList}" />
+        		<ui:param name="maxTarget" value="#{achievement.maxSumTarget}" />
+        	</ui:include>
+        </ui:fragment>
+              
+              <ui:fragment rendered="#{achievement.aquiredRevenueTargetList.size() gt 0}">
+               <ui:include src="/WEB-INF/include/achievement/progress.xhtml" >
+        		<ui:param name="name" value="AU Ziel" />
+        		<ui:param name="unit" value="€" />
+        		<ui:param name="goalAttainment" value="#{achievement.aquiredRevenueGoalAttainment}" />
+        		<ui:param name="ownGoalAttainment" value="#{achievementBean.getUserAquiredRevenueGoalAttainment(achievement, userBean.activeUser)}" />
+        		<ui:param name="targetList" value="#{achievement.aquiredRevenueTargetList}" />
+        		<ui:param name="maxTarget" value="#{achievement.maxAquiredRevenueTarget}" />
+        	</ui:include>
+        </ui:fragment>
+              
+              <ui:fragment rendered="#{achievement.contractedRevenueTargetList.size() gt 0}">
+               <ui:include src="/WEB-INF/include/achievement/progress.xhtml" >
+        		<ui:param name="name" value="GU Ziel" />
+        		<ui:param name="unit" value="€" />
+        		<ui:param name="goalAttainment" value="#{achievement.contractedRevenueGoalAttainment}" />
+        		<ui:param name="ownGoalAttainment" value="#{achievementBean.getUserContractedRevenueGoalAttainment(achievement, userBean.activeUser)}" />
+        		<ui:param name="targetList" value="#{achievement.contractedRevenueTargetList}" />
+        		<ui:param name="maxTarget" value="#{achievement.maxContractedRevenueTarget}" />
+        	</ui:include>
+        </ui:fragment>
+        
+              </div>
+            	</div>
+
+	</ui:composition>
+</h:body>
+</html>

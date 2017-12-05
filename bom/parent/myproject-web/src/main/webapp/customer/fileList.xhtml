@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:body>
+
+
+	<f:metadata>
+		<f:event type="preRenderView" listener="#{customerBean.checkIfCustomerLogged}" />
+	</f:metadata>
+
+	<ui:composition template="/WEB-INF/template/common/commonLayout.xhtml">
+	
+	
+	
+		<ui:param name="heading1" value="Dateien von Kunde #{customerBean.customer.name}" />
+		
+		
+	
+		<ui:define name="content">
+		
+		
+			<f:metadata>
+			  <f:event type="preRenderView" listener="#{fileBean.setSelectedFileOwner(customerBean.customer)}"/>
+			</f:metadata>
+		
+	        <ui:include src="/WEB-INF/include/files/fileList.xhtml" >
+	    	</ui:include>
+	    </ui:define>
+
+	</ui:composition>
+</h:body>
+</html>

@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:body>
+
+
+	<f:metadata>
+		<f:event type="preRenderView" listener="#{customerBean.checkIfCustomerLogged}" />
+	</f:metadata>
+
+	<ui:composition template="/WEB-INF/template/common/commonLayout.xhtml">
+	
+		<ui:param name="heading1" value="Vertrag Nr. #{transferBean.selectedContract.id} transferieren" />
+
+		<ui:define name="content">	
+			<h:form class="form-horizontal" id="transferContractForm">
+
+    		<div class="row">
+				<div class="col-lg-12">
+				
+	                
+					
+			            <div class="ibox float-e-margins">
+			                <div class="ibox-title">
+			                    <h5>Vertrag Details</h5>
+			                </div>
+			                <div class="ibox-content">
+								
+			                
+								<div class="form-group">
+									<label class="col-sm-2 control-label">VO</label>
+									<div class="col-sm-10">
+										<p class="form-control-static">
+											<h:outputText value="#{transferBean.selectedContract.vo}" />
+										</p>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-2 control-label">Tarif</label>
+									<div class="col-sm-10">
+										<p class="form-control-static">
+											<h:outputText value="#{transferBean.selectedContract.tariff}" />
+										</p>
+									</div>
+								</div>
+								<h:panelGroup rendered="#{transferBean.selectedContract.vo.voType['class'].simpleName == 'RevenueLevelVOTypeEntity'}">
+								<div class="form-group">
+										<label class="col-sm-2 control-label">VVL</label>
+										<div class="col-sm-4">
+											<p class="form-control-static">
+												<h:panelGroup rendered="#{transferBean.selectedContract.extensionOfTerm}"><i class="fa fa-check-square-o"></i></h:panelGroup>
+												<h:panelGroup rendered="#{not transferBean.selectedContract.extensionOfTerm}"><i class="fa fa-square-o"></i></h:panelGroup>
+											</p>
+										</div>
+								</div>
+										</h:panelGroup>
+								<div class="form-group">
+									<label class="col-sm-2 control-label">Optionen</label>
+									<div class="col-sm-10">
+										<ui:repeat var="option" value="#{transferBean.selectedContract.tariffOptionList}">
+											<p class="form-control-static">
+												<h:outputText value="#{option.name}" />
+											</p>
+										</ui:repeat>
+									</div>
+								</div>
+								
+								
+								
+								
+								<div class="hr-line-dashed"></div>
+								
+								
+								
+								<div class="form-group">
+									<label class="col-sm-2 control-label">Rufnummer</label>
+									<div class="col-sm-4">
+										<p class="form-control-static">
+											<h:outputText value="#{transferBean.selectedContract.callingNumber}" />
+										</p>
+									</div>
+									
+									<label class="col-sm-2 control-label">RV-Nummer</label>
+									<div class="col-sm-4" id="testfield">
+										<p class="form-control-static">
+											<h:outputText value="#{transferBean.selectedContract.frameworkContractId}" />
+										</p>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-2 control-label">Interne Info</label>
+									<div class="col-sm-10">
+										<p class="form-control-static">
+											<h:outputText value="#{transferBean.selectedContract.info}" />
+										</p>
+									</div>
+								</div>
+		
+		
+		
+		
+		
+			                </div>
+            			</div>
+            			
+	                
+            			
+    			</div>
+    		</div>
+		  
+		  
+		  <div class="row">
+			  <div class="col-lg-5">
+			  
+			  	<div class="ibox float-e-margins">
+	                <div class="ibox-title">
+	                    <h5>aktueller Kunde</h5>
+	                </div>
+	                <div class="ibox-content">
+	                
+						<div class="form-group">
+							<label class="col-sm-6 control-label">KdNr</label>
+							<div class="col-sm-6">
+								<p class="form-control-static">
+									<h:outputText value="#{transferBean.selectedContract.customer.id}" />
+								</p>
+							</div>
+						</div>
+	                
+						<div class="form-group">
+							<label class="col-sm-6 control-label">Name</label>
+							<div class="col-sm-6">
+								<p class="form-control-static">
+									<h:outputText value="#{transferBean.selectedContract.customer.name}" />
+								</p>
+							</div>
+						</div>
+	                
+	                	<ui:fragment rendered="#{not empty transferBean.selectedContract.externalCustomer}">
+							<div class="form-group">
+								<label class="col-sm-6 control-label">ext. KdNr.</label>
+								<div class="col-sm-6">
+									<p class="form-control-static">
+										<h:outputText value="#{transferBean.selectedContract.externalCustomer.customerId}" />
+									</p>
+								</div>
+							</div>
+						</ui:fragment>
+	                </div>
+                </div>
+			  
+			  </div>
+			  <div class="col-lg-2 text-center">
+			  	<i class="fa fa-long-arrow-right fa-4x"></i>
+			  </div>
+			  <div class="col-lg-5">
+			  <div class="ibox float-e-margins">
+	                <div class="ibox-title">
+	                    <h5>Ziel Kunde</h5>
+                   
+	                </div>
+	                <div class="ibox-content">
+	                	<h:panelGroup id="targetCustomerPanel" >
+	                
+	                
+							<div class="form-group">
+								<label class="col-sm-3 control-label">ext. KdNr.</label>
+								<div class="col-sm-9">
+									<div class="input-group">
+										<h:inputText class="form-control" id="externalCustomerQuery" value="#{transferBean.targetExternalCustomerQuery}" />
+										<span class="input-group-btn"> 
+											<h:commandLink class="btn btn-primary" action="#{transferBean.searchExternalCustomer()}" >
+                    							<f:ajax execute="externalCustomerQuery" render="targetCustomerPanel" onevent="updatePlugins"/>
+					                    		<i class="fa fa-search"></i>
+					                    	</h:commandLink>
+                                       	</span>
+                                       </div>
+								</div>
+							</div>
+		                
+		                	<ui:fragment rendered="#{transferBean.targetExternalCustomerList.size() gt 0}">
+							<div class="form-group">
+								<label class="col-sm-3 control-label">Kunde</label>
+								<div class="col-sm-9">
+									<h:selectOneMenu 
+										value="#{transferBean.targetExternalCustomer}"
+										class="chosen-select-no-single-class form-control #{ component.valid ? '' : 'select-error'}"
+										converter="#{externalCustomerConverter}"
+										validatorMessage="Bitte Kunde wählen">
+										<f:selectItem itemValue="" itemLabel="Kunde wählen ..."/>
+										<f:selectItems value="#{transferBean.targetExternalCustomerList}" var="extCustomer" itemValue="#{extCustomer}" itemLabel="#{extCustomer.customerId} #{extCustomer.customer.name}" />
+										<f:ajax event="change" render="submitButtonGroup" onevent="updatePluginsEvent" />
+										<f:validateRequired />
+									</h:selectOneMenu>
+								</div>
+							</div>
+							</ui:fragment>
+		                
+		                	<h:panelGroup id="submitButtonGroup">
+		                	<ui:fragment rendered="#{not empty transferBean.targetExternalCustomer}">
+								<div class="form-group">
+									<label class="col-sm-3 control-label"></label>
+									<div class="col-sm-9">
+										<h:commandLink  class="btn btn-xs btn-primary form-control " action="#{transferBean.transferContractToTargetCustomer}" rendered="#{permissionBean.isAllowedToChangeContract(transferBean.selectedContract)}">
+											   transferieren
+										</h:commandLink>
+									</div>
+								</div>
+							</ui:fragment>
+							</h:panelGroup>
+							
+							
+							
+							
+		                </h:panelGroup>
+		           </div>
+                </div>
+			  </div>
+		  </div>
+
+		</h:form>
+
+		</ui:define>
+
+
+	</ui:composition>
+</h:body>
+</html>

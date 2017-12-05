@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+  	xmlns:c="http://java.sun.com/jstl/core">
+
+<h:body>
+
+	<ui:composition template="/WEB-INF/template/common/commonLayout.xhtml">
+
+		<ui:param name="heading1" value="#{productStatisticBean.selectedProductStatistic.id == 0 ? 'Neue Produkt Statistik Einstellung' : productStatisticBean.selectedProductStatistic.name}" />
+
+		
+		<ui:define name="content">
+		
+		
+    		<div class="row">
+				<div class="col-lg-12">
+					<h:form class="form-horizontal " id="productStatisticDetailForm" >
+			            <div class="ibox float-e-margins">
+			                <div class="ibox-title">
+			                    <h5>Produkt Statistik Details</h5>
+			                    <div class="ibox-tools">
+			                    
+										<h:commandLink class="btn btn-xs btn-danger confirm-btn" action="#{productStatisticBean.deleteProductStatistic}" rendered="#{productStatisticBean.selectedProductStatistic.id gt 0}">
+											<i class="fa fa-trash"></i>
+									    </h:commandLink>
+									    
+										<h:commandLink id="saveBtn" action="#{productStatisticBean.saveProductStatistic}" class="btn btn-xs btn-primary " >
+											<i class="fa fa-save"></i>
+									    </h:commandLink>
+									    
+										<h:commandLink action="productStatisticList" class="btn btn-xs btn-primary " immediate="true" >
+											<i class="fa fa-times"></i>
+									    </h:commandLink>
+			                    </div>
+			                </div>
+			                <div class="ibox-content">
+		
+								
+								<div class="form-group">
+									<label class="col-sm-2 control-label">Name</label>
+									<div class="col-sm-10">
+										<h:inputText value="#{productStatisticBean.selectedProductStatistic.name}" validatorMessage="Name erforderlich. (min. 3 Zeichen)"
+											id="name"
+											class="form-control #{ component.valid ? '' : 'error'}" >
+											<f:validateLength minimum="3" maximum="255"/>
+										</h:inputText>
+										<h:messages for="name"  />
+									</div>
+								</div>
+								
+								<div class="form-group">
+									<label class="col-sm-2 control-label">Sortierung/Gewichtung</label>
+									<div class="col-sm-10">
+										<h:inputText value="#{productStatisticBean.selectedProductStatistic.weight}" validatorMessage="Gewichtung erforderlich. (Numerisch)"
+											id="weight"
+											class="form-control #{ component.valid ? '' : 'error'}" >
+										</h:inputText>
+										<h:messages for="weight"  />
+									</div>
+								</div>
+								
+								<div class="form-group">
+									<label class="col-sm-2"></label>
+									<div class="col-sm-4">
+										<h:selectBooleanCheckbox class="i-checks" value="#{productStatisticBean.selectedProductStatistic.showOnOverview}" />
+										<label class="control-label"> In übersicht anzeigen</label>
+									</div>
+								</div>
+								
+								<div class="hr-line-dashed"></div>
+									
+								
+								<div class="form-group">
+									<label class="col-sm-2 control-label">Kategorien</label>
+									<div class="col-sm-10">
+										<h:selectManyMenu a:data-placeholder="Kategorie wählen ..."
+											value="#{productStatisticBean.selectedProductStatistic.selectedProductCategoryList}"
+											class="chosen-select form-control"
+											converter="#{productCategoryConverter}">
+											<f:selectItems value="#{productBean.productCategoryList}" var="category"
+												itemValue="#{category}" itemLabel="#{category.name}" />
+										</h:selectManyMenu>
+									</div>
+								</div>
+								
+								<div class="form-group">
+									<label class="col-sm-2 control-label"></label>
+									<div class="col-sm-10">oder</div>
+								</div>
+								
+								<div class="form-group">
+									<label class="col-sm-2 control-label">Produkte</label>
+									<div class="col-sm-10">
+										<h:selectManyMenu a:data-placeholder="Produkt wählen ..."
+											value="#{productStatisticBean.selectedProductStatistic.selectedProductList}"
+											class="chosen-select form-control"
+											converter="#{baseProductConverter}">
+											<f:selectItems value="#{productBean.productList}" var="product"
+												itemValue="#{product}" itemLabel="#{product.name}" />
+										</h:selectManyMenu>
+									</div>
+								</div>
+								
+								<div class="form-group">
+									<label class="col-sm-2 control-label"></label>
+									<div class="col-sm-10">oder</div>
+								</div>
+								
+								<div class="form-group">
+									<label class="col-sm-2 control-label">Produkt Kombinationen</label>
+									<div class="col-sm-10">
+										<h:selectManyMenu a:data-placeholder="Produkt Kombination wählen ..."
+											value="#{productStatisticBean.selectedProductStatistic.selectedProductCombinationList}"
+											class="chosen-select form-control"
+											converter="#{productCombinationConverter}">
+											<f:selectItems value="#{productBean.productCombinationList}" var="productCombination"
+												itemValue="#{productCombination}" itemLabel="#{productCombination}" />
+										</h:selectManyMenu>
+									</div>
+								</div>
+								
+								
+								<div class="form-group">
+									<label class="col-sm-2 control-label"></label>
+									<div class="col-sm-10">und nicht</div>
+								</div>
+								
+								<div class="form-group">
+									<label class="col-sm-2 control-label">Produkt Filter</label>
+									<div class="col-sm-10">
+										<h:selectManyMenu a:data-placeholder="Produkt wählen ..."
+											value="#{productStatisticBean.selectedProductStatistic.selectedProductFilterList}"
+											class="chosen-select form-control"
+											converter="#{baseProductConverter}">
+											<f:selectItems value="#{productBean.productList}" var="product"
+												itemValue="#{product}" itemLabel="#{product.name}" />
+										</h:selectManyMenu>
+									</div>
+								</div>
+								
+								<div class="form-group">
+									<label class="col-sm-2 control-label"></label>
+									<div class="col-sm-10">und nicht</div>
+								</div>
+								
+								<div class="form-group">
+									<label class="col-sm-2 control-label">Produkt Kombinationen</label>
+									<div class="col-sm-10">
+										<h:selectManyMenu a:data-placeholder="Produkt Kombination wählen ..."
+											value="#{productStatisticBean.selectedProductStatistic.selectedProductCombinationFilterList}"
+											class="chosen-select form-control"
+											converter="#{productCombinationConverter}">
+											<f:selectItems value="#{productBean.productCombinationList}" var="productCombination"
+												itemValue="#{productCombination}" itemLabel="#{productCombination}" />
+										</h:selectManyMenu>
+									</div>
+								</div>
+								
+								<div class="form-group">
+									<label class="col-sm-2 control-label"></label>
+									<div class="col-sm-2">
+										<h:selectBooleanCheckbox class="i-checks" value="#{productStatisticBean.selectedProductStatistic.newContract}" />
+										<label class="control-label"> Neuverträge</label>
+									</div>
+									<div class="col-sm-1">
+										<p class="form-control-static">oder</p>
+									</div>
+									<div class="col-sm-2">
+										<h:selectBooleanCheckbox class="i-checks" value="#{productStatisticBean.selectedProductStatistic.extensionOfTheTerm}" />
+										<label class="control-label"> VertragsVL</label>
+									</div>
+									<div class="col-sm-1">
+										<p class="form-control-static">oder</p>
+									</div>
+									<div class="col-sm-2">
+										<h:selectBooleanCheckbox class="i-checks" value="#{productStatisticBean.selectedProductStatistic.debidCreditChange}" />
+										<label class="control-label"> DC Wechsel</label>
+									</div>
+								</div>
+								
+							
+							</div>
+								
+								
+						</div>	
+				</h:form>
+			</div>
+		</div>
+
+
+		</ui:define>
+
+
+	</ui:composition>
+</h:body>
+</html>

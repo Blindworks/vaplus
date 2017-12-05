@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:body>
+
+	<ui:composition template="/WEB-INF/template/common/commonLayout.xhtml">
+
+		<ui:param name="heading1" value="VO Gruppe" />
+		
+		<ui:define name="content">
+		
+	
+
+
+    		<div class="row">
+				<div class="col-lg-12">
+					<h:form class="form-horizontal">
+			            <div class="ibox float-e-margins">
+			                <div class="ibox-title">
+			                    <h5>VO Gruppe</h5>
+			                    <div class="ibox-tools">
+										<h:commandLink class="btn btn-xs btn-danger confirm-btn" action="#{VOBean.deleteVOType}" immediate="true"  rendered="#{VOBean.selectedVOType.id gt 0}">
+											<i class="fa fa-trash"></i>
+									    </h:commandLink>
+										<h:commandLink id="saveButton" action="#{VOBean.saveVOType}" class="btn btn-xs btn-primary " >
+											<i class="fa fa-save"></i>
+									    </h:commandLink>
+										<h:commandLink action="voManagement" immediate="true" class="btn btn-xs btn-primary " >
+											<i class="fa fa-times"></i>
+									    </h:commandLink>
+			                    </div>
+			                </div>
+			                <div class="ibox-content">
+			                
+			                
+				                <div class="form-group">
+									<label class="col-sm-2 control-label">Name</label>
+									<div class="col-sm-10">
+										<h:inputText id="name" value="#{VOBean.selectedVOType.name}"
+											validatorMessage="Name erforderlich (mind. 3 Zeichen)"
+											class="form-control #{ component.valid ? '' : 'error'}" >
+											<f:validateLength minimum="3" maximum="255"/>
+										</h:inputText>
+										<h:messages for="name"  />
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-2 control-label">Kürzel</label>
+									<div class="col-sm-10">
+										<h:inputText id="shortName" value="#{VOBean.selectedVOType.shortName}"
+											validatorMessage="Kürzel erforderlich (mind. 1 Zeichen, max. 4 Zeichen)"
+											class="form-control #{ component.valid ? '' : 'error'}" >
+											<f:validateLength minimum="1" maximum="4"/>
+										</h:inputText>
+										<h:messages for="shortName"  />
+									</div>
+								</div>
+								
+								<div class="form-group">
+									<label class="col-sm-2 control-label">Punkte pro € Provision</label>
+									<div class="col-sm-4">
+										<h:inputText id="pointsPerCommission" value="#{VOBean.selectedVOType.pointsPerCommission}"
+											validatorMessage="Punkte pro Umsatz erforderlich"
+											class="form-control  #{ component.valid ? '' : 'error'}" >
+											<f:validateRequired/>
+											<f:convertNumber maxFractionDigits="4" minFractionDigits="0" />
+										</h:inputText>
+										<h:messages for="pointsPerCommission"  />
+									</div>
+									<ui:fragment rendered="#{VOBean.selectedVOType['class'].simpleName != 'RevenueLevelVOTypeEntity'}">
+										<p class="col-sm-6 form-control-static" >für Berechnungen des Punkte-Vorschlags</p>
+									</ui:fragment>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-2 control-label">Aktiviert</label>
+									<div class="col-sm-10">
+										<h:selectBooleanCheckbox class="i-checks" value="#{VOBean.selectedVOType.enabled}" />
+									</div>
+								</div>
+								<h:panelGroup rendered="#{VOBean.selectedVOType.id gt 0}">
+								<div class="form-group">
+									<label class="col-sm-2 control-label">Aktionen</label>
+									<div class="col-sm-10">
+										<h:commandButton class="btn btn-primary" action="#{VOBean.allowAllProductsForSelectedVoType}" value="Alle Produkte zuweisen" />
+									</div>
+								</div>
+								</h:panelGroup>
+			                
+			                
+			                </div>
+		                </div>
+		                <p:defaultCommand target="saveButton" />
+	                </h:form>
+                </div>
+            </div>
+
+
+
+
+			
+
+		</ui:define>
+
+
+	</ui:composition>
+</h:body>
+</html>

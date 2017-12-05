@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core">
+	<ui:composition>
+
+<nav id="navbar-top" class="navbar navbar-static-top  " role="navigation" style="margin-bottom: 0">
+	
+        <div class="navbar-header">
+            <a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#"><i class="fa fa-bars"></i> </a>
+            <h:form role="search" class="navbar-form-custom" id="topSearchForm">
+                <div class="form-group">
+                	<p:focus for="top-search" rendered="false"/>
+                	<p:inputText value="#{searchBean.initQuery}" placeholder="Suche ... oder Kommando" class="form-control" id="top-search" autocomplete="off"/>
+                	<h:commandButton id="executeButton" action="#{searchBean.search}" value="Search" style="display: none;" />
+                </div>
+            </h:form>
+        </div>
+        	<h:form>
+            <ul class="nav navbar-top-links navbar-right">
+            
+                <li>
+                    <span class="m-r-sm text-muted license-name"> #{propertyBean.licenseName} </span>
+                </li>
+                
+                <h:panelGroup rendered="#{shopBean.showShopSelector}">
+                <li class="dropdown shop-selector">
+                        <a aria-expanded="false" role="button" href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-building-o"></i> <span class="shop-label"> #{shopBean.activeShop} </span> <span class="caret"></span></a>
+                        <ul role="menu" class="dropdown-menu">
+	                        <ui:repeat value="#{shopBean.shopList}" var="shop">
+	                        	<li>
+		                       		<h:commandLink value="#{shop}" class="#{shopBean.activeShop eq shop ? 'active' : ''}">
+										<f:setPropertyActionListener value="#{shop}" target="#{shopBean.activeShop}" />
+									</h:commandLink>
+								</li>
+							</ui:repeat>
+                        </ul>
+                </li>
+                </h:panelGroup>
+                
+                <h:panelGroup rendered="#{modulBean.messageModulLicensed}">
+                <li class="dropdown">
+                    <a class="dropdown-toggle count-info" data-toggle="dropdown" href="#" aria-expanded="false">
+                        <i class="fa fa-envelope"></i>  <span class="label label-warning">16</span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-messages">
+                        <li>
+                            <div class="dropdown-messages-box">
+                                <div class="media-body">
+                                    <small class="pull-right">vor 3h</small>
+                                    <strong>Max Mustermann</strong> schrieb:<br />
+                                    Lorem ipsum dolor sit amet, consetetur <br /> sadipscing elitr, sed diam nonumy ...<br />
+                                    <small class="text-muted">vor 3 Stunden um 12:36 - 10.06.2014</small>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <div class="dropdown-messages-box">
+                                <div class="media-body ">
+                                    <small class="pull-right text-navy">vor 9h</small>
+                                    <strong>John Doe</strong> schrieb:<br />
+                                    Lorem ipsum dolor sit amet, consetetur <br /> sadipscing elitr, sed diam nonumy ...<br />
+                                    <small class="text-muted">vor 9 Stunden um 8:36 - 09.06.2014</small>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <div class="dropdown-messages-box">
+                                <div class="media-body ">
+                                    <small class="pull-right">vor 28h</small>
+                                    <strong>Anna Meyer</strong> schrieb:<br />
+                                    Lorem ipsum dolor sit amet, consetetur <br /> sadipscing elitr, sed diam nonumy ...<br />
+                                    <small class="text-muted">vor 28 Stunden um 19:36 - 08.06.2014</small>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <div class="text-center link-block">
+                                <a href="mailbox.html">
+                                    <i class="fa fa-envelope"></i> <strong>Alle Nachrichten</strong>
+                                </a>
+                            </div>
+                        </li>
+                    </ul>
+                </li>
+                </h:panelGroup>
+                
+                <h:panelGroup rendered="#{modulBean.taskModulLicensed}">
+                <li class="dropdown">
+                    <a class="dropdown-toggle count-info" data-toggle="dropdown" href="#" aria-expanded="false">
+                        <i class="fa fa-bell"></i>
+                        <ui:fragment rendered="#{taskBean.countOwnOpenedTaskList() gt 0}">
+                        	<span class="label label-#{taskBean.existsOverdueTasks() ? 'danger' : 'warning'}">#{taskBean.countOwnOpenedTaskList()}</span>
+                        </ui:fragment>
+                    </a>
+                    <ul class="dropdown-menu dropdown-alerts">
+                    	<ui:repeat var="task" value="#{taskBean.getOwnOpenedTaskList().subList(0, (taskBean.getOwnOpenedTaskList().size() gt 5) ? 5 : taskBean.getOwnOpenedTaskList().size())}">
+                        <li>
+                        	<h:commandLink action="task" class="full-size" >
+											<f:setPropertyActionListener value="#{task}" target="#{taskBean.selectedTask}" />
+								<div>
+                                    <i class="fa fa-bell fa-fw"></i> <h:outputText value="#{task.title}" />
+                                    <span class="pull-right text-muted small">
+                                    	<h:outputText value="#{task.targetDate}" >
+											<f:convertDateTime pattern="dd.MM.yy" timeZone="CET" />
+										</h:outputText>
+                                    </span>
+                                </div>
+							</h:commandLink>
+                        </li>
+                        <li class="divider"></li>
+                        </ui:repeat>
+                        
+                        <li>
+                            <div class="text-center link-block">
+                            	<h:commandLink action="/task/taskList" >
+                                    <strong>Alle Aufgaben</strong>
+                                    <i class="fa fa-angle-right"></i>
+                                </h:commandLink>
+                            </div>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <div class="text-center link-block">
+                            	<h:commandLink action="/task/taskEdit" >
+                            		<f:setPropertyActionListener value="" target="#{taskBean.selectedTask}" />
+                                    <strong>Neue Aufgabe</strong>
+                                    <i class="fa fa-angle-right"></i>
+                                </h:commandLink>
+                            </div>
+                        </li>
+                    </ul>
+                </li>
+				</h:panelGroup>
+				
+				
+                <h:panelGroup rendered="#{modulBean.vvlModulLicensed}">
+				<li class="dropdown">
+                	<h:commandLink class="count-info" action="/controlling/renewableContractList" >
+                        +24<h:panelGroup rendered="#{contractBean.ownRenewableContractCount gt 0}"><span class="label label-danger">#{contractBean.ownRenewableContractCount}</span></h:panelGroup>
+                    </h:commandLink>
+                    
+                </li>
+                </h:panelGroup>
+                
+                
+                
+                <li>
+                		<h:commandLink action="#{loginController.logout}" ><i class="fa fa-power-off"></i></h:commandLink>
+                </li>
+                <li>
+                <a data-action="fullscreen" href=""><i class="fa fa-arrows-alt"></i></a>
+                </li>
+                <li>
+                <a class="sidebar-minimalize" href="#"><i class="fa fa-bars"></i> </a>
+                </li>
+                
+            </ul>
+            </h:form>
+        </nav>
+        
+        <script>
+        /*
+         * Fullscreen Browsing
+         */
+        if ($('[data-action="fullscreen"]')[0]) {
+    	var fs = $("[data-action='fullscreen']");
+    	fs.on('click', function(e) {
+    	    e.preventDefault();
+    	    	    
+    	    //Launch
+    	    function launchIntoFullscreen(element) {
+    		
+    		if(element.requestFullscreen) {
+    		    element.requestFullscreen();
+    		} else if(element.mozRequestFullScreen) {
+    		    element.mozRequestFullScreen();
+    		} else if(element.webkitRequestFullscreen) {
+    		    element.webkitRequestFullscreen();
+    		} else if(element.msRequestFullscreen) {
+    		    element.msRequestFullscreen();
+    		}
+    	    }
+    	    
+    	    //Exit
+    	    function exitFullscreen() {
+    		
+    		if(document.exitFullscreen) {
+    		    document.exitFullscreen();
+    		} else if(document.mozCancelFullScreen) {
+    		    document.mozCancelFullScreen();
+    		} else if(document.webkitExitFullscreen) {
+    		    document.webkitExitFullscreen();
+    		}
+    	    }
+    	    
+    	    launchIntoFullscreen(document.documentElement);
+    	});
+        }
+</script>
+        
+        
+			<h:outputScript>
+					$( document ).ready(function() {
+							if(! $('.page-content-wrapper input[type=text]').first().length){
+								$('#topSearchForm\\:top-search').focus();
+							}
+					});
+			</h:outputScript>
+        
+	</ui:composition>
+</html>

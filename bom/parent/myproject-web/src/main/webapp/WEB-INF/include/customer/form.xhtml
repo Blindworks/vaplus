@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:body>
+
+
+	<ui:composition>
+		
+		<div class="row">
+		
+			<h:form class="form-horizontal" id="customerForm">
+	            <div class="col-lg-12">
+	                <div class="wrapper wrapper-content animated fadeInUp">
+	
+	                    <div class="ibox">
+	                        <div class="ibox-title">
+									Details
+	                            <div class="ibox-tools">
+	                            </div>
+	                        </div>
+	                        <div class="ibox-content">
+								
+								<h:panelGroup id="customerFormElements">
+									<div class="form-group">
+										<label class="col-sm-2 control-label">Anrede</label>
+										<div class="col-sm-10">
+											<h:selectOneMenu value="#{customerBean.selectedCustomer.title}"
+												class="form-control chosen-select-no-single">
+												<f:selectItem itemValue="Herr" itemLabel="Herr" />
+												<f:selectItem itemValue="Frau" itemLabel="Frau" />
+												<f:selectItem itemValue="Firma" itemLabel="Firma" />
+												<f:ajax event="change" render="companyFields commercialRegisterIdWrapper nationalityFields" onevent="updatePluginsEvent"/>
+											</h:selectOneMenu>
+										</div>
+									</div>
+						
+						
+						
+									<div class="form-group">
+										<label class="col-sm-2 control-label">Vor- / Nachname</label>
+										<div class="col-sm-5">
+											<h:inputText value="#{customerBean.selectedCustomer.firstname}" 
+												autocomplete="off" class="form-control #{ component.valid ? '' : 'error'}" id="firstname" validatorMessage="Vorname erforderlich">
+												<f:ajax event="change" render="customerModalForm:customerModalBody"
+													disabled="#{customerBean.selectedCustomer.id gt 0}"
+													onevent="showCustomerModal" />
+												<f:validateLength minimum="2" maximum="255" disabled="#{customerBean.selectedCustomer.company}"/>
+											</h:inputText>
+											<h:messages for="firstname"  />
+										</div>
+										<div class="col-sm-5">
+											<h:inputText value="#{customerBean.selectedCustomer.lastname}"
+												autocomplete="off" class="form-control #{ component.valid ? '' : 'error'}" id="lastname"  validatorMessage="Nachname erforderlich">
+												<f:ajax event="change" render="customerModalForm:customerModalBody"
+													disabled="#{customerBean.selectedCustomer.id gt 0}"
+													onevent="showCustomerModal" />
+												<f:validateLength minimum="2" maximum="255" disabled="#{customerBean.selectedCustomer.company}"/>
+											</h:inputText>
+											<h:messages for="lastname"  />
+										</div>
+									</div>
+									<h:panelGroup id="companyFields" >
+										<ui:fragment rendered="#{customerBean.selectedCustomer.company}">
+										<div class="form-group">
+											<label class="col-sm-2 control-label">Firma</label>
+											<div class="col-sm-10">
+												<h:inputText value="#{customerBean.selectedCustomer.companyName}" id="company" validatorMessage="Firma erforderlich"
+													class="form-control #{ component.valid ? '' : 'error'}" >
+												<f:ajax event="change" render="customerModalForm:customerModalBody"
+													disabled="#{customerBean.selectedCustomer.id gt 0}"
+													onevent="showCustomerModal" />
+													<f:validateLength minimum="2" maximum="255" />
+												</h:inputText>
+												<h:messages for="company"  />
+											</div>
+										</div>
+										<div class="form-group">
+											<label class="col-sm-2 control-label">Ansprechpartner</label>
+											<div class="col-sm-10">
+												<h:inputText value="#{customerBean.selectedCustomer.contactPerson}" id="contactPerson" validatorMessage="Kontakt Person erforderlich"
+													class="form-control #{ component.valid ? '' : 'error'}" >
+													<f:validateLength minimum="2" maximum="255" />
+												</h:inputText>
+												<h:messages for="contactPerson"  />
+											</div>
+										</div>
+										</ui:fragment>
+									</h:panelGroup>
+									
+									<div class="hr-line-dashed"></div>
+									
+									<div class="form-group">
+										<label class="col-sm-2 control-label">Straße Nr.</label>
+												<div class="col-md-8">
+													<h:inputText
+														value="#{customerBean.selectedCustomer.address.street}" id="street" validatorMessage="Straße erforderlich"
+														class="form-control #{ component.valid ? '' : 'error'}" >
+														<f:validateLength minimum="2" maximum="255" />
+													</h:inputText>
+													<h:messages for="street"  />
+													<h:messages for="streetNumber"  />
+												</div>
+												<div class="col-md-2">
+													<h:inputText
+														value="#{customerBean.selectedCustomer.address.streetNumber}" id="streetNumber" validatorMessage="Hausnummer erforderlich"
+														class="form-control #{ component.valid ? '' : 'error'}" >
+														<f:validateLength minimum="1" maximum="10" />
+													</h:inputText>
+												</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-2 control-label">Adresszusatz</label>
+										<div class="col-md-10">
+											<h:inputText
+												value="#{customerBean.selectedCustomer.address.addressline}"
+												class="form-control" />
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-md-2 control-label">Land PLZ Ort</label>
+											
+												<div class="col-md-2">
+													<h:inputText
+														value="#{customerBean.selectedCustomer.address.country}" id="country" validatorMessage="Land erforderlich"
+														class="form-control #{ component.valid ? '' : 'error'}" maxlength="1">
+														<f:ajax event="change" render="city country" listener="#{customerBean.searchForCustomerCity}" />
+														<f:validateLength minimum="1" maximum="1" />
+													</h:inputText>
+												</div>
+												<div class="col-md-2">
+													<h:inputText
+														value="#{customerBean.selectedCustomer.address.zip}" id="zip" validatorMessage="PLZ erforderlich"
+														class="form-control numeric_only #{ component.valid ? '' : 'error'}" maxlength="5">
+														<f:ajax event="change" render="city" listener="#{customerBean.searchForCustomerCity}" />
+														<f:validateLength minimum="5" maximum="5" />
+													</h:inputText>
+												</div>
+												<div class="col-md-6">
+													<h:inputText value="#{customerBean.selectedCustomer.address.city}" id="city" validatorMessage="Stadt erforderlich"
+														class="form-control #{ component.valid ? '' : 'error'}" >
+														<f:ajax event="change" />
+														<f:validateLength minimum="2" maximum="2555" />
+													</h:inputText>
+												</div>
+												<div class="col-md-10 col-sm-offset-2">
+												<h:messages for="country"/>
+												<h:messages for="zip"  />
+												<h:messages for="city"  />
+												</div>
+									</div>
+									<h:panelGroup id="nationalityFields" >
+										<ui:fragment rendered="#{not customerBean.selectedCustomer.company}">
+									<div class="form-group">
+										<label class="col-md-2 control-label">Nationalität</label>
+											
+												<div class="col-md-6">
+													<h:selectOneMenu id="nationality" a:data-placeholder="Nationalität wählen ..."
+															value="#{customerBean.selectedCustomer.nationality}"
+															class="chosen-select-no-single-class form-control #{ component.valid ? '' : 'error'}" converter="#{countryConverter}">
+															<f:selectItem itemValue="" itemLabel=""/>
+															<f:selectItems value="#{countryBean.countryList}" var="country"
+																itemValue="#{country}" itemLabel="#{country.nationality}" />
+													</h:selectOneMenu>
+													
+													<h:messages for="nationality"/>
+													
+												</div>
+									</div>
+									</ui:fragment>
+									</h:panelGroup>
+									<div class="hr-line-dashed"></div>
+						
+									<div class="form-group">
+									
+										<label class="col-sm-2 control-label">E-Mail</label>
+										<div class="col-sm-5">
+											<h:inputText value="#{customerBean.selectedCustomer.email}" id="email" validatorMessage="E-Mail erforderlich"
+												class="form-control #{ component.valid ? '' : 'error'}" >
+														<f:validateLength minimum="5" maximum="225" disabled="#{customerBean.selectedCustomerMailNotSet}"/>
+														<f:validateRegex pattern="([^.@]+)(\.[^.@]+)*@([^.@]+\.)+([^.@]+)"  disabled="#{customerBean.selectedCustomerMailNotSet}" />
+												</h:inputText>
+												<h:messages for="email"/>
+										</div>
+										<div class="col-sm-5">
+											<h:selectBooleanCheckbox
+												value="#{customerBean.selectedCustomerMailNotSet}"
+												class="form-control i-checks" >
+												<f:ajax event="change" />
+											</h:selectBooleanCheckbox>
+											<label class="control-label">E-Mail nicht angegeben</label>
+										</div>
+									</div>
+						
+									<div class="form-group">
+									
+										<label class="col-sm-2 control-label">Tel</label>
+										<div class="col-sm-4">
+											<h:inputText value="#{customerBean.selectedCustomer.tel}" id="tel"
+												class="form-control #{ component.valid ? '' : 'error'}" >
+												</h:inputText>
+												<h:messages for="tel"/>
+										</div>
+										<label class="col-sm-2 control-label">Fax</label>
+										<div class="col-sm-4">
+											<h:inputText value="#{customerBean.selectedCustomer.fax}" id="fax" 
+												class="form-control #{ component.valid ? '' : 'error'}" >
+												</h:inputText>
+												<h:messages for="fax"/>
+										</div>
+									</div>
+									
+									<div class="form-group">
+									
+										<label class="col-sm-2 control-label">Geburtsdatum</label>
+										<div class="col-sm-3 date datepicker">
+											<span class="input-group-addon">
+												<i class="fa fa-calendar"></i>
+											</span>
+											
+											<h:inputText value="#{customerBean.selectedCustomer.bday}" id="bday" validatorMessage="Geburtsdatum erforderlich"
+												class="form-control #{ component.valid ? '' : 'error'}" a:data-mask="99.99.9999" >
+												<f:convertDateTime pattern="dd.MM.yyyy" timeZone="CET" />
+												<f:validateRequired disabled="#{customerBean.selectedCustomer.company}"/>
+											</h:inputText>
+										</div>
+									
+										<h:panelGroup id="commercialRegisterIdWrapper">
+											<ui:fragment rendered="#{customerBean.selectedCustomer.company}">
+												<label class="col-sm-3 control-label">HandelsRegister Nr.</label>
+												<div class="col-sm-4">
+													<h:inputText value="#{customerBean.selectedCustomer.commercialRegisterId}" id="commercialRegisterId"
+														class="form-control #{ component.valid ? '' : 'error'}" >
+														</h:inputText>
+														<h:messages for="commercialRegisterId"/>
+												</div>
+											</ui:fragment>
+										</h:panelGroup>
+										<div class="col-md-10 col-sm-offset-2">
+											<h:messages for="bday"/>
+										</div>
+									</div>
+						
+									<div class="hr-line-dashed"></div>
+									
+									
+									<div class="form-group">
+									
+										<label class="col-sm-2 control-label">Filiale</label>
+										<div class="col-sm-4">
+											
+												<h:selectOneMenu id="shop" a:data-placeholder="Filiale wählen ..."
+															value="#{customerBean.selectedCustomer.shop}"
+															class="chosen-select-no-single-class form-control #{ component.valid ? '' : 'error'}" converter="#{shopConverter}">
+															<f:selectItem itemValue="" itemLabel=""/>
+															<f:selectItems value="#{shopBean.shopList}" var="shop"
+																itemValue="#{shop}" itemLabel="#{shop.name}" />
+												</h:selectOneMenu>
+												
+												<h:messages for="shop"/>
+										</div>
+										<label class="col-sm-2 control-label">Kundenbetreuer</label>
+										<div class="col-sm-4">
+												<h:selectOneMenu id="accountManager" a:data-placeholder="Kundenbetreuer wählen ..."
+															value="#{customerBean.selectedCustomer.accountManager}"
+															class="chosen-select-no-single-class form-control #{ component.valid ? '' : 'error'}" 
+															converter="#{userConverter}">
+															<f:selectItem itemValue="" itemLabel=""/>
+															<f:selectItems value="#{userBean.userList}" var="user"
+																itemValue="#{user}" itemLabel="#{user.name}" />
+												</h:selectOneMenu>
+												<h:messages for="accountManager"/>
+										</div>
+									</div>
+						
+									<div class="hr-line-dashed"></div>
+									
+									<div class="form-group">
+										<label class="col-md-2 control-label">Notiz</label>
+										<div class="col-sm-10">
+											<h:inputTextarea rows="5" value="#{customerBean.selectedCustomer.note.content}" class="form-control" />
+										</div>
+									</div>
+									
+									<div class="hr-line-dashed"></div>
+						
+									<div class="form-group">
+										<div class="col-sm-12">
+											<h:commandButton value="speichern"
+												action="#{customerBean.saveCustomer}" class="btn btn-primary pull-right" />
+										</div>
+									</div>
+								</h:panelGroup>
+								
+	                        </div>
+	                    </div>
+	                </div>
+	            </div>
+	            </h:form>
+	            
+	     </div>
+		
+		
+		<div class="modal inmodal" id="customerModal" tabindex="-1"
+			role="dialog" aria-hidden="true" style="display: none;"
+			data-keyboard="true" data-backdrop="static">
+			<h:form class="form-horizontal" id="customerModalForm">
+				<div class="modal-dialog">
+					<div class="modal-content animated bounceInRight">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal">
+								<span aria-hidden="true">×</span><span class="sr-only">Close</span>
+							</button>
+							<i class="fa fa-user modal-icon"></i>
+							<h4 class="modal-title">Kunde bereits vorhanden?</h4>
+							<small class="font-bold">Folgende Kunden entsprechen Ihren
+								Eingaben:</small>
+						</div>
+						<h:panelGroup id="customerModalBody">
+							<div class="modal-body no-padding">
+								<div class="list-group">
+								<ui:repeat var="foundCustomer"
+										value="#{customerBean.customerSearchResult}">
+											<h:commandLink class="list-group-item customerElement text-center"
+													action="/customer/contract" >
+													<f:setPropertyActionListener value="#{foundCustomer}"
+														target="#{customerBean.selectedCustomer}" />
+													<h3 class="list-group-item-heading">#{foundCustomer.name}</h3>
+													<p class="list-group-item-text">
+							                                	<h:outputText value="#{foundCustomer.address.street}"/> <h:outputText value="#{foundCustomer.address.streetNumber}" /><br />
+							                                	<h:outputText value="#{foundCustomer.address.country}-#{foundCustomer.address.zip} #{foundCustomer.address.city}" />
+													</p>
+							                </h:commandLink>
+							    </ui:repeat>   	
+		                        </div>
+							</div>
+						</h:panelGroup>
+					</div>
+				</div>
+			</h:form>
+		</div>
+
+		<h:outputScript>
+		
+					$( document ).ready(function() {
+						$('#customerForm\\:firstname').focus();
+					});
+		
+					function showCustomerModal(data){
+						if(String(data.responseText).indexOf("customerElement") != -1){
+				             $('#customerModal').modal('show');
+				             setTimeout(function(){
+   								$('#customerModalForm\\:customerModalBody .list-group a').first().focus();
+    						 }, 300);
+				        }
+					};
+					
+					$('#customerModal').on('hide.bs.modal', function (e) {
+   						setTimeout(function (){
+							$('#customerForm\\:street').focus();
+						}, 300);
+					});
+
+					$(window).keydown(function(e){
+					
+						if(! $('#customerModal').hasClass('in')){
+					    	return true;
+						}
+					
+						var modalLinks =  $('#customerModalForm\\:customerModalBody .list-group a');
+					
+						var focusLink = $(modalLinks).filter(':focus');
+						
+						if(! focusLink.length){
+							focusLink = modalLinks.first().focus();
+						}
+					    
+					
+					    if(e.which === 40 || e.which === 9){
+					    	
+					    	if(focusLink.next().length){
+								focusLink.next().focus();
+							}
+							else{
+								modalLinks.first().focus();
+							}
+					    	
+					    	return false;
+					    }else if(e.which === 38){
+					    	
+					    	if(focusLink.prev().length){
+								focusLink.prev().focus();
+							}
+							else{
+								modalLinks.last().focus();
+							}
+					    	
+					    	return false;
+					    }
+					    
+					    return true;
+					});
+					
+					
+		</h:outputScript>
+
+	</ui:composition>
+</h:body>
+</html>

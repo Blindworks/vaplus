@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+  	xmlns:c="http://java.sun.com/jstl/core">
+
+<h:body>
+
+	<ui:composition template="/WEB-INF/template/common/commonLayout.xhtml">
+
+		<ui:param name="heading1" value="#{achievementBean.selectedAchievement.id == 0 ? 'Neues Leistungsziel' : achievementBean.selectedAchievement.name}" />
+
+		
+		<ui:define name="content">
+		
+		
+    		<div class="row">
+				<div class="col-lg-12">
+					<h:form class="form-horizontal " id="achievementDetailForm" >
+			            <div class="ibox float-e-margins">
+			                <div class="ibox-title">
+			                    <h5>Leistungsziel Details</h5>
+			                    <div class="ibox-tools">
+			                    
+										<h:commandLink class="btn btn-xs btn-danger confirm-btn" action="#{achievementBean.deleteAchievement}" >
+											<i class="fa fa-trash"></i>
+									    </h:commandLink>
+										<h:commandLink id="trashBtn" action="#{achievementBean.saveAchievement}" class="hide" />
+										<h:commandLink id="saveBtn" action="#{achievementBean.saveAchievement}" class="btn btn-xs btn-primary " >
+											<i class="fa fa-save"></i>
+									    </h:commandLink>
+										<h:commandLink action="achievementList" class="btn btn-xs btn-primary " immediate="true" >
+											<i class="fa fa-times"></i>
+									    </h:commandLink>
+			                    </div>
+			                </div>
+			                <div class="ibox-content">
+		
+								
+								<div class="form-group">
+									<label class="col-sm-2 control-label">Name</label>
+									<div class="col-sm-10">
+										<h:inputText value="#{achievementBean.selectedAchievement.name}" validatorMessage="Name erforderlich. (min. 3 Zeichen)"
+											id="name"
+											class="form-control #{ component.valid ? '' : 'error'}" >
+											<f:validateLength minimum="3" maximum="255"/>
+										</h:inputText>
+										<h:messages for="name"  />
+									</div>
+								</div>
+								
+								<div class="form-group">
+									<label class="col-sm-2 control-label">Sortierung/Gewichtung</label>
+									<div class="col-sm-10">
+										<h:inputText value="#{achievementBean.selectedAchievement.weight}" validatorMessage="Gewichtung erforderlich. (Numerisch)"
+											id="weight"
+											class="form-control #{ component.valid ? '' : 'error'}" >
+										</h:inputText>
+										<h:messages for="weight"  />
+									</div>
+								</div>
+								
+								<div class="form-group">
+									<label class="col-sm-2 control-label">Status</label>
+									<div class="col-sm-2">
+										<h:selectBooleanCheckbox class="i-checks" value="#{achievementBean.selectedAchievement.enabled}" />
+										<label class="control-label"> Aktiv</label>
+									</div>
+									<div class="col-sm-2">
+										<h:selectBooleanCheckbox class="i-checks" value="#{achievementBean.selectedAchievement.invisible}" />
+										<label class="control-label"> Unsichtbar</label>
+									</div>
+									<div class="col-sm-2">
+										<h:selectBooleanCheckbox class="i-checks" value="#{achievementBean.selectedAchievement.showOnCompanyDashboard}" />
+										<label class="control-label"> Firmen-Dashboard</label>
+									</div>
+									<div class="col-sm-4" >
+				                         <div class="input-daterange input-group">
+					                             <h:inputText type="text" class="form-control" value="#{achievementBean.selectedAchievement.effectiveDate}" a:data-mask="99.99.9999">
+					                             	<f:convertDateTime pattern="dd.MM.yyyy"  timeZone="CET"/>
+					                             </h:inputText>
+					                             <span class="input-group-addon">bis</span>
+					                             <h:inputText type="text" class="form-control" value="#{achievementBean.selectedAchievement.expiryDate}" a:data-mask="99.99.9999" >
+					                            	 <f:convertDateTime pattern="dd.MM.yyyy"  timeZone="CET"/>
+					                             </h:inputText>
+				                         </div>
+				                     </div>
+								</div>
+								
+								<div class="hr-line-dashed"></div>
+									<h3>Was?</h3>
+									<p>Welche Produkte oder Kategorien zählen in das Ziel?</p>
+									
+									
+								<div class="form-group">
+									<label class="col-sm-2 control-label"></label>
+								</div>
+								
+								<div class="form-group">
+									<label class="col-sm-2 control-label">Kategorien</label>
+									<div class="col-sm-10">
+										<h:selectManyMenu a:data-placeholder="Kategorie wählen ..."
+											value="#{achievementBean.selectedAchievement.selectedProductCategoryList}"
+											class="chosen-select form-control"
+											converter="#{productCategoryConverter}">
+											<f:selectItems value="#{productBean.productCategoryList}" var="category"
+												itemValue="#{category}" itemLabel="#{category.name}" />
+										</h:selectManyMenu>
+									</div>
+								</div>
+								
+								<div class="form-group">
+									<label class="col-sm-2 control-label"></label>
+									<div class="col-sm-10">oder</div>
+								</div>
+								
+								<div class="form-group">
+									<label class="col-sm-2 control-label">Produkte</label>
+									<div class="col-sm-10">
+										<h:selectManyMenu a:data-placeholder="Produkt wählen ..."
+											value="#{achievementBean.selectedAchievement.selectedProductList}"
+											class="chosen-select form-control"
+											converter="#{baseProductConverter}">
+											<f:selectItems value="#{productBean.productList}" var="product"
+												itemValue="#{product}" itemLabel="#{product.name}" />
+										</h:selectManyMenu>
+									</div>
+								</div>
+								
+								<div class="form-group">
+									<label class="col-sm-2 control-label"></label>
+									<div class="col-sm-10">oder</div>
+								</div>
+								
+								<div class="form-group">
+									<label class="col-sm-2 control-label">Produkt Kombinationen</label>
+									<div class="col-sm-10">
+										<h:selectManyMenu a:data-placeholder="Produkt Kombination wählen ..."
+											value="#{achievementBean.selectedAchievement.selectedProductCombinationList}"
+											class="chosen-select form-control"
+											converter="#{productCombinationConverter}">
+											<f:selectItems value="#{productBean.productCombinationList}" var="productCombination"
+												itemValue="#{productCombination}" itemLabel="#{productCombination}" />
+										</h:selectManyMenu>
+									</div>
+								</div>
+								
+								
+								<div class="form-group">
+									<label class="col-sm-2 control-label"></label>
+									<div class="col-sm-10">und nicht</div>
+								</div>
+								
+								<div class="form-group">
+									<label class="col-sm-2 control-label">Produkt Filter</label>
+									<div class="col-sm-10">
+										<h:selectManyMenu a:data-placeholder="Produkt wählen ..."
+											value="#{achievementBean.selectedAchievement.selectedProductFilterList}"
+											class="chosen-select form-control"
+											converter="#{baseProductConverter}">
+											<f:selectItems value="#{productBean.productList}" var="product"
+												itemValue="#{product}" itemLabel="#{product.name}" />
+										</h:selectManyMenu>
+									</div>
+								</div>
+								
+								<div class="form-group">
+									<label class="col-sm-2 control-label"></label>
+									<div class="col-sm-10">und nicht</div>
+								</div>
+								
+								<div class="form-group">
+									<label class="col-sm-2 control-label">Produkt Kombinationen</label>
+									<div class="col-sm-10">
+										<h:selectManyMenu a:data-placeholder="Produkt Kombination wählen ..."
+											value="#{achievementBean.selectedAchievement.selectedProductCombinationFilterList}"
+											class="chosen-select form-control"
+											converter="#{productCombinationConverter}">
+											<f:selectItems value="#{productBean.productCombinationList}" var="productCombination"
+												itemValue="#{productCombination}" itemLabel="#{productCombination}" />
+										</h:selectManyMenu>
+									</div>
+								</div>
+								
+								<div class="form-group">
+									<label class="col-sm-2 control-label"></label>
+									<div class="col-sm-2">
+										<h:selectBooleanCheckbox class="i-checks" value="#{achievementBean.selectedAchievement.newContract}" />
+										<label class="control-label"> Neuverträge</label>
+									</div>
+									<div class="col-sm-1">
+										<p class="form-control-static">oder</p>
+									</div>
+									<div class="col-sm-2">
+										<h:selectBooleanCheckbox class="i-checks" value="#{achievementBean.selectedAchievement.extensionOfTheTerm}" />
+										<label class="control-label"> VertragsVL</label>
+									</div>
+									<div class="col-sm-1">
+										<p class="form-control-static">oder</p>
+									</div>
+									<div class="col-sm-2">
+										<h:selectBooleanCheckbox class="i-checks" value="#{achievementBean.selectedAchievement.debidCreditChange}" />
+										<label class="control-label"> DC Wechsel</label>
+									</div>
+								</div>
+								
+								
+								<div class="hr-line-dashed"></div>
+									<h3>Wen?</h3>
+									<p>Durch wen kann das Ziel erreicht werden?</p>
+								
+								
+								<div class="form-group">
+									<label class="col-sm-2 control-label">Shop</label>
+									<div class="col-sm-10">
+										<h:selectManyMenu a:data-placeholder="Shop wählen ..."
+											value="#{achievementBean.selectedAchievement.sourceShopList}"
+											class="chosen-select form-control"
+											converter="#{shopConverter}">
+											<f:selectItems value="#{shopBean.shopList}" var="shop"
+												itemValue="#{shop}" itemLabel="#{shop.name}" />
+										</h:selectManyMenu>
+									</div>
+								</div>
+								
+								<div class="form-group">
+									<label class="col-sm-2 control-label"></label>
+									<div class="col-sm-10">
+										<p class="form-control-static">oder</p>
+									</div>
+								</div>
+								
+								<div class="form-group">
+									<label class="col-sm-2 control-label">Shop Gruppen</label>
+									<div class="col-sm-10">
+										<h:selectManyMenu a:data-placeholder="Shop Gruppe wählen ..."
+											value="#{achievementBean.selectedAchievement.sourceShopGroupList}"
+											class="chosen-select form-control"
+											converter="#{shopGroupConverter}">
+											<f:selectItems value="#{shopBean.shopGroupList}" var="shopGroup"
+												itemValue="#{shopGroup}" itemLabel="#{shopGroup.name}" />
+										</h:selectManyMenu>
+									</div>
+								</div>
+								
+								<div class="form-group">
+									<label class="col-sm-2 control-label"></label>
+									<div class="col-sm-10">
+										<p class="form-control-static">oder</p>
+									</div>
+								</div>
+								
+								<div class="form-group">
+									<label class="col-sm-2 control-label">Mitarbeiter</label>
+									<div class="col-sm-10">
+										<h:selectManyMenu a:data-placeholder="Mitarbeiter wählen ..."
+											value="#{achievementBean.selectedAchievement.sourceUserList}"
+											class="chosen-select form-control"
+											converter="#{userConverter}">
+											<f:selectItems value="#{userBean.userList}" var="user"
+												itemValue="#{user}" itemLabel="#{user.name}" />
+										</h:selectManyMenu>
+									</div>
+								</div>
+								
+								<div class="form-group">
+									<label class="col-sm-2 control-label"></label>
+									<div class="col-sm-10">
+										<p class="form-control-static">oder</p>
+									</div>
+								</div>
+								
+								<div class="form-group">
+									<label class="col-sm-2 control-label">VO</label>
+									<div class="col-sm-10">
+										<h:selectManyMenu a:data-placeholder="VO wählen ..."
+											value="#{achievementBean.selectedAchievement.sourceVOList}"
+											class="chosen-select form-control"
+											converter="#{vOConverter}">
+											<f:selectItems value="#{VOBean.VOList}" var="vo"
+												itemValue="#{vo}" itemLabel="#{vo.name}" />
+										</h:selectManyMenu>
+									</div>
+								</div>
+								
+								
+								<div class="hr-line-dashed"></div>
+									<h3>Wer?</h3>
+									<p>Wer erhält die Vergütung bei Zielerreichung?</p>
+								
+								<div class="form-group">
+									<label class="col-sm-2 control-label"></label>
+									<div class="col-sm-10">
+										<h:selectBooleanCheckbox class="i-checks" value="#{achievementBean.selectedAchievement.payoutToSource}" />
+										<label class="control-label">Auszahlung an Erzeuger?</label>
+									</div>
+								</div>
+								
+								<div class="form-group">
+									<label class="col-sm-2 control-label">Mitarbeiter</label>
+									<div class="col-sm-10">
+										<h:selectManyMenu a:data-placeholder="Mitarbeiter wählen ..."
+											value="#{achievementBean.selectedAchievement.payoutUserList}"
+											class="chosen-select form-control"
+											converter="#{userConverter}">
+											<f:selectItems value="#{userBean.userList}" var="user"
+												itemValue="#{user}" itemLabel="#{user.name}" />
+										</h:selectManyMenu>
+									</div>
+								</div>
+								
+								<div class="hr-line-dashed"></div>
+								
+								<h:panelGroup id="achievementTotalTargetGroup">
+								
+									<span class="pull-right">
+										<h:commandLink action="#{achievementBean.setTotalPieceTargetToSelectedAchievement}" class="btn btn-xs btn-primary" immediate="true" rendered="#{empty achievementBean.selectedAchievement.totalPieceTarget}">
+											<i class="fa fa-plus"></i> Stückziel
+											<f:ajax render="achievementTotalTargetGroup" />
+										</h:commandLink>
+										<span class="spacer"></span>
+										<h:commandLink action="#{achievementBean.setTotalSumTargetToSelectedAchievement}" class="btn btn-xs btn-primary" immediate="true" rendered="#{empty achievementBean.selectedAchievement.totalSumTarget}" >
+											<i class="fa fa-plus"></i> Summenziel
+											<f:ajax render="achievementTotalTargetGroup" />
+										</h:commandLink>
+										<span class="spacer"></span>
+										<h:commandLink action="#{achievementBean.setTotalAquiredRevenueTargetToSelectedAchievement}" class="btn btn-xs btn-primary" immediate="true" rendered="#{empty achievementBean.selectedAchievement.totalAquiredRevenueTarget}" >
+											<i class="fa fa-plus"></i> AU-Ziel
+											<f:ajax render="achievementTotalTargetGroup" />
+										</h:commandLink>
+										<span class="spacer"></span>
+										<h:commandLink action="#{achievementBean.setTotalContractedRevenueTargetToSelectedAchievement}" class="btn btn-xs btn-primary" immediate="true" rendered="#{empty achievementBean.selectedAchievement.totalContractedRevenueTarget}" >
+											<i class="fa fa-plus"></i> GU-Ziel
+											<f:ajax render="achievementTotalTargetGroup" />
+										</h:commandLink>
+									</span>
+									
+									<h3>Gesamt Vergütung</h3>
+									<p>Bie Zielerreichung wird jedem Begünstigten die gesamte Vergütung ausgeschüttet.</p>
+									
+									
+									<ui:fragment rendered="#{not empty achievementBean.selectedAchievement.totalPieceTarget or not empty achievementBean.selectedAchievement.totalSumTarget or not empty achievementBean.selectedAchievement.totalAquiredRevenueTarget or not empty achievementBean.selectedAchievement.totalContractedRevenueTarget}">
+										<div class="form-group">
+											<label class="col-sm-2 "></label>
+											<label class="col-sm-2 text-center">Ziel</label>
+											<label class="col-sm-2 text-center">Betrag</label>
+											<label class="col-sm-2 text-center">Freitext</label>
+											<label class="col-sm-1 "></label>
+											<label class="col-sm-2 text-center">erw. Provision</label>
+											<label class="col-sm-1 "></label>
+										</div>
+									</ui:fragment>
+										
+									
+									<ui:fragment rendered="#{not empty achievementBean.selectedAchievement.totalPieceTarget}">
+										<div class="form-group">
+											<label class="col-sm-2 control-label">Stück</label>
+											<div class="col-sm-2">
+												<div class="input-group m-b">
+													<h:inputText value="#{achievementBean.selectedAchievement.totalPieceTarget.target}" class="form-control text-right">
+																	<f:convertNumber maxFractionDigits="2" minFractionDigits="0" />
+													</h:inputText>
+													<span class="input-group-addon">Stk</span>
+												</div>
+											</div>
+											<div class="col-sm-2">
+												<div class="input-group m-b">
+													<h:inputText value="#{achievementBean.selectedAchievement.totalPieceTarget.payout}" class="form-control text-right">
+																	<f:convertNumber maxFractionDigits="2" minFractionDigits="0" />
+													</h:inputText>
+													<span class="input-group-addon"><i class="fa fa-eur"></i></span>
+												</div>
+											</div>
+											<div class="col-sm-2">
+												<h:inputText value="#{achievementBean.selectedAchievement.totalPieceTarget.payoutText}" class="form-control">
+												</h:inputText>
+											</div>
+											
+											<div class="col-sm-1">
+											</div>
+											
+											<div class="col-sm-2">
+												<div class="input-group m-b">
+													<h:inputText value="#{achievementBean.selectedAchievement.totalPieceTarget.commission}" class="form-control text-right">
+																	<f:convertNumber maxFractionDigits="2" minFractionDigits="2" />
+													</h:inputText>
+													<span class="input-group-addon"><i class="fa fa-eur"></i></span>
+												</div>
+											</div>
+										
+											<div class="col-sm-1">
+												<h:commandLink action="#{achievementBean.clearTotalPieceTargetOnSelectedAchievement}" class="btn btn-danger " immediate="true" >
+													<i class="fa fa-trash"></i>
+													<f:ajax render=":achievementDetailForm:achievementTotalTargetGroup" />
+												</h:commandLink>
+											</div>
+										</div>
+									</ui:fragment>
+									
+									<ui:fragment rendered="#{not empty achievementBean.selectedAchievement.totalSumTarget}">
+										<div class="form-group">
+											<label class="col-sm-2 control-label">Summe</label>
+											<div class="col-sm-2">
+												<div class="input-group m-b">
+													<h:inputText value="#{achievementBean.selectedAchievement.totalSumTarget.target}" class="form-control text-right">
+																	<f:convertNumber maxFractionDigits="2" minFractionDigits="2" />
+													</h:inputText>
+													<span class="input-group-addon"><i class="fa fa-eur"></i></span>
+												</div>
+											</div>
+											<div class="col-sm-2">
+												<div class="input-group m-b">
+													<h:inputText value="#{achievementBean.selectedAchievement.totalSumTarget.payout}" class="form-control text-right">
+																	<f:convertNumber maxFractionDigits="2" minFractionDigits="0" />
+													</h:inputText>
+													<span class="input-group-addon"><i class="fa fa-eur"></i></span>
+												</div>
+											</div>
+											<div class="col-sm-2">
+												<h:inputText value="#{achievementBean.selectedAchievement.totalSumTarget.payoutText}" class="form-control">
+												</h:inputText>
+											</div>
+											
+											<div class="col-sm-1">
+											</div>
+											
+											<div class="col-sm-2">
+												<div class="input-group m-b">
+													<h:inputText value="#{achievementBean.selectedAchievement.totalSumTarget.commission}" class="form-control text-right">
+																	<f:convertNumber maxFractionDigits="2" minFractionDigits="2" />
+													</h:inputText>
+													<span class="input-group-addon"><i class="fa fa-eur"></i></span>
+												</div>
+											</div>
+										
+											<div class="col-sm-1">
+												<h:commandLink action="#{achievementBean.clearTotalSumTargetOnSelectedAchievement}" class="btn btn-danger " immediate="true" >
+													<i class="fa fa-trash"></i>
+													<f:ajax render=":achievementDetailForm:achievementTotalTargetGroup" />
+												</h:commandLink>
+											</div>
+										</div>
+									</ui:fragment>
+									
+									<ui:fragment rendered="#{not empty achievementBean.selectedAchievement.totalAquiredRevenueTarget}">
+										<div class="form-group">
+											<label class="col-sm-2 control-label">AU</label>
+											<div class="col-sm-2">
+												<div class="input-group m-b">
+													<h:inputText value="#{achievementBean.selectedAchievement.totalAquiredRevenueTarget.target}" class="form-control text-right">
+																	<f:convertNumber maxFractionDigits="2" minFractionDigits="2" />
+													</h:inputText>
+													<span class="input-group-addon"><i class="fa fa-eur"></i></span>
+												</div>
+											</div>
+											<div class="col-sm-2">
+												<div class="input-group m-b">
+													<h:inputText value="#{achievementBean.selectedAchievement.totalAquiredRevenueTarget.payout}" class="form-control text-right">
+																	<f:convertNumber maxFractionDigits="2" minFractionDigits="0" />
+													</h:inputText>
+													<span class="input-group-addon"><i class="fa fa-eur"></i></span>
+												</div>
+											</div>
+											<div class="col-sm-2">
+												<h:inputText value="#{achievementBean.selectedAchievement.totalAquiredRevenueTarget.payoutText}" class="form-control ">
+												</h:inputText>
+											</div>
+											
+											<div class="col-sm-1">
+											</div>
+											
+											<div class="col-sm-2">
+												<div class="input-group m-b">
+													<h:inputText value="#{achievementBean.selectedAchievement.totalAquiredRevenueTarget.commission}" class="form-control text-right">
+																	<f:convertNumber maxFractionDigits="2" minFractionDigits="2" />
+													</h:inputText>
+													<span class="input-group-addon"><i class="fa fa-eur"></i></span>
+												</div>
+											</div>
+										
+											<div class="col-sm-1">
+												<h:commandLink action="#{achievementBean.clearTotalAquiredRevenueTargetOnSelectedAchievement}" class="btn btn-danger " immediate="true" >
+													<i class="fa fa-trash"></i>
+													<f:ajax render=":achievementDetailForm:achievementTotalTargetGroup" />
+												</h:commandLink>
+											</div>
+										</div>
+									</ui:fragment>
+									
+									<ui:fragment rendered="#{not empty achievementBean.selectedAchievement.totalContractedRevenueTarget}">
+										<div class="form-group">
+											<label class="col-sm-2 control-label">GU</label>
+											<div class="col-sm-2">
+												<div class="input-group m-b">
+													<h:inputText value="#{achievementBean.selectedAchievement.totalContractedRevenueTarget.target}" class="form-control text-right">
+																	<f:convertNumber maxFractionDigits="2" minFractionDigits="2" />
+													</h:inputText>
+													<span class="input-group-addon"><i class="fa fa-eur"></i></span>
+												</div>
+											</div>
+											<div class="col-sm-2">
+												<div class="input-group m-b">
+													<h:inputText value="#{achievementBean.selectedAchievement.totalContractedRevenueTarget.payout}" class="form-control text-right">
+																	<f:convertNumber maxFractionDigits="2" minFractionDigits="0" />
+													</h:inputText>
+													<span class="input-group-addon"><i class="fa fa-eur"></i></span>
+												</div>
+											</div>
+											<div class="col-sm-2">
+												<h:inputText value="#{achievementBean.selectedAchievement.totalContractedRevenueTarget.payoutText}" class="form-control">
+												</h:inputText>
+											</div>
+											
+											<div class="col-sm-1">
+											</div>
+											
+											<div class="col-sm-2">
+												<div class="input-group m-b">
+													<h:inputText value="#{achievementBean.selectedAchievement.totalContractedRevenueTarget.commission}" class="form-control text-right">
+																	<f:convertNumber maxFractionDigits="2" minFractionDigits="2" />
+													</h:inputText>
+													<span class="input-group-addon"><i class="fa fa-eur"></i></span>
+												</div>
+											</div>
+										
+											<div class="col-sm-1">
+												<h:commandLink action="#{achievementBean.clearTotalContractedRevenueTargetOnSelectedAchievement}" class="btn btn-danger " immediate="true" >
+													<i class="fa fa-trash"></i>
+													<f:ajax render=":achievementDetailForm:achievementTotalTargetGroup" />
+												</h:commandLink>
+											</div>
+										</div>
+									</ui:fragment>
+								</h:panelGroup>
+								
+								<div class="hr-line-dashed"></div>
+								
+									<span class="pull-right">
+										<h:commandLink action="#{achievementBean.addPieceTargetToSelectedAchievement}" class="btn btn-xs btn-primary" immediate="true" >
+											<i class="fa fa-plus"></i> Stückziel
+											<f:ajax render="achievementTargetListGroup" />
+										</h:commandLink>
+										<span class="spacer"></span>
+										<h:commandLink action="#{achievementBean.addSumTargetToSelectedAchievement}" class="btn btn-xs btn-primary" immediate="true" >
+											<i class="fa fa-plus"></i> Summenziel
+											<f:ajax render="achievementTargetListGroup" />
+										</h:commandLink>
+										<span class="spacer"></span>
+										<h:commandLink action="#{achievementBean.addAquiredRevenueTargetToSelectedAchievement}" class="btn btn-xs btn-primary" immediate="true" >
+											<i class="fa fa-plus"></i> AU-Ziel
+											<f:ajax render="achievementTargetListGroup" />
+										</h:commandLink>
+										<span class="spacer"></span>
+										<h:commandLink action="#{achievementBean.addContractedRevenueTargetToSelectedAchievement}" class="btn btn-xs btn-primary" immediate="true" >
+											<i class="fa fa-plus"></i> GU-Ziel
+											<f:ajax render="achievementTargetListGroup" />
+										</h:commandLink>
+									</span>
+									<h3>Einzel Staffel Vergütung</h3>
+									<p>Bei "Auszahlung an Erzeuger" wird jedem die Vergütung mal selbst erzeugter Stücke ausgeschüttet.</p>
+									<p>Alternativ wird jedem Begünstigtem die Vergütung mal aller Stücke ausgeschüttet.</p>
+							
+							
+							<h:panelGroup id="achievementTargetListGroup">
+								<ui:fragment rendered="#{achievementBean.selectedAchievement.pieceTargetList.size() gt 0 or achievementBean.selectedAchievement.sumTargetList.size() gt 0 or achievementBean.selectedAchievement.aquiredRevenueTargetList.size() gt 0 or achievementBean.selectedAchievement.contractedRevenueTargetList.size() gt 0}">
+									<div class="form-group">
+										<label class="col-sm-2 "></label>
+										<label class="col-sm-2 text-center">Ziel</label>
+										<label class="col-sm-2 text-center">Betrag / Stk.</label>
+										<label class="col-sm-2 text-center">Freitext / Stk.</label>
+										<label class="col-sm-1 "></label>
+										<label class="col-sm-2 text-center">erw. Provision / Stk.</label>
+										<label class="col-sm-1 "></label>
+									</div>
+								</ui:fragment>
+									
+							
+								<ui:repeat var="pieceTarget" value="#{achievementBean.selectedAchievement.pieceTargetList}">
+									<div class="form-group">
+										<label class="col-sm-2 control-label">Stück</label>
+										<div class="col-sm-2">
+											<div class="input-group m-b">
+												<h:inputText value="#{pieceTarget.target}" class="form-control text-right">
+																<f:convertNumber maxFractionDigits="0" minFractionDigits="0" />
+												</h:inputText>
+												<span class="input-group-addon">Stk</span>
+											</div>
+										</div>
+										<div class="col-sm-2">
+											<div class="input-group m-b">
+												<h:inputText value="#{pieceTarget.payout}" class="form-control text-right">
+																<f:convertNumber maxFractionDigits="2" minFractionDigits="0" />
+												</h:inputText>
+												<span class="input-group-addon"><i class="fa fa-eur"></i></span>
+											</div>
+										</div>
+										<div class="col-sm-2">
+											<h:inputText value="#{pieceTarget.payoutText}" class="form-control">
+											</h:inputText>
+										</div>
+											
+											<div class="col-sm-1">
+											</div>
+											
+										<div class="col-sm-2">
+											<div class="input-group m-b">
+												<h:inputText value="#{pieceTarget.commission}" class="form-control text-right">
+																<f:convertNumber maxFractionDigits="2" minFractionDigits="2" />
+												</h:inputText>
+												<span class="input-group-addon"><i class="fa fa-eur"></i></span>
+											</div>
+										</div>
+										
+										<div class="col-sm-1">
+											<h:commandLink action="#{achievementBean.removePieceTargetFromSelectedAchievement(pieceTarget)}" class="btn btn-danger " immediate="true" >
+												<i class="fa fa-trash"></i>
+												<f:ajax render=":achievementDetailForm:achievementTargetListGroup" />
+											</h:commandLink>
+										</div>
+									</div>
+								</ui:repeat>
+								
+								
+								
+								<ui:repeat var="sumTarget" value="#{achievementBean.selectedAchievement.sumTargetList}">
+									<div class="form-group">
+										<label class="col-sm-2 control-label">Summe</label>
+										<div class="col-sm-2">
+											<div class="input-group m-b">
+												<h:inputText value="#{sumTarget.target}" class="form-control text-right">
+																<f:convertNumber maxFractionDigits="2" minFractionDigits="2" />
+												</h:inputText>
+												<span class="input-group-addon"><i class="fa fa-eur"></i></span>
+											</div>
+										</div>
+										<div class="col-sm-2">
+											<div class="input-group m-b">
+												<h:inputText value="#{sumTarget.payout}" class="form-control text-right">
+																<f:convertNumber maxFractionDigits="2" minFractionDigits="0" />
+												</h:inputText>
+												<span class="input-group-addon"><i class="fa fa-eur"></i></span>
+											</div>
+										</div>
+										<div class="col-sm-2">
+											<h:inputText value="#{sumTarget.payoutText}" class="form-control">
+											</h:inputText>
+										</div>
+											
+											<div class="col-sm-1">
+											</div>
+											
+										<div class="col-sm-2">
+											<div class="input-group m-b">
+												<h:inputText value="#{sumTarget.commission}" class="form-control text-right">
+																<f:convertNumber maxFractionDigits="2" minFractionDigits="2" />
+												</h:inputText>
+												<span class="input-group-addon"><i class="fa fa-eur"></i></span>
+											</div>
+										</div>
+										
+										<div class="col-sm-1">
+											<h:commandLink action="#{achievementBean.removeSumTargetFromSelectedAchievement(sumTarget)}" class="btn btn-danger " immediate="true" >
+												<i class="fa fa-trash"></i>
+												<f:ajax render=":achievementDetailForm:achievementTargetListGroup" />
+											</h:commandLink>
+										</div>
+									</div>
+								</ui:repeat>
+								
+								
+								<ui:repeat var="aquiredRevenueTarget" value="#{achievementBean.selectedAchievement.aquiredRevenueTargetList}">
+									<div class="form-group">
+										<label class="col-sm-2 control-label">AU</label>
+										<div class="col-sm-2">
+											<div class="input-group m-b">
+												<h:inputText value="#{aquiredRevenueTarget.target}" class="form-control text-right">
+																<f:convertNumber maxFractionDigits="2" minFractionDigits="2" />
+												</h:inputText>
+												<span class="input-group-addon"><i class="fa fa-eur"></i></span>
+											</div>
+										</div>
+										<div class="col-sm-2">
+											<div class="input-group m-b">
+												<h:inputText value="#{aquiredRevenueTarget.payout}" class="form-control text-right">
+																<f:convertNumber maxFractionDigits="2" minFractionDigits="0" />
+												</h:inputText>
+												<span class="input-group-addon"><i class="fa fa-eur"></i></span>
+											</div>
+										</div>
+										<div class="col-sm-2">
+											<h:inputText value="#{aquiredRevenueTarget.payoutText}" class="form-control">
+											</h:inputText>
+										</div>
+											
+											<div class="col-sm-1">
+											</div>
+											
+										<div class="col-sm-2">
+											<div class="input-group m-b">
+												<h:inputText value="#{aquiredRevenueTarget.commission}" class="form-control text-right">
+																<f:convertNumber maxFractionDigits="2" minFractionDigits="2" />
+												</h:inputText>
+												<span class="input-group-addon"><i class="fa fa-eur"></i></span>
+											</div>
+										</div>
+										
+										<div class="col-sm-1">
+											<h:commandLink action="#{achievementBean.removeAquiredRevenueTargetFromSelectedAchievement(aquiredRevenueTarget)}" class="btn btn-danger " immediate="true" >
+												<i class="fa fa-trash"></i>
+												<f:ajax render=":achievementDetailForm:achievementTargetListGroup" />
+											</h:commandLink>
+										</div>
+									</div>
+								</ui:repeat>
+								
+								
+								<ui:repeat var="contractedRevenueTarget" value="#{achievementBean.selectedAchievement.contractedRevenueTargetList}">
+									<div class="form-group">
+										<label class="col-sm-2 control-label">GU</label>
+										<div class="col-sm-2">
+											<div class="input-group m-b">
+												<h:inputText value="#{contractedRevenueTarget.target}" class="form-control text-right">
+																<f:convertNumber maxFractionDigits="2" minFractionDigits="2" />
+												</h:inputText>
+												<span class="input-group-addon"><i class="fa fa-eur"></i></span>
+											</div>
+										</div>
+										<div class="col-sm-2">
+											<div class="input-group m-b">
+												<h:inputText value="#{contractedRevenueTarget.payout}" class="form-control text-right">
+																<f:convertNumber maxFractionDigits="2" minFractionDigits="0" />
+												</h:inputText>
+												<span class="input-group-addon"><i class="fa fa-eur"></i></span>
+											</div>
+										</div>
+										<div class="col-sm-2">
+											<h:inputText value="#{contractedRevenueTarget.payoutText}" class="form-control">
+											</h:inputText>
+										</div>
+											
+											<div class="col-sm-1">
+											</div>
+											
+										<div class="col-sm-2">
+											<div class="input-group m-b">
+												<h:inputText value="#{contractedRevenueTarget.commission}" class="form-control text-right">
+																<f:convertNumber maxFractionDigits="2" minFractionDigits="2" />
+												</h:inputText>
+												<span class="input-group-addon"><i class="fa fa-eur"></i></span>
+											</div>
+										</div>
+										
+										<div class="col-sm-1">
+											<h:commandLink action="#{achievementBean.removeContractedRevenueTargetFromSelectedAchievement(contractedRevenueTarget)}" class="btn btn-danger " immediate="true" >
+												<i class="fa fa-trash"></i>
+												<f:ajax render=":achievementDetailForm:achievementTargetListGroup" />
+											</h:commandLink>
+										</div>
+									</div>
+								</ui:repeat>
+								</h:panelGroup>
+							
+							</div>
+								
+								
+						</div>	
+				</h:form>
+			</div>
+		</div>
+
+
+		</ui:define>
+
+
+	</ui:composition>
+</h:body>
+</html>

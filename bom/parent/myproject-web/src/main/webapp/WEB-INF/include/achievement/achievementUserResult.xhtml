@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+		xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:f="http://java.sun.com/jsf/core"	
+	xmlns:p="http://primefaces.org/ui">
+
+<h:body>
+	<ui:composition >
+	
+		<div class="row">
+           <div class="col-md-4">
+           		<h3>#{user.name}</h3>
+           </div>
+           <div class="col-md-2 forum-info">
+               <span class="views-number">
+                   <h:outputText value="#{achievement.getUserGoalAttainment(user).pieceGoalAttainment}" ><f:convertNumber maxFractionDigits="0" minFractionDigits="0" /></h:outputText>
+               </span>
+               <div>
+                   <small>Stücke</small>
+               </div>
+           </div>
+           <div class="col-md-2 forum-info">
+               <span class="views-number">
+                   <h:outputText value="#{achievement.getUserGoalAttainment(user).sumGoalAttainment}" ><f:convertNumber maxFractionDigits="2" minFractionDigits="2" /></h:outputText> €
+               </span>
+               <div>
+                   <small>Summe</small>
+               </div>
+           </div>
+           <div class="col-md-2 forum-info">
+               <span class="views-number">
+                   <h:outputText value="#{achievement.getUserGoalAttainment(user).aquiredRevenueGoalAttainment}" ><f:convertNumber maxFractionDigits="2" minFractionDigits="2" /></h:outputText> €
+               </span>
+               <div>
+                   <small>AU</small>
+               </div>
+           </div>
+           <div class="col-md-2 forum-info">
+               <span class="views-number">
+                   <h:outputText value="#{achievement.getUserGoalAttainment(user).contractedRevenueGoalAttainment}" ><f:convertNumber maxFractionDigits="2" minFractionDigits="2" /></h:outputText> €
+               </span>
+               <div>
+                   <small>GU</small>
+               </div>
+           </div>
+       </div>
+       
+       <br/>
+       <br/>
+
+	</ui:composition>
+</h:body>
+</html>

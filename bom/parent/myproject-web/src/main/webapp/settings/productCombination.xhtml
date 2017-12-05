@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:body>
+
+	<ui:composition template="/WEB-INF/template/common/commonLayout.xhtml">
+
+		<ui:param name="heading1" value="Produkt Kombination" />
+		
+		<ui:define name="content">
+		
+		
+
+    		<div class="row">
+				<div class="col-lg-12">
+					<h:form class="form-horizontal">
+			            <div class="ibox float-e-margins">
+			                <div class="ibox-title">
+			                    <h5>Produkt Kombinations Details</h5>
+			                    <div class="ibox-tools">
+			                    
+										<h:commandLink class="btn btn-xs btn-danger confirm-btn" action="#{productBean.deleteProductCombination}" immediate="true"  rendered="#{productBean.selectedProductCombination.id gt 0}">
+											<i class="fa fa-trash"></i>
+									    </h:commandLink>
+									    
+										<h:commandLink id="saveButton" action="#{productBean.saveProductCombination}" class="btn btn-xs btn-primary " >
+											<i class="fa fa-save"></i>
+									    </h:commandLink>
+										<h:commandLink action="productCombinationList" class="btn btn-xs btn-primary " immediate="true" >
+											<i class="fa fa-times"></i>
+									    </h:commandLink>
+			                    </div>
+			                </div>
+			                <div class="ibox-content">
+			                
+			                			<div class="form-group">
+											<label class="col-sm-4 control-label">Tarif</label>
+											<div class="col-sm-8">
+												<h:selectOneMenu id="tariffSelect" 
+													value="#{productBean.selectedProductCombination.product}"
+													class="chosen-select-full-width form-control"
+													converter="#{baseProductConverter}">
+													<f:selectItem itemValue="" itemLabel=""/>
+													<f:selectItems value="#{productBean.tariffList}" var="tariff"
+														itemValue="#{tariff}" itemLabel="#{tariff.name}" />
+												</h:selectOneMenu>
+												<h:messages for="tariffSelect"  />
+											</div>
+										</div>
+										<div class="form-group">
+											<label class="col-sm-4 control-label">Product Optionen</label>
+											<div class="col-sm-8">
+												<h:selectManyMenu id="productOptionList" 
+													value="#{productBean.selectedProductCombination.productOptionList}"
+													class="chosen-select-full-width form-control"
+													converter="#{baseProductConverter}">
+													<f:selectItem itemValue="" itemLabel=""/>
+													<f:selectItems value="#{productBean.productOptionList}" var="option"
+														itemValue="#{option}" itemLabel="#{option.name}" />
+												</h:selectManyMenu>
+												<h:messages for="productOptionList"  />
+											</div>
+										</div>
+			                
+			                
+			                
+			                </div>
+		                </div>
+		                <p:defaultCommand target="saveButton" />
+	                </h:form>
+                </div>
+            </div>
+
+
+			
+
+		</ui:define>
+
+
+	</ui:composition>
+</h:body>
+</html>

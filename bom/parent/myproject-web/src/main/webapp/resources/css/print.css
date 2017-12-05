@@ -1,0 +1,25 @@
+@media print {
+	body {
+		font-size: 8px !important;
+	}
+	
+	#page-wrapper{
+		margin: 0 !important;
+	}
+	.page-content-wrapper{
+		margin: 0 !important;
+	}
+	.page-heading{
+		padding: 0 !important;
+	}
+	.wrapper-content{
+		padding: 0 !important;
+	}
+	
+	.btn{
+		display:none;
+	}
+	.ibox-title{
+		border-width: 0px !important;
+	}
+}
