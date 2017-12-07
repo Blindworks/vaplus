@@ -35,12 +35,14 @@ import de.vaplus.api.entity.Event;
 import de.vaplus.api.entity.JobTitle;
 import de.vaplus.api.entity.SecureUserLink;
 import de.vaplus.api.entity.ShopAlias;
+import de.vaplus.api.entity.State;
 import de.vaplus.api.entity.User;
 import de.vaplus.api.entity.UserAlias;
 import de.vaplus.api.entity.UserCustomerHistory;
 import de.vaplus.api.entity.UserGroup;
 import de.vaplus.api.entity.UserStats;
 import de.vaplus.api.entity.VacationRequest;
+import de.vaplus.client.eao.StateEao;
 import de.vaplus.client.eao.UserEao;
 import de.vaplus.client.entity.EmploymentFormEntity;
 import de.vaplus.client.entity.EventEntity;
@@ -90,6 +92,9 @@ public class UserController implements UserControllerInterface {
 
     @Inject
     private UserEao userEao;
+    
+    @Inject
+    private StateEao stateEao;
 
     @Inject
     private PicketlinkEao picketLinkEao;
@@ -181,20 +186,27 @@ public class UserController implements UserControllerInterface {
 //		System.out.println("userController createSupervisorUser");
 		
 		UserEntity u = new UserEntity();
-		u.setLastname("Supervisor");
+		u.setLastname("Supervisor_new");
 		u.setTitle("Herr");
-		u.setFirstname("");
+		u.setFirstname("super_new");
 		u.setEmail("");
 		u.setPointGoal(new BigDecimal(0));
+		u.setBasicSalary(BigDecimal.valueOf(0));
+		u.setBonusSalary(BigDecimal.valueOf(0));
+		u.setCarGrossCatalogPrice(BigDecimal.valueOf(0));
+		u.setMinimalBonusPointGoal(BigDecimal.valueOf(0));
 		u.setUuid(UUID.randomUUID().toString());
 		
 		JobTitle jobTitle = getJobTitleByName("Supervisor", true);
 		u.setJobTitle(jobTitle);
 		
+		State state = this.stateEao.getStateById(7);
+		u.setState(state);
+		
 		
 		PartitionTypeEntity pte = picketLinkEao.getPartitionTypeEntity("default", true);
 		
-		AccountTypeEntity ate = picketLinkEao.getAccountTypeEntity("supervisor");
+		AccountTypeEntity ate = picketLinkEao.getAccountTypeEntity("supervisor_new");
 		
 		if(ate != null){
 //			System.err.println("Supervisor already created!");
@@ -206,7 +218,7 @@ public class UserController implements UserControllerInterface {
 		
 		ate.setId(UUID.randomUUID().toString());
 		
-		ate.setLoginName("supervisor");
+		ate.setLoginName("supervisor_new");
 		ate.setTypeName("org.picketlink.idm.model.basic.User");
 		ate.setEnabled(true);
 		ate.setCreatedDate(Calendar.getInstance().getTime());

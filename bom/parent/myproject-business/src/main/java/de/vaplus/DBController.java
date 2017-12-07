@@ -2417,7 +2417,7 @@ public class DBController implements DBControllerInterface{
 		session.executeNonSelectingSQL("TRUNCATE TABLE `Note`");
 		session.executeNonSelectingSQL("SET FOREIGN_KEY_CHECKS=1;");
 
-		session.executeNonSelectingSQL("ALTER TABLE `Note` MODIFY `id` bigint(20) NOT NULL");
+		//session.executeNonSelectingSQL("ALTER TABLE `Note` MODIFY `id` bigint(20) NOT NULL");
 		session.executeNonSelectingSQL("ALTER TABLE `Note` DROP `creationDate`; ");
 		session.executeNonSelectingSQL("ALTER TABLE `Note` DROP `updateDate`; ");
 		session.executeNonSelectingSQL("ALTER TABLE `Note` ADD CONSTRAINT `FK_Note_id` FOREIGN KEY (`id`) REFERENCES `Activity` (`id`);");
@@ -2444,11 +2444,12 @@ public class DBController implements DBControllerInterface{
 
 	@SuppressWarnings("unused")
 	private void startUpdate_42(UnitOfWork session) throws Exception{
-		session.executeNonSelectingSQL("ALTER TABLE `BaseContract` MODIFY `id` bigint(20) NOT NULL");
+		//session.executeNonSelectingSQL("ALTER TABLE `BaseContract` MODIFY `id` bigint(20) NOT NULL");
 
 		session.executeNonSelectingSQL("ALTER TABLE `BaseContract` DROP FOREIGN KEY  `FK_BaseContract_customer_id`;");
 		session.executeNonSelectingSQL("ALTER TABLE `BaseContract` DROP FOREIGN KEY  `FK_BaseContract_shop_id`;");
 		session.executeNonSelectingSQL("ALTER TABLE `BaseContract` DROP FOREIGN KEY  `FK_BaseContract_user_id`;");
+
 
 		session.executeNonSelectingSQL("ALTER TABLE `BaseContract` DROP `DTYPE`; ");
 		session.executeNonSelectingSQL("ALTER TABLE `BaseContract` DROP `creationDate`; ");
@@ -2863,21 +2864,21 @@ public class DBController implements DBControllerInterface{
 	public void checkForDBUpdates(){
 		System.out.println("DBController | checkForDBUpdates");
 
-//		startPriorityUpdate();
-//
-//
-//		long dbVersion = propertyController.getLongProperty(PROPERTY_DB_VERSION, 0);
-//
-//
-//		System.out.println("DB Version: "+dbVersion);
-//
-//		if(dbVersion < DB_VERSION){
-//			System.out.println("DB neets update!");
-//			startUpdates();
-//		}
-//		else{
-//			System.out.println("DB is up to date!");
-//		}
+		startPriorityUpdate();
+
+
+		long dbVersion = propertyController.getLongProperty(PROPERTY_DB_VERSION, 0);
+
+
+		System.out.println("DB Version: "+dbVersion);
+
+		if(dbVersion < DB_VERSION){
+			System.out.println("DB neets update!");
+			startUpdates();
+		}
+		else{
+			System.out.println("DB is up to date!");
+		}
 
 	}
 

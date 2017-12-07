@@ -42,6 +42,7 @@
 		<mockito.version>1.9.5</mockito.version>
 		<slf4j.version>1.7.7</slf4j.version>
 		<dbunit.version>2.5.0</dbunit.version>
+		<picketlink.version>2.7.0.Final</picketlink.version>
 
 		<!-- plugin versions -->
 		<maven-failsafe-plugin.version>2.17</maven-failsafe-plugin.version>
@@ -82,13 +83,20 @@
 			<dependency>
 				<groupId>org.picketlink</groupId>
 				<artifactId>picketlink</artifactId>
-				<version>2.7.1.Final</version>
+				<version>${picketlink.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.picketlink</groupId>
 				<artifactId>picketlink-idm-simple-schema</artifactId>
-				<version>2.7.1.Final</version>
+				<version>${picketlink.version}</version>
 			</dependency>
+			<dependency>
+      			<groupId>org.picketlink</groupId>
+      			<artifactId>picketlink-javaee-6.0</artifactId>
+      			<type>pom</type>
+      			<scope>import</scope>
+      			<version>${picketlink.version}</version>
+    		</dependency>
 			
 			<dependency>
 				<groupId>org.picketbox</groupId>
@@ -131,9 +139,26 @@
 				<version>2.2.12</version>
 				<scope>provided</scope>
 			</dependency>
+			<dependency>
+				<groupId>org.primefaces</groupId>
+				<artifactId>primefaces</artifactId>
+				<version>5.1</version>
+			</dependency>
 
-
-
+			<dependency>
+				<groupId>org.primefaces</groupId>
+				<artifactId>primefaces-blank</artifactId>
+				<version>1.0.0</version>
+			</dependency>
+			<dependency>
+    			<groupId>org.primefaces.themes</groupId>
+    			<artifactId>bootstrap</artifactId>
+			</dependency>
+			<dependency>
+    			<groupId>net.bootsfaces</groupId>
+    			<artifactId>bootsfaces</artifactId>
+			</dependency>
+			
 
 			<dependency>
 				<groupId>junit</groupId>
@@ -259,6 +284,12 @@
 			<name>Altassian 3rdparty</name>
 			<url>https://maven.atlassian.com/3rdparty/</url>
 		</repository>
+		<repository>
+			<id>Primefaces repo</id>
+			<name>Primefaces repo</name>
+			<url>http://repository.primefaces.org/</url>
+		</repository>
+		
 	</repositories>
 
 </project>

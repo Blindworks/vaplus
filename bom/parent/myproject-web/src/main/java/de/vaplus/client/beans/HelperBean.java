@@ -12,12 +12,8 @@ import java.util.Map;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
-import javax.faces.convert.DateTimeConverter;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
-
-import de.vaplus.client.converter.MinimalDateTimeConverter;
-import de.vaplus.client.converter.NamedDateTimeConverter;
 
 
 @SessionScoped
@@ -27,28 +23,28 @@ public class HelperBean implements Serializable {
 	@Inject
 	private FacesContext facesContext;
 	
-	private NamedDateTimeConverter namedDateTimeConverter;
-	
-	private MinimalDateTimeConverter minimalDateTimeConverter;
+//	private NamedDateTimeConverter namedDateTimeConverter;
+//	
+//	private MinimalDateTimeConverter minimalDateTimeConverter;
 
 	private final String[] monthNames = {"Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember"};
 	
 	
-	public NamedDateTimeConverter getConvertDate() {
-		if(namedDateTimeConverter == null){
-			namedDateTimeConverter = new NamedDateTimeConverter();
-//			convertDate.setPattern("EEEEEEEE, MMM dd, yyyy");
-		}
-	    return namedDateTimeConverter;
-	}
-	
-	public MinimalDateTimeConverter getConvertTime() {
-		if(minimalDateTimeConverter == null){
-			minimalDateTimeConverter = new MinimalDateTimeConverter();
-//			convertDate.setPattern("EEEEEEEE, MMM dd, yyyy");
-		}
-	    return minimalDateTimeConverter;
-	}
+//	public NamedDateTimeConverter getConvertDate() {
+//		if(namedDateTimeConverter == null){
+//			namedDateTimeConverter = new NamedDateTimeConverter();
+////			convertDate.setPattern("EEEEEEEE, MMM dd, yyyy");
+//		}
+//	    return namedDateTimeConverter;
+//	}
+//	
+//	public MinimalDateTimeConverter getConvertTime() {
+//		if(minimalDateTimeConverter == null){
+//			minimalDateTimeConverter = new MinimalDateTimeConverter();
+////			convertDate.setPattern("EEEEEEEE, MMM dd, yyyy");
+//		}
+//	    return minimalDateTimeConverter;
+//	}
 	
 //	public void checkDB() throws IOException {
 //		if(! dbController.isDBUpToDate()){

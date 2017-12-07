@@ -275,8 +275,8 @@
                                                 </h:panelGroup>
                                                </p>
                                                <span class="vertical-date small text-muted">
-                                               		<h:outputText value="#{activity.creationDate}" converter="#{NamedDateTimeConverter}" >
-														<f:convertDateTime binding="#{helperBean.convertTime}"  timeZone="CET"/>
+                                               		<h:outputText value="#{activity.creationDate}"  >
+														<f:convertDateTime binding="#{MinimalDateTimeConverter}"  timeZone="CET"/>
 													</h:outputText>
 											   </span>
                                         </div>
@@ -294,8 +294,8 @@
                                                 </h:panelGroup>
                                                </p>
                                                <span class="vertical-date small text-muted">
-                                               		<h:outputText value="#{activity.creationDate}" converter="#{NamedDateTimeConverter}" >
-														<f:convertDateTime binding="#{helperBean.convertTime}"  timeZone="CET"/>
+                                               		<h:outputText value="#{activity.creationDate}"  >
+														<f:convertDateTime binding="#{MinimalDateTimeConverter}"  timeZone="CET"/>
 													</h:outputText>
 											   </span>
                                         </div>

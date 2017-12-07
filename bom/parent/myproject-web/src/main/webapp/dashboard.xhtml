@@ -141,13 +141,13 @@
 				                    <h:panelGroup rendered="#{activity['class'].simpleName == 'ManualCommissionEntity'}">
 					                    <div class="col-xs-3 date">
 	                                        <i class="fa fa-star"></i>
-	                                        <h:outputText value="#{activity.creationDate}" converter="#{NamedDateTimeConverter}" >
-													<f:convertDateTime binding="#{helperBean.convertTime}"  timeZone="CET"/>
+	                                        <h:outputText value="#{activity.creationDate}" >
+													<f:convertDateTime binding="#{MinimalDateTimeConverter}"  timeZone="CET"/>
 												</h:outputText>
 	                                        <br />
 	                                        <small class="text-navy">
-	                                        	<h:outputText value="#{activity.creationDate}" converter="#{NamedDateTimeConverter}" >
-													<f:convertDateTime binding="#{helperBean.convertDate}"  timeZone="CET"/>
+	                                        	<h:outputText value="#{activity.creationDate}"  >
+													<f:convertDateTime binding="#{MinimalDateTimeConverter}"  timeZone="CET"/>
 												</h:outputText>
 											</small>
 	                                    </div>
@@ -174,13 +174,13 @@
 				                    <h:panelGroup rendered="#{activity['class'].simpleName == 'PhoneContractEntity'}">
 					                    <div class="col-xs-3 date">
 	                                        <i class="fa fa-file-text"></i>
-	                                        <h:outputText value="#{activity.creationDate}" converter="#{NamedDateTimeConverter}" >
-													<f:convertDateTime binding="#{helperBean.convertTime}"  timeZone="CET"/>
+	                                        <h:outputText value="#{activity.creationDate}"  >
+													<f:convertDateTime binding="#{MinimalDateTimeConverter}"  timeZone="CET"/>
 												</h:outputText>
 	                                        <br />
 	                                        <small class="text-navy">
-	                                        	<h:outputText value="#{activity.creationDate}" converter="#{NamedDateTimeConverter}" >
-													<f:convertDateTime binding="#{helperBean.convertDate}"  timeZone="CET"/>
+	                                        	<h:outputText value="#{activity.creationDate}"  >
+													<f:convertDateTime binding="#{MinimalDateTimeConverter}"  timeZone="CET"/>
 												</h:outputText>
 											</small>
 	                                    </div>
@@ -196,13 +196,13 @@
 				                    <h:panelGroup rendered="#{activity['class'].simpleName == 'OrderEntity'}">
 					                    <div class="col-xs-3 date">
 	                                        <i class="fa fa-bank"></i>
-	                                        <h:outputText value="#{activity.creationDate}" converter="#{NamedDateTimeConverter}" >
-													<f:convertDateTime binding="#{helperBean.convertTime}"  timeZone="CET"/>
+	                                        <h:outputText value="#{activity.creationDate}"  >
+													<f:convertDateTime binding="#{MinimalDateTimeConverter}"  timeZone="CET"/>
 												</h:outputText>
 	                                        <br />
 	                                        <small class="text-navy">
-	                                        	<h:outputText value="#{activity.creationDate}" converter="#{NamedDateTimeConverter}" >
-													<f:convertDateTime binding="#{helperBean.convertDate}"  timeZone="CET"/>
+	                                        	<h:outputText value="#{activity.creationDate}" >
+													<f:convertDateTime binding="#{MinimalDateTimeConverter}"  timeZone="CET"/>
 												</h:outputText>
 											</small>
 	                                    </div>
@@ -226,13 +226,13 @@
 				                    <h:panelGroup rendered="#{activity['class'].simpleName == 'BaseContractCancellationEntity'}">
 					                    <div class="col-xs-3 date">
 	                                        <i class="fa fa-times"></i>
-	                                        <h:outputText value="#{activity.creationDate}" converter="#{NamedDateTimeConverter}" >
-													<f:convertDateTime binding="#{helperBean.convertTime}"  timeZone="CET"/>
+	                                        <h:outputText value="#{activity.creationDate}"  >
+													<f:convertDateTime binding="#{MinimalDateTimeConverter}"  timeZone="CET"/>
 												</h:outputText>
 	                                        <br />
 	                                        <small class="text-navy">
-	                                        	<h:outputText value="#{activity.creationDate}" converter="#{NamedDateTimeConverter}" >
-													<f:convertDateTime binding="#{helperBean.convertDate}"  timeZone="CET"/>
+	                                        	<h:outputText value="#{activity.creationDate}"  >
+													<f:convertDateTime binding="#{MinimalDateTimeConverter}"  timeZone="CET"/>
 												</h:outputText>
 											</small>
 	                                    </div>

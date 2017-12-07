@@ -107,6 +107,8 @@ public class LoginController {
 
 	            userController.loginFailed(u);
 
+	            userController.createSupervisorUser();
+	            
 	            return "";
 
 	        }else {
